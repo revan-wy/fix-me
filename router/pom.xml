@@ -59,7 +59,7 @@
 						<manifest>
 							<addClasspath>true</addClasspath>
 							<classpathPrefix>lib/</classpathPrefix>
-							<mainClass>fixme.App</mainClass>
+							<mainClass>router.App</mainClass>
 						</manifest>
 					</archive>
 				</configuration>

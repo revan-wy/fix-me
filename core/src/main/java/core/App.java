@@ -1,4 +1,4 @@
-package fixme;
+package core;
 
 /**
  * Hello world!
