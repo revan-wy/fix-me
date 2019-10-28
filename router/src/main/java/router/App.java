@@ -12,9 +12,9 @@ public final class App {
 	}
 
     public static void main(String[] args) {
-		// BrokerRouter brokerRouter = new Router(5000);
-		// Thread brokerRouterThread = new Thread(brokerRouter);
-		// brokerRouterThread.start();
+		Router brokerRouter = new Router(5000);
+		Thread brokerRouterThread = new Thread(brokerRouter);
+		brokerRouterThread.start();
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 		while (true) {
 			try {
