@@ -157,9 +157,9 @@
     </profile>
   </profiles>
   <modules>
-    <module>router</module>
+    <module>core</module>
     <module>broker</module>
     <module>market</module>
-    <module>core</module>
+    <module>router</module>
   </modules>
 </project>
