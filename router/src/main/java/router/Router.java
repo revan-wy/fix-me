@@ -31,7 +31,7 @@ public class Router implements Runnable {
 							throws Exception {
 								ch.pipeline().addLast(
 									new Decoder(),
-									new AcceptConnectionEncoder(),
+									new NewConnectionEncoder(),
 									new SellOrBuyEncoder(),
 									new ProcessingHandler()
 							);
