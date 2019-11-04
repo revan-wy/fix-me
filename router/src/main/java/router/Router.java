@@ -1,7 +1,5 @@
 package router;
 
-import core.decoders.Decoder;
-
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.ChannelOption;
@@ -38,7 +36,9 @@ public class Router implements Runnable {
 						}
 					}).option(ChannelOption.SO_BACKLOG, 128)
 					.childOption(ChannelOption.SO_KEEPALIVE, true);
+
 					// TODO complete this block
+
 		}
 		
 		// TODO complete implementation of run method
