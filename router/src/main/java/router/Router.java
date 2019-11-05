@@ -43,6 +43,9 @@ public class Router implements Runnable {
 
 					// TODO complete this block
 
+		} finally {
+			workerGroup.shutdownGracefully();
+			bossGroup.shutdownGracefully();
 		}
 		
 		// TODO complete implementation of run method
