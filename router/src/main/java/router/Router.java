@@ -4,6 +4,7 @@ import core.decoders.Decoder;
 import core.encoders.NewConnectionEncoder;
 import core.encoders.SellOrBuyEncoder;
 import io.netty.bootstrap.ServerBootstrap;
+import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelInboundHandlerAdapter;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.ChannelOption;
@@ -40,21 +41,22 @@ public class Router implements Runnable {
 						}
 					}).option(ChannelOption.SO_BACKLOG, 128)
 					.childOption(ChannelOption.SO_KEEPALIVE, true);
-
-					// TODO complete this block
-
+			ChannelFuture future = b.bind(this.port).sync();
+			future.channel().closeFuture().sync();
+		} catch (InterruptedException e) {
+			e.printStackTrace();
 		} finally {
 			workerGroup.shutdownGracefully();
 			bossGroup.shutdownGracefully();
 		}
-		
-		// TODO complete implementation of run method
-
 	}
-
+	
 	public class ProcessingHandler extends ChannelInboundHandlerAdapter {
-
+		
 		// TODO complete this implementation
-
+		
 	}
+	
+	// TODO complete implementation of this class
+
 }
