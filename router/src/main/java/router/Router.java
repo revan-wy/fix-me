@@ -48,4 +48,9 @@ public class Router implements Runnable {
 
 	}
 
+	public class ProcessingHandler {
+
+		// TODO complete this implementation
+
+	}
 }
