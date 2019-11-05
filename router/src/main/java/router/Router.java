@@ -1,6 +1,7 @@
 package router;
 
 import core.decoders.Decoder;
+import core.encoders.NewConnectionEncoder;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.ChannelOption;
