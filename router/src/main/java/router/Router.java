@@ -4,6 +4,7 @@ import core.decoders.Decoder;
 import core.encoders.NewConnectionEncoder;
 import core.encoders.SellOrBuyEncoder;
 import io.netty.bootstrap.ServerBootstrap;
+import io.netty.channel.ChannelInboundHandlerAdapter;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.ChannelOption;
 import io.netty.channel.EventLoopGroup;
@@ -48,7 +49,7 @@ public class Router implements Runnable {
 
 	}
 
-	public class ProcessingHandler {
+	public class ProcessingHandler extends ChannelInboundHandlerAdapter {
 
 		// TODO complete this implementation
 
