@@ -14,6 +14,12 @@ public class MessageAcceptConnection {
 
 	}
 
+	public void setChecksum(String string) {
+
+		// TODO complete this method
+
+	}
+
 	// TODO complete this implementation
 
 }
