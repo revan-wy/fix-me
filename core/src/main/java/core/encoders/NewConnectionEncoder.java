@@ -8,11 +8,13 @@ import io.netty.handler.codec.MessageToByteEncoder;
 public class NewConnectionEncoder extends MessageToByteEncoder<MessageAcceptConnection> {
 
 	@Override
-	protected void encode(ChannelHandlerContext ctx, MessageAcceptConnection msg, ByteBuf out) throws Exception {
-		// TODO Auto-generated method stub
-
+	protected void encode(ChannelHandlerContext ctx, MessageAcceptConnection message, ByteBuf out) throws Exception {
+		out.writeInt(message.getTypeLength());
+		out.writeCharSequence(message.getMessageType(), charset);
+		if (message.getMessageType().equals("MESSAGE_ACCEPT_CONNECTION")) {
+			out.writeInt(message.getId());
+			out.writeInt(message.getChecksumLength());
+			out.writeCharSequence(message.getChecksum(), charset)
+		}
 	}
-
-	// TODO complete implementation of this encoder
-
 }
