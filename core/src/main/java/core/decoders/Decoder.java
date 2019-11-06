@@ -15,11 +15,13 @@ public class Decoder extends ReplayingDecoder<Object> {
 		FixMessage message = new FixMessage();
 		Charset charset = Charset.forName("UTF-8");
 		message.setMessageType(in.readCharSequence(in.readInt(), charset).toString());
+		if (message.getMessageType().equals("MESSAGE_ACCEPT_CONNECTION")) {
+
+			// TODO complete this block
+
+		}
 		
 		// TODO Auto-generated method stub
 
 	}
-
-	// TODO implement decoder class
-
 }
