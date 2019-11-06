@@ -8,6 +8,12 @@ public class MessageAcceptConnection {
 
 	}
 
+	public void setId(int readInt) {
+
+		// TODO complete this method
+
+	}
+
 	// TODO complete this implementation
 
 }

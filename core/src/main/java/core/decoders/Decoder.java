@@ -19,6 +19,7 @@ public class Decoder extends ReplayingDecoder<Object> {
 		if (request.getMessageType().equals("MESSAGE_ACCEPT_CONNECTION")) {
 			MessageAcceptConnection response = new MessageAcceptConnection();
 			response.setMessageType(request.getMessageType());
+			response.setId(in.readInt());
 
 			// TODO complete this block
 
