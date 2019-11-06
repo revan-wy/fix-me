@@ -17,7 +17,7 @@ public class NewConnectionEncoder extends MessageToByteEncoder<MessageAcceptConn
 		if (message.getMessageType().equals("MESSAGE_ACCEPT_CONNECTION")) {
 			out.writeInt(message.getId());
 			out.writeInt(message.getChecksumLength());
-			out.writeCharSequence(message.getChecksum(), charset)
+			out.writeCharSequence(message.getChecksum(), charset);
 		}
 	}
 }

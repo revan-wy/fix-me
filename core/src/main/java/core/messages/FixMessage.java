@@ -1,6 +1,7 @@
 package core.messages;
 
 public class FixMessage {
+	private String	checksum;
 	private int		checksumLength;
 	private String	messageType;
 	private int		typeLength;
@@ -19,6 +20,10 @@ public class FixMessage {
 
 	public int getChecksumLength() {
 		return this.checksumLength;
+	}
+
+	public String getChecksum() {
+		return this.checksum;
 	}
 
 	// TODO complete implementation of this class
