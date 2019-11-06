@@ -1,7 +1,6 @@
 package core.messages;
 
 public class FixMessage {
-
 	private String messageType;
 
 	public void setMessageType(String messageType) {
