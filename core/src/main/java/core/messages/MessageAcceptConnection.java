@@ -1,6 +1,7 @@
 package core.messages;
 
 public class MessageAcceptConnection {
+	private int typeLength;
 
 	public void setMessageType(String messageType) {
 
@@ -18,6 +19,10 @@ public class MessageAcceptConnection {
 
 		// TODO complete this method
 
+	}
+
+	public int getTypeLength() {
+		return this.typeLength;
 	}
 
 	// TODO complete this implementation
