@@ -27,6 +27,7 @@ public class Decoder extends ReplayingDecoder<Object> {
 				request.getMessageType().equals("MESSAGE_SELL")) {
 			MessageSellOrBuy response = new MessageSellOrBuy();
 			response.setMessageType(request.getMessageType());
+			response.setMessageAction(in.readCharSequence(in.readInt(), charset).toString());
 		}
 		
 		// TODO Auto-generated method stub

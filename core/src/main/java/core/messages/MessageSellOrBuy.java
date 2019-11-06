@@ -8,6 +8,12 @@ public class MessageSellOrBuy {
 
 	}
 
+	public void setMessageAction(String messageAction) {
+
+		// TODO complete this method
+
+	}
+
 	// TODO complete this implementation
 
 }
