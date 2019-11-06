@@ -36,8 +36,5 @@ public class Decoder extends ReplayingDecoder<Object> {
 			response.setNewChecksum();
 			out.add(response);
 		}
-		
-		// TODO Auto-generated method stub
-
 	}
 }
