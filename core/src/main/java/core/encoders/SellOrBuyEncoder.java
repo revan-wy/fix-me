@@ -8,11 +8,21 @@ import io.netty.handler.codec.MessageToByteEncoder;
 public class SellOrBuyEncoder extends MessageToByteEncoder<MessageSellOrBuy> {
 
 	@Override
-	protected void encode(ChannelHandlerContext ctx, MessageSellOrBuy msg, ByteBuf out) throws Exception {
-		// TODO Auto-generated method stub
-
+	protected void encode(ChannelHandlerContext ctx, MessageSellOrBuy message, ByteBuf out) throws Exception {
+		out.writeInt(message.getTypeLength());
+		out.writeCharSequence(message.getMessageType, charset);
+		if (message.getMessageType().equals("MESSAGE_BUY") ||
+				message.getMessageType().equals("MESSAGE_SELL")) {
+			out.writeInt(message.getActionLength());
+			out.writeCharSequence(message.getMessageAction(), charset);
+			out.writeInt(message.getId());
+			out.writeInt(message.getInstrumentLength());
+			out.writeCharSequence(message.getInstrument(), charset);
+			out.writeInt(message.getMarketId());
+			out.writeInt(message.getPrince());
+			out.writeInt(message.getQuantity());
+			out.writeInt(message.getChecksumLength());
+			out.writeCharSequence(message.getChecksum(), charset)
+		}
 	}
-
-	// TODO complete this implementation
-
 }
