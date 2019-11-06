@@ -5,6 +5,7 @@ import java.util.List;
 
 import core.messages.FixMessage;
 import core.messages.MessageAcceptConnection;
+import core.messages.MessageSellOrBuy;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.ReplayingDecoder;
@@ -22,6 +23,10 @@ public class Decoder extends ReplayingDecoder<Object> {
 			response.setId(in.readInt());
 			response.setChecksum(in.readCharSequence(in.readInt(), charset).toString());
 			out.add(response);
+		} else if (request.getMessageType().equals("MESSAGE_BUY") || 
+				request.getMessageType().equals("MESSAGE_SELL")) {
+			MessageSellOrBuy response = new MessageSellOrBuy();
+			response.setMessageType(request.getMessageType());
 		}
 		
 		// TODO Auto-generated method stub
