@@ -21,9 +21,7 @@ public class Decoder extends ReplayingDecoder<Object> {
 			response.setMessageType(request.getMessageType());
 			response.setId(in.readInt());
 			response.setChecksum(in.readCharSequence(in.readInt(), charset).toString());
-
-			// TODO complete this block
-
+			out.add(response);
 		}
 		
 		// TODO Auto-generated method stub
