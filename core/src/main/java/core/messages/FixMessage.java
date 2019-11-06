@@ -4,10 +4,8 @@ public class FixMessage {
 
 	private String messageType;
 
-	public void setMessageType(String string) {
-	
-		// TODO complete implementation of this method
-	
+	public void setMessageType(String messageType) {
+		this.messageType = messageType;
 	}
 
 	public String getMessageType() {
