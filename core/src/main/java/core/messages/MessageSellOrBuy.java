@@ -44,6 +44,12 @@ public class MessageSellOrBuy {
 
 	}
 
+	public void setNewChecksum() {
+
+		// TODO complete this method
+
+	}
+
 	// TODO complete this implementation
 
 }
