@@ -32,6 +32,12 @@ public class MessageSellOrBuy {
 
 	}
 
+	public void setQuantity() {
+
+		// TODO complete this method
+
+	}
+
 	// TODO complete this implementation
 
 }

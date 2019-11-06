@@ -31,9 +31,10 @@ public class Decoder extends ReplayingDecoder<Object> {
 			response.setId(in.readInt());
 			response.setInstrument(in.readCharSequence(in.readInt(), charset).toString());
 			response.setMarketId(in.readInt());
-
-			// TODO complete this block
-
+			response.setQuantity();
+			response.setPrice();
+			response.setNewChecksum();
+			out.add(response);
 		}
 		
 		// TODO Auto-generated method stub
