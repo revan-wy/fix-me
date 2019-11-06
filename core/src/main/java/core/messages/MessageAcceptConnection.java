@@ -1,8 +1,7 @@
 package core.messages;
 
-public class MessageAcceptConnection {
-	private String	messageType;
-	private int		typeLength;
+public class MessageAcceptConnection extends FixMessage {
+	private int id;
 
 	public void setMessageType(String messageType) {
 
@@ -22,12 +21,8 @@ public class MessageAcceptConnection {
 
 	}
 
-	public int getTypeLength() {
-		return this.typeLength;
-	}
-
-	public String getMessageType() {
-		return this.messageType;
+	public int getId() {
+		return this.id;
 	}
 
 	// TODO complete this implementation
