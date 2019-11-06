@@ -20,6 +20,12 @@ public class MessageSellOrBuy {
 
 	}
 
+	public void setInstrument(String instrument) {
+
+		// TODO complete this method
+
+	}
+
 	// TODO complete this implementation
 
 }

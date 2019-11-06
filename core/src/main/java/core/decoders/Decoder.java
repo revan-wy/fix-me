@@ -29,6 +29,7 @@ public class Decoder extends ReplayingDecoder<Object> {
 			response.setMessageType(request.getMessageType());
 			response.setMessageAction(in.readCharSequence(in.readInt(), charset).toString());
 			response.setId(in.readInt());
+			response.setInstrument(in.readCharSequence(in.readInt(), charset).toString());
 
 			// TODO complete this block
 
