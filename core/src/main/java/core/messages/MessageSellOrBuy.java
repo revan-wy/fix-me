@@ -26,6 +26,12 @@ public class MessageSellOrBuy {
 
 	}
 
+	public void setMarketId(int marketId) {
+
+		// TODO complete this method
+
+	}
+
 	// TODO complete this implementation
 
 }
