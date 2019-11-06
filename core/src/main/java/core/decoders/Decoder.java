@@ -28,6 +28,10 @@ public class Decoder extends ReplayingDecoder<Object> {
 			MessageSellOrBuy response = new MessageSellOrBuy();
 			response.setMessageType(request.getMessageType());
 			response.setMessageAction(in.readCharSequence(in.readInt(), charset).toString());
+			response.setId(in.readInt());
+
+			// TODO complete this block
+
 		}
 		
 		// TODO Auto-generated method stub
