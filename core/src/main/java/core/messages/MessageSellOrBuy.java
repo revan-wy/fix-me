@@ -5,6 +5,7 @@ public class MessageSellOrBuy extends FixMessage {
 	private int		id;
 	private int		instrumentLength;
 	private int		price;
+	private int		quantity;
 	private String	instrument;
 	private String	messageAction;
 
@@ -48,6 +49,10 @@ public class MessageSellOrBuy extends FixMessage {
 
 	public int		getPrice() {
 		return this.price;
+	}
+
+	public int getQuantity() {
+		return this.quantity;
 	}
 
 	public void		setId(int readInt) {
