@@ -23,6 +23,8 @@ import io.netty.channel.socket.nio.NioServerSocketChannel;
 
 public class Router implements Runnable {
 	private int port;
+	private EventLoopGroup workerGroup;
+	private EventLoopGroup bossGroup;
 	private static HashMap<Integer, ChannelHandlerContext> routingTable = new HashMap<>();
 
 	public Router(int port) {
@@ -101,8 +103,8 @@ public class Router implements Runnable {
 
 	@Override
 	public void run() {
-		EventLoopGroup bossGroup = new NioEventLoopGroup();
-		EventLoopGroup workerGroup = new NioEventLoopGroup();
+		bossGroup = new NioEventLoopGroup();
+		workerGroup = new NioEventLoopGroup();
 		try {
 			ServerBootstrap b = new ServerBootstrap();
 			b.group(bossGroup, workerGroup)
@@ -125,12 +127,16 @@ public class Router implements Runnable {
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		} finally {
-			workerGroup.shutdownGracefully();
-			bossGroup.shutdownGracefully();
+			shutdown();
 		}
 	}
 	
 	private String stringBrokerOrMarket() {
 		return this.port == 5001 ? "market" : "broker";
+	}
+
+	public void shutdown() {
+		workerGroup.shutdownGracefully();
+		bossGroup.shutdownGracefully();
 	}
 }
