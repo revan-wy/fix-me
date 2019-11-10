@@ -4,6 +4,7 @@ public class MessageSellOrBuy extends FixMessage {
 	private int		actionLength;
 	private int		id;
 	private int		instrumentLength;
+	private String	instrument;
 	private String	messageAction;
 
 	public			MessageSellOrBuy(String messageType, String messageAction, int marketId, int id, String instrument,
@@ -30,6 +31,10 @@ public class MessageSellOrBuy extends FixMessage {
 
 	public int		getId() {
 		return this.id;
+	}
+
+	public String	getInstrument() {
+		return this.instrument;
 	}
 
 	public int		getInstrumentLength() {
@@ -86,7 +91,6 @@ public class MessageSellOrBuy extends FixMessage {
 		// TODO complete this method
 
 	}
-
 
 	// TODO complete this implementation
 
