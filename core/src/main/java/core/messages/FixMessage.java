@@ -25,6 +25,10 @@ public class FixMessage {
 		return this.checksumLength;
 	}	
 
+	public int getMarketId() {
+		return this.marketId;
+	}
+
 	public String	getMessageType() {
 		return this.messageType;
 	}		
