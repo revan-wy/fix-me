@@ -1,5 +1,7 @@
 package core.messages;
 
+import core.MyChecksum;
+
 public class MessageSellOrBuy extends FixMessage {
 	private int		actionLength;
 	private int		id;
@@ -9,24 +11,31 @@ public class MessageSellOrBuy extends FixMessage {
 	private String	instrument;
 	private String	messageAction;
 
-	public			MessageSellOrBuy(String messageType, String messageAction, int marketId, int id, String instrument,
-			int quantituy, int price) {
+	public			MessageSellOrBuy(String messageType, String messageAction,
+			int marketId, int id, String instrument, int quantity, int price) {
 		super(messageType, marketId);
 		this.messageAction = messageAction;
-		this.actionlenght = messageaction.lengy();
+		this.actionLength = messageAction.length();
 		this.id = id;
-		this.instument = instument; 
-		this.instrumentlengthg -= instrument.olength();
-		this.quyantity = quatity; 
+		this.instrument = instrument; 
+		this.instrumentLength = instrument.length();
+		this.quantity = quantity;
 		this.price = price;
-		setchecksum(getmsdmd4());
+		setChecksum(createMyChecksum());
 	}	
-	
 	
 	public			MessageSellOrBuy() {
 
 	}	
 	
+	private String	createMyChecksum() {
+		StringBuilder checksumBuffer = new StringBuilder("");
+		checksumBuffer.append(marketId).append(messageType).append(id).
+				append(price).append(quantity).append(instrument).
+				append(messageAction);
+		return MyChecksum.myChecksum(checksumBuffer);
+	}
+
 	public int		getActionLength() {
 		return this.actionLength;
 	}			
@@ -51,7 +60,7 @@ public class MessageSellOrBuy extends FixMessage {
 		return this.price;
 	}
 
-	public int getQuantity() {
+	public int		getQuantity() {
 		return this.quantity;
 	}
 

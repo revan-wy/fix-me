@@ -1,11 +1,11 @@
 package core.messages;
 
 public class FixMessage {
-	private int		checksumLength;
-	private int		marketId;
-	private int		typeLength;
-	private String	checksum;
-	private String	messageType;
+	private int			checksumLength;
+	protected int		marketId;
+	private int			typeLength;
+	private String		checksum;
+	protected String	messageType;
 
 	public			FixMessage(String messageType, int marketId) {
 		this.messageType = messageType;
@@ -36,6 +36,11 @@ public class FixMessage {
 	public int		getTypeLength() {
 		return this.typeLength;
 	}		
+
+	public void		setChecksum(String checksum) {
+		this.checksum = checksum;
+		this.checksumLength = checksum.length();
+	}
 
 	public void		setMessageType(String messageType) {
 		this.messageType = messageType;
