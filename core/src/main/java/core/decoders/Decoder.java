@@ -31,8 +31,8 @@ public class Decoder extends ReplayingDecoder<Object> {
 			response.setId(in.readInt());
 			response.setInstrument(in.readCharSequence(in.readInt(), charset).toString());
 			response.setMarketId(in.readInt());
-			response.setQuantity();
-			response.setPrice();
+			response.setQuantity(in.readInt());
+			response.setPrice(in.readInt());
 			response.setNewChecksum();
 			out.add(response);
 		}

@@ -42,8 +42,13 @@ public class FixMessage {
 		this.checksumLength = checksum.length();
 	}
 
+	public void		setMarketId(int marketId) {
+		this.marketId = marketId;
+	}
+
 	public void		setMessageType(String messageType) {
 		this.messageType = messageType;
+		this.typeLength = messageType.length();
 	}			
 
 	// TODO complete implementation of this class

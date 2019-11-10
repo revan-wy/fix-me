@@ -64,53 +64,43 @@ public class MessageSellOrBuy extends FixMessage {
 		return this.quantity;
 	}
 
-	public void		setId(int readInt) {
-		// TODO complete this method
-		
+	public void		setId(int id) {
+		this.id = id;
 	}		
 	
 	public void		setInstrument(String instrument) {
-		
-		// TODO complete this method
-		
+		this.instrument = instrument;
+		this.instrumentLength = instrument.length();
 	}		
 	
-	public void		setMarketId(int marketId) {
-
-		// TODO complete this method
-
-	}			
-
 	public void		setMessageAction(String messageAction) {
-		
-		// TODO complete this method
-		
+		this.messageAction = messageAction;
+		this.actionLength = messageAction.length();
 	}			
 	
-	public void		setMessageType(String messageType) {
-
-		// TODO complete this method
-
-	}				
-
 	public void		setNewChecksum() {
-
-		// TODO complete this method
-
+		setChecksum(createMyChecksum());
 	}			
 
-	public void		setPrice() {
-
-		// TODO complete this method
-
+	public void		setPrice(int price) {
+		this.price = price;
 	}			
 
-	public void		setQuantity() {
-
-		// TODO complete this method
-
+	public void		setQuantity(int quantity) {
+		this.quantity = quantity;
 	}
 
-	// TODO complete this implementation
-
+	@Override
+	public String toString() {
+		return "MessageSellOrBuy {" +
+				"ID = " + 
+				" | MESSAGE_TYPE = " + getMessageType() +
+				" | MESSAGE_ACTION = " + getMessageAction() +
+				" | INSTRUMENT = " + getInstrument() +
+				" | MARKET_ID = " + getMarketId() +
+				" | QUANTITY = " + getQuantity() +
+				" | PRICE = " + getPrice() +
+				" | CHECKSUM = " + getChecksum() +
+				" }";
+	}
 }
