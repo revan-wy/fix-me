@@ -1,5 +1,7 @@
 package core.encoders;
 
+import java.nio.charset.Charset;
+
 import core.messages.MessageSellOrBuy;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
@@ -9,8 +11,9 @@ public class SellOrBuyEncoder extends MessageToByteEncoder<MessageSellOrBuy> {
 
 	@Override
 	protected void encode(ChannelHandlerContext ctx, MessageSellOrBuy message, ByteBuf out) throws Exception {
+		Charset charset = Charset.forName("UTF-8");
 		out.writeInt(message.getTypeLength());
-		out.writeCharSequence(message.getMessageType, charset);
+		out.writeCharSequence(message.getMessageType(), charset);
 		if (message.getMessageType().equals("MESSAGE_BUY") ||
 				message.getMessageType().equals("MESSAGE_SELL")) {
 			out.writeInt(message.getActionLength());
@@ -19,10 +22,10 @@ public class SellOrBuyEncoder extends MessageToByteEncoder<MessageSellOrBuy> {
 			out.writeInt(message.getInstrumentLength());
 			out.writeCharSequence(message.getInstrument(), charset);
 			out.writeInt(message.getMarketId());
-			out.writeInt(message.getPrince());
+			out.writeInt(message.getPrice());
 			out.writeInt(message.getQuantity());
 			out.writeInt(message.getChecksumLength());
-			out.writeCharSequence(message.getChecksum(), charset)
+			out.writeCharSequence(message.getChecksum(), charset);
 		}
 	}
 }
