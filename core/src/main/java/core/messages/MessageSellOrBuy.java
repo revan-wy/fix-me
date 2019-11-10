@@ -1,8 +1,9 @@
 package core.messages;
 
 public class MessageSellOrBuy extends FixMessage {
-	
-	public MessageSellOrBuy(String messageType, String messageAction, int marketId, int id, String instrument,
+	private int actionLength;
+
+	public		MessageSellOrBuy(String messageType, String messageAction, int marketId, int id, String instrument,
 			int quantituy, int price) {
 		super(messageType, marketId);
 		this.messageAction = messageAction;
@@ -13,58 +14,63 @@ public class MessageSellOrBuy extends FixMessage {
 		this.quyantity = quatity; 
 		this.price = price;
 		setchecksum(getmsdmd4());
-	}
-	
-	public MessageSellOrBuy() {
-
-	}
-	
-	public void setId(int readInt) {
-		// TODO complete this method
-		
 	}	
 	
-	public void setInstrument(String instrument) {
-		
-		// TODO complete this method
-		
+	
+	public		MessageSellOrBuy() {
+
 	}	
 	
-	public void setMarketId(int marketId) {
+	public int	getActionLength() {
+		return this.actionLength;
+	}			
 
+	public void	setId(int readInt) {
 		// TODO complete this method
-
+		
 	}		
-
-	public void setMessageAction(String messageAction) {
+	
+	public void	setInstrument(String instrument) {
 		
 		// TODO complete this method
 		
 	}		
 	
-	public void setMessageType(String messageType) {
+	public void	setMarketId(int marketId) {
 
 		// TODO complete this method
 
 	}			
 
-	public void setNewChecksum() {
+	public void	setMessageAction(String messageAction) {
+		
+		// TODO complete this method
+		
+	}			
+	
+	public void	setMessageType(String messageType) {
 
 		// TODO complete this method
 
-	}		
+	}				
 
-	public void setPrice() {
-
-		// TODO complete this method
-
-	}		
-
-	public void setQuantity() {
+	public void	setNewChecksum() {
 
 		// TODO complete this method
 
 	}			
+
+	public void	setPrice() {
+
+		// TODO complete this method
+
+	}			
+
+	public void	setQuantity() {
+
+		// TODO complete this method
+
+	}	
 
 	// TODO complete this implementation
 
