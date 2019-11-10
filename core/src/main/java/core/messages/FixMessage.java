@@ -13,7 +13,7 @@ public class FixMessage {
 		this.marketId = marketId;
 	}
 
-	public FixMessage() {
+	public			FixMessage() {
 
 	}
 
@@ -25,7 +25,7 @@ public class FixMessage {
 		return this.checksumLength;
 	}	
 
-	public int getMarketId() {
+	public int		getMarketId() {
 		return this.marketId;
 	}
 
