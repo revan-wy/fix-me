@@ -13,7 +13,7 @@ public class MessageAcceptConnection extends FixMessage {
 		this.id = id;
 	}
 
-	public void setNewChecksum(String string) {
+	public void setNewChecksum() {
 		StringBuilder checksumBuffer = new StringBuilder("");
 		checksumBuffer.append(this.id).append(this.messageType);
 		setChecksum(MyChecksum.myChecksum(checksumBuffer));

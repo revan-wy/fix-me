@@ -28,7 +28,7 @@ public class MessageSellOrBuy extends FixMessage {
 
 	}	
 	
-	private String	createMyChecksum() {
+	public String	createMyChecksum() {
 		StringBuilder checksumBuffer = new StringBuilder("");
 		checksumBuffer.append(marketId).append(messageType).append(id).
 				append(price).append(quantity).append(instrument).

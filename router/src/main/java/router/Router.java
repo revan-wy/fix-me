@@ -1,10 +1,18 @@
 package router;
 
+import java.util.HashMap;
+
 import core.decoders.Decoder;
 import core.encoders.NewConnectionEncoder;
 import core.encoders.SellOrBuyEncoder;
+import core.exceptions.ChecksumIsNotEqual;
+import core.exceptions.ClientNotInRoutingTable;
+import core.messages.FixMessage;
+import core.messages.MessageAcceptConnection;
+import core.messages.MessageSellOrBuy;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.ChannelFuture;
+import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.ChannelOption;
@@ -15,9 +23,80 @@ import io.netty.channel.socket.nio.NioServerSocketChannel;
 
 public class Router implements Runnable {
 	private int port;
+	private static HashMap<Integer, ChannelHandlerContext> routingTable = new HashMap<>();
 
 	public Router(int port) {
 		this.port = port;
+	}
+
+	public void acceptNewConnection(ChannelHandlerContext context, Object request) {
+		MessageAcceptConnection response = (MessageAcceptConnection)request;
+		String newId = context.channel().remoteAddress().toString().substring(11);
+		newId = newId.concat(brokerOrMarketBool() ? "2" : "3");
+		response.setId(Integer.valueOf(newId));
+		response.setNewChecksum();
+		context.writeAndFlush(response);
+		routingTable.put(response.getId(), context);
+		System.out.println("New connection made with " + stringBrokerOrMarket() + newId);
+	}
+
+	private boolean brokerOrMarketBool() {
+		return (this.port != 5001);
+	}
+
+	public void checkForErrors(MessageSellOrBuy response) throws Exception {
+		if (!response.createMyChecksum().equals(response.getChecksum())) {
+			throw new ChecksumIsNotEqual();
+		}
+		if (!checkIfInTable(response.getMarketId())) {
+			throw new ClientNotInRoutingTable();
+		}
+	}
+
+	private boolean checkIfInTable(int id) {
+		return routingTable.containsKey(id);
+	}
+	
+	public ChannelHandlerContext getFromTableById(int id) {
+		return routingTable.get(id);
+	}
+
+	public boolean messageIsFromMarket(MessageSellOrBuy response) throws Exception {
+		if ((response.getMessageAction().equals("MESSAGE_EXECUTE")) ||
+				(response.getMessageAction().equals("MESSAGE_REJECT"))) {
+			if (!response.createMyChecksum().equals(response.getChecksum())) {
+				throw new ChecksumIsNotEqual();
+			}
+			getFromTableById(response.getId()).writeAndFlush(response);
+			return true;
+		}
+		return false;
+	}
+
+	public class ProcessingHandler extends ChannelInboundHandlerAdapter {
+		@Override
+		public void channelRead(ChannelHandlerContext context, Object request) {
+			FixMessage message = (FixMessage)request;
+			if (message.getMessageType().equals("MESSAGE_ACCEPT_CONNECTION")) {
+				acceptNewConnection(context, request);
+			} else if ((message.getMessageType().equals("MESSAGE_BUY")) ||
+					(message.getMessageType().equals("MESSAGE_SELL"))) {
+				MessageSellOrBuy response = (MessageSellOrBuy)request;
+				try {
+					checkForErrors(response);
+					if (messageIsFromMarket(response)) {
+						return;
+					};
+					System.out.print("Sending request to market " + response.getMarketId());
+					getFromTableById(response.getMarketId()).channel().writeAndFlush(response);
+				} catch(Exception e) {
+					System.out.println(e.getMessage());
+					response.setMessageAction("MESSAGE_REJECT");
+					response.setNewChecksum();
+					context.writeAndFlush(response);
+				}
+			}
+		}
 	}
 
 	@Override
@@ -51,12 +130,7 @@ public class Router implements Runnable {
 		}
 	}
 	
-	public class ProcessingHandler extends ChannelInboundHandlerAdapter {
-		
-		// TODO complete this implementation
-		
+	private String stringBrokerOrMarket() {
+		return this.port == 5001 ? "market" : "broker";
 	}
-	
-	// TODO complete implementation of this class
-
 }
