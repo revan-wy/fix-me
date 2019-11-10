@@ -13,6 +13,10 @@ public class FixMessage {
 		this.marketId = marketId;
 	}
 
+	public FixMessage() {
+
+	}
+
 	public String	getChecksum() {
 		return this.checksum;
 	}
