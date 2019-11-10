@@ -50,7 +50,4 @@ public class FixMessage {
 		this.messageType = messageType;
 		this.typeLength = messageType.length();
 	}			
-
-	// TODO complete implementation of this class
-
 }
