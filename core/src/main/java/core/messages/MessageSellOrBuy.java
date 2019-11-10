@@ -4,6 +4,7 @@ public class MessageSellOrBuy extends FixMessage {
 	private int		actionLength;
 	private int		id;
 	private int		instrumentLength;
+	private int		price;
 	private String	instrument;
 	private String	messageAction;
 
@@ -44,6 +45,10 @@ public class MessageSellOrBuy extends FixMessage {
 	public String	getMessageAction() {
 		return this.messageAction;
 	}	
+
+	public int		getPrice() {
+		return this.price;
+	}
 
 	public void		setId(int readInt) {
 		// TODO complete this method
