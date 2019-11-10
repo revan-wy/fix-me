@@ -3,9 +3,10 @@ package core.messages;
 public class MessageSellOrBuy extends FixMessage {
 	private int		actionLength;
 	private int		id;
+	private int		instrumentLength;
 	private String	messageAction;
 
-	public		MessageSellOrBuy(String messageType, String messageAction, int marketId, int id, String instrument,
+	public			MessageSellOrBuy(String messageType, String messageAction, int marketId, int id, String instrument,
 			int quantituy, int price) {
 		super(messageType, marketId);
 		this.messageAction = messageAction;
@@ -19,68 +20,73 @@ public class MessageSellOrBuy extends FixMessage {
 	}	
 	
 	
-	public		MessageSellOrBuy() {
+	public			MessageSellOrBuy() {
 
 	}	
 	
-	public int	getActionLength() {
+	public int		getActionLength() {
 		return this.actionLength;
 	}			
 
-	public int getId() {
+	public int		getId() {
 		return this.id;
 	}
 
-	public String getMessageAction() {
+	public int		getInstrumentLength() {
+		return this.instrumentLength;
+	}
+
+	public String	getMessageAction() {
 		return this.messageAction;
 	}	
 
-	public void	setId(int readInt) {
+	public void		setId(int readInt) {
 		// TODO complete this method
 		
 	}		
 	
-	public void	setInstrument(String instrument) {
+	public void		setInstrument(String instrument) {
 		
 		// TODO complete this method
 		
 	}		
 	
-	public void	setMarketId(int marketId) {
+	public void		setMarketId(int marketId) {
 
 		// TODO complete this method
 
 	}			
 
-	public void	setMessageAction(String messageAction) {
+	public void		setMessageAction(String messageAction) {
 		
 		// TODO complete this method
 		
 	}			
 	
-	public void	setMessageType(String messageType) {
+	public void		setMessageType(String messageType) {
 
 		// TODO complete this method
 
 	}				
 
-	public void	setNewChecksum() {
+	public void		setNewChecksum() {
 
 		// TODO complete this method
 
 	}			
 
-	public void	setPrice() {
+	public void		setPrice() {
 
 		// TODO complete this method
 
 	}			
 
-	public void	setQuantity() {
+	public void		setQuantity() {
 
 		// TODO complete this method
 
 	}
+
 
 	// TODO complete this implementation
 
