@@ -2,6 +2,7 @@ package core.messages;
 
 public class MessageSellOrBuy extends FixMessage {
 	private int		actionLength;
+	private int		id;
 	private String	messageAction;
 
 	public		MessageSellOrBuy(String messageType, String messageAction, int marketId, int id, String instrument,
@@ -25,6 +26,10 @@ public class MessageSellOrBuy extends FixMessage {
 	public int	getActionLength() {
 		return this.actionLength;
 	}			
+
+	public int getId() {
+		return this.id;
+	}
 
 	public String getMessageAction() {
 		return this.messageAction;
