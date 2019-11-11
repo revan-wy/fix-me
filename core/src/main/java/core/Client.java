@@ -110,16 +110,39 @@ public class Client implements Runnable {
 					System.out.println(e.getMessage());
 					return;
 				}
-
-					// TODO 
-
+				if (checkForBrokerAnswerFromMarket(response)) {
+					return;
+				}
+				if (message.getMessageType().equals("MESSAGE_SELL")) {
+					marketForSellRequestLogic(context, response);
+				} else {
+					marketForBuyRequestLogic(context, response);
+				}
 			}
 		}
 		
+		public boolean checkForBrokerAnswerFromMarket(MessageSellOrBuy response) {
+
+			// TODO
+
+			return false;
+		}
+		
+		public void marketForSellRequestLogic(ChannelHandlerContext context, MessageSellOrBuy response) {
+
+			// TODO
+
+		}
+		
+		public void marketForBuyRequestLogic(ChannelHandlerContext context, MessageSellOrBuy response) {
+
+			// TODO
+
+		}
+
 		// TODO
 	
-	}
-	
+	}	
 
 	// TODO
 
