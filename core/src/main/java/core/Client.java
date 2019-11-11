@@ -122,9 +122,11 @@ public class Client implements Runnable {
 		}
 		
 		public boolean checkForBrokerAnswerFromMarket(MessageSellOrBuy response) {
-
-			// TODO
-
+			if ((response.getMessageAction().equals("MESSAGE_EXECUTE")) ||
+					(response.getMessageAction().equals("MESSAGE_REJECT"))) {
+				System.out.println("Response from market: " + response.getMessageAction());
+				return true;
+			}
 			return false;
 		}
 		
