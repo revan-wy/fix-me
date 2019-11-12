@@ -1,0 +1,1 @@
+java -jar router/target/router-project.jar

@@ -1,0 +1,1 @@
+java -jar core/target/core-project.jar
