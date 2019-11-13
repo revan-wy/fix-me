@@ -3,6 +3,7 @@ package core;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.Random;
 
 import core.decoders.Decoder;
 import core.encoders.NewConnectionEncoder;
@@ -131,9 +132,16 @@ public class Client implements Runnable {
 		}
 		
 		public void marketForSellRequestLogic(ChannelHandlerContext context, MessageSellOrBuy response) {
-
-			// TODO
-
+			Random random = new Random();
+			if (random.nextBoolean()) {
+				System.out.println("Sell order executed.");
+				response.setMessageAction("MESSAGE_EXECUTE");
+			} else {
+				System.out.println("Sell order rejected.");
+				response.setMessageAction("MESSAGE_REJECT");
+			}
+			response.setNewChecksum();
+			context.writeAndFlush(response);
 		}
 		
 		public void marketForBuyRequestLogic(ChannelHandlerContext context, MessageSellOrBuy response) {
