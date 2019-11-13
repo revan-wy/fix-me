@@ -145,7 +145,7 @@ public class Client implements Runnable {
 		}
 		
 		public void marketForBuyRequestLogic(ChannelHandlerContext context, MessageSellOrBuy response) {
-			Random random = new Random;
+			Random random = new Random();
 			int randomInt = random.nextInt(100);
 			if (randomInt >= 0 && randomInt < 20) {
 				System.out.println("Buy order rejected. Requested instrument unavailable.");
@@ -154,12 +154,11 @@ public class Client implements Runnable {
 				System.out.println("Buy order rejected. Requested quantity unavailable.");
 				response.setMessageAction("MESSAGE_REJECT");
 			} else {
-				
+				System.out.println("Buy order executed.");
+				response.setMessageAction("MESSAGE_EXECUTE");
 			}
-
-
-			// TODO
-
+			response.setNewChecksum();
+			context.writeAndFlush(response);
 		}
 
 		// TODO
