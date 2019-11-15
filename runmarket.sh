@@ -1,1 +1,1 @@
-java -jar market/target/market-project.jar
+java -jar market/target/market-1-jar-with-dependencies.jar

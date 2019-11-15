@@ -1,1 +1,1 @@
-java -jar core/target/core-project.jar
+java -jar core/target/core-1-jar-with-dependencies.jar

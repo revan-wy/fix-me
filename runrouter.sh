@@ -1,1 +1,1 @@
-java -jar router/target/router-project.jar
+java -jar router/target/router-1-jar-with-dependencies.jar
