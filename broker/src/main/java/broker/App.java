@@ -14,10 +14,7 @@ public final class App {
 		try {
 			clientThread.join();
 		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
-		} finally {
-
 		}
 		Client.handleInput(client);
 	}
