@@ -1,9 +1,12 @@
 package core.exceptions;
 
 public class ClientNotInRoutingTable extends Exception {
-	private static final long serialVersionUID = -1114883444409482670L;
+	/**
+	 * added to circumvent warning
+	 */
+	private static final long serialVersionUID = -1354177855341301317L;
 
 	public ClientNotInRoutingTable() {
-		super("Requested client does not exist on the routing table.");
+		super("This client is not in routing table!");
 	}
 }

@@ -3,7 +3,6 @@ package router;
 import java.util.HashMap;
 
 import core.decoders.Decoder;
-import core.encoders.NewConnectionEncoder;
 import core.encoders.SellOrBuyEncoder;
 import core.exceptions.ChecksumIsNotEqual;
 import core.exceptions.ClientNotInRoutingTable;
