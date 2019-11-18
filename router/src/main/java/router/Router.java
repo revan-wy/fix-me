@@ -69,7 +69,7 @@ public class Router implements Runnable {
 	class ProcessingHandler extends ChannelInboundHandlerAdapter {
 		@Override
 		public void channelRead(ChannelHandlerContext ctx, Object msg) {
-			FIXMessage message = (FIXMessage) msg;
+			FixMessage message = (FixMessage) msg;
 			if (message.getMessageType().equals(Message.Type.CONNECTION_REQUEST.toString()))
 				acceptNewConnection(ctx, msg);
 			else if (message.getMessageType().equals(Message.Type.BUY.toString())

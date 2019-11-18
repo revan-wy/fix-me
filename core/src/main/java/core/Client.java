@@ -12,7 +12,7 @@ import core.exceptions.ChecksumIsNotEqual;
 import core.exceptions.EmptyInput;
 import core.exceptions.ErrorInput;
 import core.messages.ConnectionRequest;
-import core.messages.FIXMessage;
+import core.messages.FixMessage;
 import core.messages.Message;
 import core.messages.MessageSellOrBuy;
 import io.netty.bootstrap.Bootstrap;
@@ -95,7 +95,7 @@ public class Client implements Runnable {
 
 		@Override
 		public void channelRead(ChannelHandlerContext context, Object msg) {
-			FIXMessage message = (FIXMessage) msg;
+			FixMessage message = (FixMessage) msg;
 			if (message.getMessageType().equals(Message.Type.CONNECTION_REQUEST.toString())) {
 				ConnectionRequest request = (ConnectionRequest) msg;
 				clientID = request.getId();

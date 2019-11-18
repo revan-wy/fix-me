@@ -2,7 +2,7 @@ package core.messages;
 
 import core.MyChecksum;
 
-public class ConnectionRequest extends FIXMessage {
+public class ConnectionRequest extends FixMessage {
 	private int		id;
 
 	public ConnectionRequest(String messageType) {

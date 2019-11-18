@@ -4,7 +4,7 @@ import java.nio.charset.Charset;
 import java.util.List;
 
 import core.messages.ConnectionRequest;
-import core.messages.FIXMessage;
+import core.messages.FixMessage;
 import core.messages.Message;
 import core.messages.MessageSellOrBuy;
 import io.netty.buffer.ByteBuf;
@@ -16,7 +16,7 @@ public class Decoder extends ReplayingDecoder<Object> {
 
 	@Override
 	protected void decode(ChannelHandlerContext ctx, ByteBuf in, List<Object> out) throws Exception {
-		FIXMessage msg = new FIXMessage();
+		FixMessage msg = new FixMessage();
 		msg.setMessageType(in.readCharSequence(in.readInt(), charset).toString());
 		if (msg.getMessageType().equals(Message.Type.CONNECTION_REQUEST.toString())) {
 			ConnectionRequest ret = new ConnectionRequest();

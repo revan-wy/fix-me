@@ -2,7 +2,7 @@ package core.messages;
 
 import core.MyChecksum;
 
-public class MessageSellOrBuy extends FIXMessage {
+public class MessageSellOrBuy extends FixMessage {
 	private int		actionLength;
 	private String	messageAction;
 	private int		id;
