@@ -22,3 +22,5 @@ public class AcceptConnectionEncoder extends MessageToByteEncoder<MessageAcceptC
 		}
 	}
 }
+
+// TODO
