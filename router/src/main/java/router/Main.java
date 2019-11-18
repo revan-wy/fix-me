@@ -6,12 +6,10 @@ import java.io.InputStreamReader;
 
 public class Main {
 	public static void main(String[] args) {
-		Router brokerServer = new Router(Router.BROKER_SERVER);
-		Thread brokerServerThread = new Thread(brokerServer);
-		brokerServerThread.start();
-		Router marketServer = new Router(Router.MARKET_SERVER);
-		Thread marketServerThread = new Thread(marketServer);
-		marketServerThread.start();
+		Router brokerRouter = new Router(Router.BROKER_PORT);
+		new Thread(brokerRouter).start();
+		Router marketServer = new Router(Router.MARKET_PORT);
+		new Thread(marketServer).start();
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 		String command;
 		while (true) {
@@ -22,7 +20,7 @@ public class Main {
 				System.err.println(e.getMessage());
 			}
 			if (command != null && command.toLowerCase().equals("exit")) {
-				brokerServer.shutDown();
+				brokerRouter.shutDown();
 				marketServer.shutDown();
 				break;
 			}

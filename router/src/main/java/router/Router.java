@@ -16,8 +16,8 @@ import java.util.HashMap;
 
 public class Router implements Runnable {
 	private static HashMap<Integer, ChannelHandlerContext> routingTable = new HashMap<>();
-	static final int MARKET_SERVER = 5001;
-	static final int BROKER_SERVER = 5000;
+	static final int MARKET_PORT = 5001;
+	static final int BROKER_PORT = 5000;
 	private EventLoopGroup bossGroup;
 	private EventLoopGroup workerGroup;
 	private int serverType;
@@ -32,11 +32,11 @@ public class Router implements Runnable {
 	}
 
 	private String brokerOrMarketString() {
-		return serverType == MARKET_SERVER ? "market" : "broker";
+		return serverType == MARKET_PORT ? "market" : "broker";
 	}
 
 	private boolean brokerOrMarketBool() {
-		return serverType != MARKET_SERVER;
+		return serverType != MARKET_PORT;
 	}
 
 	private void createServer(int port) {
