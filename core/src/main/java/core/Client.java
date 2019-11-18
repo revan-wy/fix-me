@@ -93,31 +93,29 @@ public class Client implements Runnable {
 			context.writeAndFlush(message);
 		}
 
-		// TODO
-
 		@Override
-		public void channelRead(ChannelHandlerContext ctx, Object msg) {
+		public void channelRead(ChannelHandlerContext context, Object msg) {
 			FIXMessage message = (FIXMessage) msg;
 			if (message.getMessageType().equals(Message.Type.CONNECTION_REQUEST.toString())) {
-				ConnectionRequest ret = (ConnectionRequest) msg;
-				clientID = ret.getId();
-				System.out.println("Connection with router established. ID: " + clientID);
+				ConnectionRequest request = (ConnectionRequest) msg;
+				clientID = request.getId();
+				System.out.println("Client connected to router with ID: " + clientID);
 			} else if (message.getMessageType().equals(Message.Type.BUY.toString())
 					|| message.getMessageType().equals(Message.Type.SELL.toString())) {
-				MessageSellOrBuy ret = (MessageSellOrBuy) msg;
+				MessageSellOrBuy request = (MessageSellOrBuy) msg;
 				try {
-					if (!ret.createMyChecksum().equals(ret.getChecksum()))
+					if (!request.createMyChecksum().equals(request.getChecksum()))
 						throw new ChecksumIsNotEqual();
 				} catch (Exception e) {
 					System.out.println(e.getMessage());
 					return;
 				}
-				if (checkForBrokerAnswerFromMarket(ret))
+				if (checkForBrokerAnswerFromMarket(request))
 					return;
 				if (message.getMessageType().equals(Message.Type.SELL.toString()))
-					marketForSellRequestLogic(ctx, ret);
+					marketForSellRequestLogic(context, request);
 				else
-					marketForBuyRequestLogic(ctx, ret);
+					marketForBuyRequestLogic(context, request);
 			}
 		}
 
