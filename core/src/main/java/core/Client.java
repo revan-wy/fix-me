@@ -149,24 +149,18 @@ public class Client implements Runnable {
 			context.writeAndFlush(message);
 		}
 
-		private void marketBuyOrderHandler(ChannelHandlerContext ctx, BuyOrSellOrder ret) {
+		private void marketBuyOrderHandler(ChannelHandlerContext context, BuyOrSellOrder message) {
 			Random random = new Random();
-			int randomInt = random.nextInt(100);
-			if (randomInt >= 0 && randomInt < 20) {
-				System.out.println("REJECT. Cause: no such instrument on market!");
-				ret.setMessageAction(Message.Action.REJECTED.toString());
-			} else if (randomInt >= 20 && randomInt < 40) {
-				System.out.println("REJECT. Cause: not enough amount of such instrument on market!");
-				ret.setMessageAction(Message.Action.REJECTED.toString());
+			if (random.nextBoolean()) {
+				System.out.println("Buy order rejected.");
+				message.setMessageAction(Message.Action.REJECTED.toString());
 			} else {
-				System.out.println("EXECUTE. Thank you for buying!");
-				ret.setMessageAction(Message.Action.EXECUTED.toString());
+				System.out.println("Buy order successfully executed.");
+				message.setMessageAction(Message.Action.EXECUTED.toString());
 			}
-			ret.updateChecksum();
-			ctx.writeAndFlush(ret);
+			message.updateChecksum();
+			context.writeAndFlush(message);
 		}
-
-		// TODO
 
 		private void channelWrite(ChannelHandlerContext ctx) {
 			try {
