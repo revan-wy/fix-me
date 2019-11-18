@@ -1,57 +1,64 @@
 package broker;
 
+import java.io.IOException;
 import java.util.Random;
 import java.util.Scanner;
 
 import core.messages.MessageSellOrBuy;
 
-public class BrokerLogic{
+public class BrokerLogic {
     int validation;
 
     BrokerLogic() {
     }
 
-    public void brokerLoop() {
+    public void brokerLoop() throws IOException {
         MessageSellOrBuy message;
         Scanner scan = new Scanner(System.in);
         String command;
+        int marketId = 0;
         int validation = 0;
         while (validation == 0) {
             printMenue();
             command = scan.nextLine();
             switch (command) {
             case "1":
-                message = new MessageSellOrBuy("Buy Message", "BUY", 1212, 1212, randInstrument(), randQuantity(), randPrice());
-                System.out.println("Buy command signaled");
-                System.out.println("MESSAGE: Type=" + message.getMessageType() + " | Action=" + message.getMessageAction() + 
-                                    " | MarketID=" + message.getMarketId() + " | ID=" + message.getId() +
-                                    " | Instrument=" + message.getInstrument() + " | Quantity=" + message.getQuantity() + 
-                                    " | Price=" + message.getPrice());
+                System.out.println("Please input a market ID:");
+                try{marketId = scan.nextInt();}catch(Exception ex){
+                    System.out.println("Invalid Market ID");
+                    System.out.println("Press Any Key To Continue...");
+                    System.in.read();
+                    continue;}
+                message = new MessageSellOrBuy("Buy Message", "BUY", (marketId), 1212, randInstrument(), randQuantity(), randPrice());
+                System.out.println("Buy command signaled -> ["+marketId+"]");
+                System.out.println(message.toString());
                 System.out.println("Press Any Key To Continue...");
-                command = scan.nextLine();
+                try{System.in.read();}catch(Exception ex){ex.printStackTrace();}
                 break;
             case "2":
-            
-                message = new MessageSellOrBuy("Sell Message", "SELL", 1212, 1212, randInstrument(), randQuantity(), randPrice());
-                System.out.println("Sell command signaled");
-                System.out.println("MESSAGE: Type=" + message.getMessageType() + " | Action=" + message.getMessageAction() + 
-                                    " | MarketID=" + message.getMarketId() + " | ID=" + message.getId() +
-                                    " | Instrument=" + message.getInstrument() + " | Quantity=" + message.getQuantity() + 
-                                    " | Price=" + message.getPrice());
+                System.out.println("Please input a market ID:");
+                try{marketId = scan.nextInt();}catch(Exception ex){
+                    System.out.println("Invalid Market ID");
+                    System.out.println("Press Any Key To Continue...");
+                    System.in.read();
+                    continue;}
+                message = new MessageSellOrBuy("Sell Message", "SELL", (marketId), 1212, randInstrument(), randQuantity(), randPrice());
+                System.out.println("Sell command signaled to market -> ["+marketId+"]");
+                System.out.println(message.toString());
                 System.out.println("Press Any Key To Continue...");
-                command = scan.nextLine();
+                try{System.in.read();}catch(Exception ex){ex.printStackTrace();}
                 break;
             case "3":
                 validation = 1;
                 System.out.println("Exit command signaled");
                 System.out.println("Press Any Key To Continue...");
-                command = scan.nextLine();
+                scan.nextLine();
                 break;
             }
             // Write and Flush goes here
-            System.out.println("Write and flush goes here");
+            System.out.println("Write and Flush goes here");
         }
-        System.out.println("Broker loop exited");
+        System.out.println("Broker Loop Exited");
         scan.close();
     }
 
@@ -66,7 +73,7 @@ public class BrokerLogic{
         System.out.println("   |_|    |_/_/\\_\\           |_|  |_|\\___| |____/|_|  \\___/|_|\\_\\___|_|");
         System.out.println("   ________________________________________________________________________");
         System.out.println("  | Welcome to the Fix-Me Broker.                                          |");
-        System.out.println("  | The following commands are available, please use nuumbers 1, 2 or 3.   |");
+        System.out.println("  | The following commands are available, please use numbers 1, 2 or 3.    |");
         System.out.println("  |------------------------------------------------------------------------|");
         System.out.println("  |  1. | BUY a comodity from the market.                                  |");
         System.out.println("  |  2. | SELL a comodity to the market.                                   |");
@@ -90,12 +97,12 @@ public class BrokerLogic{
     }
 }
 
-//  ______ _             __  __        ____            _             
-// |  ____(_)           |  \/  |      |  _ \          | |            
-// | |__   ___  ________| \  / | ___  | |_) |_ __ ___ | | _____ _ __ 
-// |  __| | \ \/ /______| |\/| |/ _ \ |  _ <| '__/ _ \| |/ / _ \ '__|
-// | |    | |>  <       | |  | |  __/ | |_) | | | (_) |   <  __/ |   
-// |_|    |_/_/\_\      |_|  |_|\___| |____/|_|  \___/|_|\_\___|_|   
+//  ______ _                  __  __        ____            _             
+// |  ____(_)                |  \/  |      |  _ \          | |            
+// | |__   ___  ___  ______  | \  / | ___  | |_) |_ __ ___ | | _____ _ __ 
+// |  __| | \ \/ /  |______| | |\/| |/ _ \ |  _ <| '__/ _ \| |/ / _ \ '__| 
+// | |    | |>  <            | |  | |  __/ | |_) | | | (_) |   <  __/ |   
+// |_|    |_/_/\_\           |_|  |_|\___| |____/|_|  \___/|_|\_\___|_|   
                                                                   
                                                            
                                                                  

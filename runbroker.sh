@@ -1,1 +1,1 @@
-java -jar broker/target/broker-project.jar
+java -jar broker/target/broker-1-jar-with-dependencies.jar
