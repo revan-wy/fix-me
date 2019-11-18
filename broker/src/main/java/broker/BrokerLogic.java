@@ -31,6 +31,7 @@ public class BrokerLogic{
                 command = scan.nextLine();
                 break;
             case "2":
+            
                 message = new MessageSellOrBuy("Sell Message", "SELL", 1212, 1212, randInstrument(), randQuantity(), randPrice());
                 System.out.println("Sell command signaled");
                 System.out.println("MESSAGE: Type=" + message.getMessageType() + " | Action=" + message.getMessageAction() + 
@@ -57,12 +58,12 @@ public class BrokerLogic{
     private static void printMenue() {
         System.out.print("\033[H\033[2J");
         System.out.flush();
-        System.out.println("    ______ _             __  __        ____            _    ");
-        System.out.println("   |  ____(_)           |  \\/  |      |  _ \\          | |");
-        System.out.println("   | |__   ___  ________| \\  / | ___  | |_) |_ __ ___ | | _____ _ __ ");
-        System.out.println("   |  __| | \\ \\/ /______| |\\/| |/ _ \\ |  _ <| '__/ _ \\| |/ / _ \\ '__|");
-        System.out.println("   | |    | |>  <       | |  | |  __/ | |_) | | | (_) |   <  __/ |   ");
-        System.out.println("   |_|    |_/_/\\_\\      |_|  |_|\\___| |____/|_|  \\___/|_|\\_\\___|_|");
+        System.out.println("    ______ _                  __  __        ____            _    ");
+        System.out.println("   |  ____(_)                |  \\/  |      |  _ \\          | |");
+        System.out.println("   | |__   ___  ___  ______  | \\  / | ___  | |_) |_ __ ___ | | _____ _ __ ");
+        System.out.println("   |  __| | \\ \\/ /  |______| | |\\/| |/ _ \\ |  _ <| '__/ _ \\| |/ / _ \\ '__|");
+        System.out.println("   | |    | |>  <            | |  | |  __/ | |_) | | | (_) |   <  __/ |   ");
+        System.out.println("   |_|    |_/_/\\_\\           |_|  |_|\\___| |____/|_|  \\___/|_|\\_\\___|_|");
         System.out.println("   ________________________________________________________________________");
         System.out.println("  | Welcome to the Fix-Me Broker.                                          |");
         System.out.println("  | The following commands are available, please use nuumbers 1, 2 or 3.   |");
@@ -70,7 +71,7 @@ public class BrokerLogic{
         System.out.println("  |  1. | BUY a comodity from the market.                                  |");
         System.out.println("  |  2. | SELL a comodity to the market.                                   |");
         System.out.println("  |  3. | EXIT the Fix-Me Broker.                                          |");
-        System.out.println("   ________________________________________________________________________");
+        System.out.println("  |________________________________________________________________________|");
     }
 
     private static int randPrice(){
@@ -79,7 +80,7 @@ public class BrokerLogic{
     }
 
     private static String randInstrument(){
-        String[] arr = {"GOLD", "OIl", "AVOCADOS", "DIAMONDS"};
+        String[] arr = {"GOLD", "OIl", "AVOCADOS", "DIAMONDS", "COFFEE"};
         Random rand = new Random();
         return(arr[rand.nextInt(4)]);
     }
