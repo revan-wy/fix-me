@@ -12,4 +12,5 @@ public class MyChecksum {
 
 }
 
+// TODO rethink project structure
 // TODO format
