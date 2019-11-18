@@ -36,9 +36,13 @@ public class Client implements Runnable {
 	private EventLoopGroup workerGroup;
 	private int clientID;
 
+	// TODO
+
 	public Client(Client.Type clientName) {
 		this.clientType = clientName;
 	}
+
+	// TODO
 
 	public static void inputHandler(Client client) {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -55,6 +59,8 @@ public class Client implements Runnable {
 			}
 		}
 	}
+
+	// TODO
 
 	@Override
 	public void run() {
@@ -81,9 +87,13 @@ public class Client implements Runnable {
 		}
 	}
 
+	// TODO
+
 	public void shutdown() {
 		workerGroup.shutdownGracefully();
 	}
+
+	// TODO
 
 	class ClientHandler extends ChannelInboundHandlerAdapter {
 		@Override
@@ -92,6 +102,8 @@ public class Client implements Runnable {
 			ConnectionRequest message = new ConnectionRequest(Message.Type.CONNECTION_REQUEST.toString(), 0, 0);
 			context.writeAndFlush(message);
 		}
+
+		// TODO
 
 		@Override
 		public void channelRead(ChannelHandlerContext ctx, Object msg) {
@@ -119,6 +131,8 @@ public class Client implements Runnable {
 			}
 		}
 
+		// TODO
+
 		private boolean checkForBrokerAnswerFromMarket(MessageSellOrBuy ret) {
 			if (ret.getMessageAction().equals(Message.Action.EXECUTE.toString())
 					|| ret.getMessageAction().equals(Message.Action.REJECT.toString())) {
@@ -127,6 +141,8 @@ public class Client implements Runnable {
 			}
 			return false;
 		}
+
+		// TODO
 
 		private void marketForSellRequestLogic(ChannelHandlerContext ctx, MessageSellOrBuy ret) {
 			Random random = new Random();
@@ -140,6 +156,8 @@ public class Client implements Runnable {
 			ret.setNewChecksum();
 			ctx.writeAndFlush(ret);
 		}
+
+		// TODO
 
 		private void marketForBuyRequestLogic(ChannelHandlerContext ctx, MessageSellOrBuy ret) {
 			Random random = new Random();
@@ -158,6 +176,8 @@ public class Client implements Runnable {
 			ctx.writeAndFlush(ret);
 		}
 
+		// TODO
+
 		private void channelWrite(ChannelHandlerContext ctx) {
 			try {
 				String input = getTextFromUser();
@@ -172,6 +192,8 @@ public class Client implements Runnable {
 				channelWrite(ctx);
 			}
 		}
+
+		// TODO
 
 		private void handleBrokerWrite(ChannelHandlerContext ctx, String s) throws Exception {
 			String[] split = s.split("\\s+");
@@ -195,6 +217,8 @@ public class Client implements Runnable {
 			System.out.println("Sending request to router..");
 		}
 
+		// TODO
+
 		private int checkID(String id) throws Exception {
 			int iID = Integer.valueOf(id);
 			if (id.length() != 6)
@@ -202,11 +226,15 @@ public class Client implements Runnable {
 			return iID;
 		}
 
+		// TODO
+
 		@Override
 		public void channelReadComplete(ChannelHandlerContext ctx) {
 			if (clientType == Client.Type.BROKER)
 				channelWrite(ctx);
 		}
+
+		// TODO
 
 		private String getTextFromUser() throws Exception {
 			System.out.println(
@@ -217,4 +245,5 @@ public class Client implements Runnable {
 	}
 }
 
+// TODO alphabetise
 // TODO format
