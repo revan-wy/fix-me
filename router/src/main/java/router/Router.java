@@ -5,7 +5,7 @@ import java.util.HashMap;
 import core.decoders.Decoder;
 import core.encoders.AcceptConnectionEncoder;
 import core.encoders.BuyOrSellEncoder;
-import core.exceptions.ChecksumIsNotEqual;
+import core.exceptions.ChecksumIsInvalid;
 import core.exceptions.ClientNotInRoutingTable;
 import core.messages.BuyOrSellOrder;
 import core.messages.ConnectionRequest;
@@ -112,7 +112,7 @@ public class Router implements Runnable {
 
 	public void checkForErrors(BuyOrSellOrder response) throws Exception {
 		if (!response.createMyChecksum().equals(response.getChecksum())) {
-			throw new ChecksumIsNotEqual();
+			throw new ChecksumIsInvalid();
 		}
 		if (!checkIfInTable(response.getMarketId())) {
 			throw new ClientNotInRoutingTable();
@@ -123,7 +123,7 @@ public class Router implements Runnable {
 		if (ret.getMessageAction().equals(Message.Action.EXECUTE.toString())
 				|| ret.getMessageAction().equals(Message.Action.REJECT.toString())) {
 			if (!ret.createMyChecksum().equals(ret.getChecksum()))
-				throw new ChecksumIsNotEqual();
+				throw new ChecksumIsInvalid();
 			getFromTableById(ret.getId()).writeAndFlush(ret);
 			return true;
 		}

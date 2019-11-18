@@ -8,7 +8,7 @@ import java.util.Random;
 import core.decoders.Decoder;
 import core.encoders.AcceptConnectionEncoder;
 import core.encoders.BuyOrSellEncoder;
-import core.exceptions.ChecksumIsNotEqual;
+import core.exceptions.ChecksumIsInvalid;
 import core.exceptions.EmptyInput;
 import core.exceptions.ErrorInput;
 import core.messages.BuyOrSellOrder;
@@ -99,10 +99,10 @@ public class Client implements Runnable {
 			if (message.getMessageType().equals(Message.Type.CONNECTION_REQUEST.toString())) {
 				announceNewConnection(msg);
 			} else if (messageIsBuyOrSell(message)) {
-				BuyOrSellOrder request = (BuyOrSellOrder) msg;// TODO
+				BuyOrSellOrder request = (BuyOrSellOrder) msg;
 				try {
 					if (!request.createMyChecksum().equals(request.getChecksum()))
-						throw new ChecksumIsNotEqual();// TODO
+						throw new ChecksumIsInvalid();// TODO
 				} catch (Exception e) {
 					System.out.println(e.getMessage());
 					return;
