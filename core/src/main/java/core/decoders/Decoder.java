@@ -1,6 +1,9 @@
 package core.decoders;
 
-import core.messages.FixMessage;
+import java.nio.charset.Charset;
+import java.util.List;
+
+import core.messages.FIXMessage;
 import core.messages.MessageAcceptConnection;
 import core.messages.MessageSellOrBuy;
 import core.messages.MessageTypes;
@@ -8,15 +11,12 @@ import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.ReplayingDecoder;
 
-import java.nio.charset.Charset;
-import java.util.List;
-
 public class Decoder extends ReplayingDecoder<Object> {
 	private final Charset charset = Charset.forName("UTF-8");
 
 	@Override
 	protected void decode(ChannelHandlerContext ctx, ByteBuf in, List<Object> out) throws Exception {
-		FixMessage msg = new FixMessage();
+		FIXMessage msg = new FIXMessage();
 		msg.setMessageType(in.readCharSequence(in.readInt(), charset).toString());
 		if (msg.getMessageType().equals(MessageTypes.MESSAGE_ACCEPT_CONNECTION.toString())) {
 			MessageAcceptConnection ret = new MessageAcceptConnection();
@@ -34,7 +34,7 @@ public class Decoder extends ReplayingDecoder<Object> {
 			ret.setMarketId(in.readInt());
 			ret.setQuantity(in.readInt());
 			ret.setPrice(in.readInt());
-			ret.setNewCheckSum();
+			ret.setNewChecksum();
 			out.add(ret);
 		}
 	}

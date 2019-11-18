@@ -1,11 +1,11 @@
-package com.router;
+package router;
 
-import com.core.decoders.Decoder;
-import com.core.encoders.AcceptConnectionEncoder;
-import com.core.encoders.SellOrBuyEncoder;
-import com.core.exceptions.ChecksumIsNotEqual;
-import com.core.exceptions.ClientNotInRoutingTable;
-import com.core.messages.*;
+import core.decoders.Decoder;
+import core.encoders.AcceptConnectionEncoder;
+import core.encoders.SellOrBuyEncoder;
+import core.exceptions.ChecksumIsNotEqual;
+import core.exceptions.ClientNotInRoutingTable;
+import core.messages.*;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.*;
 import io.netty.channel.nio.NioEventLoopGroup;
@@ -89,7 +89,7 @@ public class Server implements Runnable {
 				} catch (Exception e) {
 					System.out.println(e.getMessage());
 					ret.setMessageAction(MessageTypes.MESSAGE_REJECT.toString());
-					ret.setNewCheckSum();
+					ret.setNewChecksum();
 					ctx.writeAndFlush(ret);
 				}
 			}
@@ -101,23 +101,25 @@ public class Server implements Runnable {
 		String newID = ctx.channel().remoteAddress().toString().substring(11);
 		newID = newID.concat(brokerOrMarketBool() ? "2" : "3");
 		ret.setId(Integer.valueOf(newID));
-		ret.setNewCheckSum();
+		ret.setNewChecksum();
 		ctx.writeAndFlush(ret);
 		routingTable.put(ret.getId(), ctx);
 		System.out.println("Accepted a connection from " + brokerOrMarketString() + ": " + newID);
 	}
 
-	private void checkForErrors(MessageSellOrBuy ret) throws Exception {
-		if (!ret.getMsgMD5().equals(ret.getChecksum()))
+	public void checkForErrors(MessageSellOrBuy response) throws Exception {
+		if (!response.createMyChecksum().equals(response.getChecksum())) {
 			throw new ChecksumIsNotEqual();
-		if (!checkIfInTable(ret.getMarketId()))
+		}
+		if (!checkIfInTable(response.getMarketId())) {
 			throw new ClientNotInRoutingTable();
+		}
 	}
 
 	private boolean checkIfMessageIsRejectedOrExecuted(MessageSellOrBuy ret) throws Exception {
 		if (ret.getMessageAction().equals(MessageTypes.MESSAGE_EXECUTE.toString()) ||
 			ret.getMessageAction().equals(MessageTypes.MESSAGE_REJECT.toString())) {
-			if (!ret.getMsgMD5().equals(ret.getChecksum()))
+			if (!ret.createMyChecksum().equals(ret.getChecksum()))
 				throw new ChecksumIsNotEqual();
 			getFromTableById(ret.getId()).writeAndFlush(ret);
 			return true;

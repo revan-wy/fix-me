@@ -62,7 +62,7 @@ public class MessageSellOrBuy extends FIXMessage {
 		return instrumentLength;
 	}
 
-	public void setNewCheckSum() {
+	public void setNewChecksum() {
 		setChecksum(createMyChecksum());
 	}
 

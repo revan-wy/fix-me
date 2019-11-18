@@ -3,10 +3,11 @@ package router;
 import java.util.HashMap;
 
 import core.decoders.Decoder;
+import core.encoders.AcceptConnectionEncoder;
 import core.encoders.SellOrBuyEncoder;
 import core.exceptions.ChecksumIsNotEqual;
 import core.exceptions.ClientNotInRoutingTable;
-import core.messages.FixMessage;
+import core.messages.FIXMessage;
 import core.messages.MessageAcceptConnection;
 import core.messages.MessageSellOrBuy;
 import io.netty.bootstrap.ServerBootstrap;
@@ -31,7 +32,7 @@ public class Router implements Runnable {
 	}
 
 	public void acceptNewConnection(ChannelHandlerContext context, Object request) {
-		MessageAcceptConnection response = (MessageAcceptConnection)request;
+		MessageAcceptConnection response = (MessageAcceptConnection) request;
 		String newId = context.channel().remoteAddress().toString().substring(11);
 		newId = newId.concat(brokerOrMarketBool() ? "2" : "3");
 		response.setId(Integer.valueOf(newId));
@@ -57,14 +58,14 @@ public class Router implements Runnable {
 	private boolean checkIfInTable(int id) {
 		return routingTable.containsKey(id);
 	}
-	
+
 	public ChannelHandlerContext getFromTableById(int id) {
 		return routingTable.get(id);
 	}
 
 	public boolean messageIsFromMarket(MessageSellOrBuy response) throws Exception {
-		if ((response.getMessageAction().equals("MESSAGE_EXECUTE")) ||
-				(response.getMessageAction().equals("MESSAGE_REJECT"))) {
+		if ((response.getMessageAction().equals("MESSAGE_EXECUTE"))
+				|| (response.getMessageAction().equals("MESSAGE_REJECT"))) {
 			if (!response.createMyChecksum().equals(response.getChecksum())) {
 				throw new ChecksumIsNotEqual();
 			}
@@ -77,7 +78,7 @@ public class Router implements Runnable {
 	public class ProcessingHandler extends ChannelInboundHandlerAdapter {
 		@Override
 		public void channelRead(ChannelHandlerContext context, Object request) {
-			FixMessage message = (FixMessage)request;
+			FIXMessage message = (FIXMessage)request;
 			if (message.getMessageType().equals("MESSAGE_ACCEPT_CONNECTION")) {
 				acceptNewConnection(context, request);
 			} else if ((message.getMessageType().equals("MESSAGE_BUY")) ||
@@ -114,7 +115,7 @@ public class Router implements Runnable {
 							throws Exception {
 								ch.pipeline().addLast(
 									new Decoder(),
-									new NewConnectionEncoder(),
+									new AcceptConnectionEncoder(),
 									new SellOrBuyEncoder(),
 									new ProcessingHandler()
 							);

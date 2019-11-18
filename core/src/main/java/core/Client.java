@@ -129,7 +129,7 @@ public class Client implements Runnable {
 				System.out.println("REJECT. Cause: we don't want this instrument.");
 				ret.setMessageAction(MessageTypes.MESSAGE_REJECT.toString());
 			}
-			ret.setNewCheckSum();
+			ret.setNewChecksum();
 			ctx.writeAndFlush(ret);
 		}
 
@@ -146,7 +146,7 @@ public class Client implements Runnable {
 				System.out.println("EXECUTE. Thank you for buying!");
 				ret.setMessageAction(MessageTypes.MESSAGE_EXECUTE.toString());
 			}
-			ret.setNewCheckSum();
+			ret.setNewChecksum();
 			ctx.writeAndFlush(ret);
 		}
 
@@ -178,7 +178,7 @@ public class Client implements Runnable {
 				out = new MessageSellOrBuy(MessageTypes.MESSAGE_BUY.toString(), "-",marketID, uniqueID, instrument, quantity, price);
 			} else
 				throw new ErrorInput();
-			out.setNewCheckSum();
+			out.setNewChecksum();
 			ctx.writeAndFlush(out);
 			System.out.println("Sending request to router..");
 		}
