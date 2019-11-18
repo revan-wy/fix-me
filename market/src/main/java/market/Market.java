@@ -12,6 +12,6 @@ public class Market {
 		} catch (InterruptedException e) {
 			System.out.println(e.getMessage());
 		}
-		Client.handleInput(client);
+		Client.inputHandler(client);
 	}
 }

@@ -92,7 +92,7 @@ public class Server implements Runnable {
 	}
 
 	private void acceptNewConnection(ChannelHandlerContext ctx, Object msg) {
-		MessageAcceptConnection ret = (MessageAcceptConnection) msg;
+		ConnectionRequest ret = (ConnectionRequest) msg;
 		String newID = ctx.channel().remoteAddress().toString().substring(11);
 		newID = newID.concat(brokerOrMarketBool() ? "2" : "3");
 		ret.setId(Integer.valueOf(newID));

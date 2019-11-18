@@ -7,8 +7,8 @@ import core.encoders.AcceptConnectionEncoder;
 import core.encoders.SellOrBuyEncoder;
 import core.exceptions.ChecksumIsNotEqual;
 import core.exceptions.ClientNotInRoutingTable;
+import core.messages.ConnectionRequest;
 import core.messages.FIXMessage;
-import core.messages.MessageAcceptConnection;
 import core.messages.MessageSellOrBuy;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.ChannelFuture;
@@ -32,7 +32,7 @@ public class Router implements Runnable {
 	}
 
 	public void acceptNewConnection(ChannelHandlerContext context, Object request) {
-		MessageAcceptConnection response = (MessageAcceptConnection) request;
+		ConnectionRequest response = (ConnectionRequest) request;
 		String newId = context.channel().remoteAddress().toString().substring(11);
 		newId = newId.concat(brokerOrMarketBool() ? "2" : "3");
 		response.setId(Integer.valueOf(newId));

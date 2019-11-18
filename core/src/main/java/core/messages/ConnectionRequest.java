@@ -2,10 +2,10 @@ package core.messages;
 
 import core.MyChecksum;
 
-public class MessageAcceptConnection extends FIXMessage {
+public class ConnectionRequest extends FIXMessage {
 	private int		id;
 
-	public MessageAcceptConnection(String messageType, int marketId, int id) {
+	public ConnectionRequest(String messageType, int marketId, int id) {
 		super(messageType, marketId);
 		this.id = id;
 		StringBuilder checksumBuffer = new StringBuilder("");
@@ -13,7 +13,8 @@ public class MessageAcceptConnection extends FIXMessage {
 		setChecksum(MyChecksum.myChecksum(checksumBuffer));
 	}
 
-	public MessageAcceptConnection() {}
+	public ConnectionRequest() {
+	}
 
 	public int getId() {
 		return id;

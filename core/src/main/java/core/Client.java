@@ -11,9 +11,9 @@ import core.encoders.SellOrBuyEncoder;
 import core.exceptions.ChecksumIsNotEqual;
 import core.exceptions.EmptyInput;
 import core.exceptions.ErrorInput;
+import core.messages.ConnectionRequest;
 import core.messages.FIXMessage;
 import core.messages.Message;
-import core.messages.MessageAcceptConnection;
 import core.messages.MessageSellOrBuy;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.ChannelFuture;
@@ -27,32 +27,30 @@ import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioSocketChannel;
 
 public class Client implements Runnable {
-	
+
 	public enum Type {
-		BROKER,
-		MARKET
+		BROKER, MARKET
 	}
 
-	private Client.Type			clientName;
-	private EventLoopGroup	workerGroup;
-	private int				uniqueID;
+	private Client.Type clientType;
+	private EventLoopGroup workerGroup;
+	private int clientID;
 
 	public Client(Client.Type clientName) {
-		this.clientName = clientName;
+		this.clientType = clientName;
 	}
 
-	public static void handleInput(Client client) {
+	public static void inputHandler(Client client) {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-		String command;
+		String input = "";
 		while (true) {
-			command = null;
 			try {
-				command = br.readLine();
+				input = br.readLine();
 			} catch (IOException e) {
 				System.err.println(e.getMessage());
 			}
-			if (command != null && command.toLowerCase().equals("exit")) {
-				client.shutDown();
+			if (input != "" && input.toLowerCase().equals("exit")) {
+				client.shutdown();
 				break;
 			}
 		}
@@ -62,54 +60,49 @@ public class Client implements Runnable {
 	public void run() {
 		String host = "localhost";
 		int port = 5000;
-		if (clientName == Client.Type.MARKET)
+		if (clientType == Client.Type.MARKET)
 			port = 5001;
 		workerGroup = new NioEventLoopGroup();
 		try {
 			Bootstrap b = new Bootstrap();
-			b.group(workerGroup)
-			.channel(NioSocketChannel.class)
-			.handler(new ChannelInitializer<SocketChannel>() {
+			b.group(workerGroup).channel(NioSocketChannel.class).handler(new ChannelInitializer<SocketChannel>() {
 				@Override
 				public void initChannel(SocketChannel ch) throws Exception {
-					ch.pipeline().addLast(
-							new Decoder(),
-							new AcceptConnectionEncoder(),
-							new SellOrBuyEncoder(),
+					ch.pipeline().addLast(new Decoder(), new AcceptConnectionEncoder(), new SellOrBuyEncoder(),
 							new ClientHandler());
 				}
 			}).option(ChannelOption.SO_KEEPALIVE, true);
 			ChannelFuture f = b.connect(host, port).sync();
 			f.channel().closeFuture().sync();
 		} catch (InterruptedException e) {
-			e.printStackTrace();
+			System.out.println(e.getMessage());
 		} finally {
-			shutDown();
+			shutdown();
 		}
 	}
 
-	public void shutDown() {
+	public void shutdown() {
 		workerGroup.shutdownGracefully();
 	}
 
 	class ClientHandler extends ChannelInboundHandlerAdapter {
 		@Override
-		public void channelActive(ChannelHandlerContext ctx) throws Exception {
-			System.out.println(clientName + " is connecting to router..");
-			MessageAcceptConnection msg = new MessageAcceptConnection(Message.Type.CONNECTION_REQUEST.toString(), 0, 0);
-			ctx.writeAndFlush(msg);
+		public void channelActive(ChannelHandlerContext context) throws Exception {
+			System.out.println("Connection request sent to router.");
+			ConnectionRequest message = new ConnectionRequest(Message.Type.CONNECTION_REQUEST.toString(), 0, 0);
+			context.writeAndFlush(message);
 		}
 
 		@Override
 		public void channelRead(ChannelHandlerContext ctx, Object msg) {
-			FIXMessage message = (FIXMessage)msg;
+			FIXMessage message = (FIXMessage) msg;
 			if (message.getMessageType().equals(Message.Type.CONNECTION_REQUEST.toString())) {
-				MessageAcceptConnection ret = (MessageAcceptConnection)msg;
-				uniqueID = ret.getId();
-				System.out.println("Connection with router established. ID: " + uniqueID);
-			} else if (	message.getMessageType().equals(Message.Type.BUY.toString()) ||
-						message.getMessageType().equals(Message.Type.SELL.toString())) {
-				MessageSellOrBuy ret = (MessageSellOrBuy)msg;
+				ConnectionRequest ret = (ConnectionRequest) msg;
+				clientID = ret.getId();
+				System.out.println("Connection with router established. ID: " + clientID);
+			} else if (message.getMessageType().equals(Message.Type.BUY.toString())
+					|| message.getMessageType().equals(Message.Type.SELL.toString())) {
+				MessageSellOrBuy ret = (MessageSellOrBuy) msg;
 				try {
 					if (!ret.createMyChecksum().equals(ret.getChecksum()))
 						throw new ChecksumIsNotEqual();
@@ -127,8 +120,8 @@ public class Client implements Runnable {
 		}
 
 		private boolean checkForBrokerAnswerFromMarket(MessageSellOrBuy ret) {
-			if (ret.getMessageAction().equals(Message.Action.EXECUTE.toString()) ||
-					ret.getMessageAction().equals(Message.Action.REJECT.toString())) {
+			if (ret.getMessageAction().equals(Message.Action.EXECUTE.toString())
+					|| ret.getMessageAction().equals(Message.Action.REJECT.toString())) {
 				System.out.println("Answer for your request: " + ret.getMessageAction());
 				return true;
 			}
@@ -171,8 +164,8 @@ public class Client implements Runnable {
 				if (input.length() == 0)
 					throw new EmptyInput();
 				else if (input.toLowerCase().equals("exit"))
-					shutDown();
-				else if (clientName == Client.Type.BROKER)
+					shutdown();
+				else if (clientType == Client.Type.BROKER)
 					handleBrokerWrite(ctx, input);
 			} catch (Exception e) {
 				System.out.println(e.getMessage());
@@ -190,9 +183,11 @@ public class Client implements Runnable {
 			int quantity = Integer.valueOf(split[3]);
 			int price = Integer.valueOf(split[4]);
 			if (split[0].toLowerCase().equals("sell")) {
-				out = new MessageSellOrBuy(Message.Type.SELL.toString(), "-",marketID, uniqueID, instrument, quantity, price);
+				out = new MessageSellOrBuy(Message.Type.SELL.toString(), "-", marketID, clientID, instrument, quantity,
+						price);
 			} else if (split[0].toLowerCase().equals("buy")) {
-				out = new MessageSellOrBuy(Message.Type.BUY.toString(), "-",marketID, uniqueID, instrument, quantity, price);
+				out = new MessageSellOrBuy(Message.Type.BUY.toString(), "-", marketID, clientID, instrument, quantity,
+						price);
 			} else
 				throw new ErrorInput();
 			out.setNewChecksum();
@@ -209,12 +204,13 @@ public class Client implements Runnable {
 
 		@Override
 		public void channelReadComplete(ChannelHandlerContext ctx) {
-			if (clientName == Client.Type.BROKER)
+			if (clientType == Client.Type.BROKER)
 				channelWrite(ctx);
 		}
 
 		private String getTextFromUser() throws Exception {
-			System.out.println("Enter request message of type: [sell || buy] [market id] [instrument] [quantity] [price]");
+			System.out.println(
+					"Enter request message of type: [sell || buy] [market id] [instrument] [quantity] [price]");
 			BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 			return br.readLine();
 		}

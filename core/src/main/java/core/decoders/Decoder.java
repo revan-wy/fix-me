@@ -3,9 +3,9 @@ package core.decoders;
 import java.nio.charset.Charset;
 import java.util.List;
 
+import core.messages.ConnectionRequest;
 import core.messages.FIXMessage;
 import core.messages.Message;
-import core.messages.MessageAcceptConnection;
 import core.messages.MessageSellOrBuy;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
@@ -19,7 +19,7 @@ public class Decoder extends ReplayingDecoder<Object> {
 		FIXMessage msg = new FIXMessage();
 		msg.setMessageType(in.readCharSequence(in.readInt(), charset).toString());
 		if (msg.getMessageType().equals(Message.Type.CONNECTION_REQUEST.toString())) {
-			MessageAcceptConnection ret = new MessageAcceptConnection();
+			ConnectionRequest ret = new ConnectionRequest();
 			ret.setMessageType(msg.getMessageType());
 			ret.setId(in.readInt());
 			ret.setChecksum(in.readCharSequence(in.readInt(), charset).toString());
