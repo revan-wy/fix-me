@@ -6,10 +6,10 @@ import java.io.InputStreamReader;
 
 public class Main {
 	public static void main(String[] args) {
-		Server brokerServer = new Server(Server.BROKER_SERVER);
+		Router brokerServer = new Router(Router.BROKER_SERVER);
 		Thread brokerServerThread = new Thread(brokerServer);
 		brokerServerThread.start();
-		Server marketServer = new Server(Server.MARKET_SERVER);
+		Router marketServer = new Router(Router.MARKET_SERVER);
 		Thread marketServerThread = new Thread(marketServer);
 		marketServerThread.start();
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
