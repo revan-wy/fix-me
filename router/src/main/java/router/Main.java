@@ -8,24 +8,21 @@ public class Main {
 	public static void main(String[] args) {
 		Router brokerRouter = new Router(Router.BROKER_PORT);
 		new Thread(brokerRouter).start();
-		Router marketServer = new Router(Router.MARKET_PORT);
-		new Thread(marketServer).start();
+		Router marketRouter = new Router(Router.MARKET_PORT);
+		new Thread(marketRouter).start();
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-		String command;
+		String command = "";
 		while (true) {
-			command = null;
 			try {
 				command = br.readLine();
 			} catch (IOException e) {
-				System.err.println(e.getMessage());
+				System.out.println(e.getMessage());
 			}
-			if (command != null && command.toLowerCase().equals("exit")) {
+			if (command != "" && command.toLowerCase().equals("exit")) {
 				brokerRouter.shutDown();
-				marketServer.shutDown();
+				marketRouter.shutDown();
 				break;
 			}
 		}
 	}
 }
-
-// TODO format
