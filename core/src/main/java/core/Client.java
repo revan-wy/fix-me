@@ -27,22 +27,23 @@ import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioSocketChannel;
 
 public class Client implements Runnable {
+	private Client.Type clientType;
+	private EventLoopGroup workerGroup;
+	private int clientID;
+	private String host = "localhost";
+	private int port;
 
 	public enum Type {
 		BROKER, MARKET
 	}
 
-	private Client.Type clientType;
-	private EventLoopGroup workerGroup;
-	private int clientID;
+	public Client(Client.Type clientType) {
+		this.clientType = clientType;
+		this.port = 5000;
+		if (clientType == Client.Type.MARKET)
+			port = 5001;
 
-	// TODO
-
-	public Client(Client.Type clientName) {
-		this.clientType = clientName;
 	}
-
-	// TODO
 
 	public static void inputHandler(Client client) {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -60,14 +61,8 @@ public class Client implements Runnable {
 		}
 	}
 
-	// TODO
-
 	@Override
 	public void run() {
-		String host = "localhost";
-		int port = 5000;
-		if (clientType == Client.Type.MARKET)
-			port = 5001;
 		workerGroup = new NioEventLoopGroup();
 		try {
 			Bootstrap b = new Bootstrap();
