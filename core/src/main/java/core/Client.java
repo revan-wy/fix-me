@@ -6,7 +6,10 @@ import core.encoders.SellOrBuyEncoder;
 import core.exceptions.ChecksumIsNotEqual;
 import core.exceptions.EmptyInput;
 import core.exceptions.ErrorInput;
-import core.messages.*;
+import core.messages.FIXMessage;
+import core.messages.MessageAcceptConnection;
+import core.messages.MessageSellOrBuy;
+import core.messages.MessageTypes;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.*;
 import io.netty.channel.nio.NioEventLoopGroup;
@@ -73,7 +76,7 @@ public class Client implements Runnable {
 		}
 	}
 
-	private void shutDown() {
+	public void shutDown() {
 		workerGroup.shutdownGracefully();
 	}
 
@@ -155,6 +158,8 @@ public class Client implements Runnable {
 				String input = getTextFromUser();
 				if (input.length() == 0)
 					throw new EmptyInput();
+				else if (input.toLowerCase().equals("exit"))
+					shutDown();
 				else if (clientName.equals("Broker"))
 					handleBrokerWrite(ctx, input);
 			} catch (Exception e) {

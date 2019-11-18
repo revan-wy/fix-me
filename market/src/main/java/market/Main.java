@@ -12,6 +12,6 @@ public class Main {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        Client.handleInput(client);
+		Client.handleInput(client);
     }
 }
