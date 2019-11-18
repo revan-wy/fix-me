@@ -11,10 +11,10 @@ import core.encoders.SellOrBuyEncoder;
 import core.exceptions.ChecksumIsNotEqual;
 import core.exceptions.EmptyInput;
 import core.exceptions.ErrorInput;
+import core.messages.BuyOrSellOrder;
 import core.messages.ConnectionRequest;
 import core.messages.FixMessage;
 import core.messages.Message;
-import core.messages.MessageSellOrBuy;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelHandlerContext;
@@ -97,31 +97,39 @@ public class Client implements Runnable {
 		public void channelRead(ChannelHandlerContext context, Object msg) {
 			FixMessage message = (FixMessage) msg;
 			if (message.getMessageType().equals(Message.Type.CONNECTION_REQUEST.toString())) {
-				ConnectionRequest request = (ConnectionRequest) msg;
-				clientID = request.getId();
-				System.out.println("Client connected to router with ID: " + clientID);
-			} else if (message.getMessageType().equals(Message.Type.BUY.toString())
-					|| message.getMessageType().equals(Message.Type.SELL.toString())) {
-				MessageSellOrBuy request = (MessageSellOrBuy) msg;
+				announceNewConnection(msg);
+			} else if (messageIsBuyOrSell(message)) {
+				BuyOrSellOrder request = (BuyOrSellOrder) msg;// TODO
 				try {
 					if (!request.createMyChecksum().equals(request.getChecksum()))
-						throw new ChecksumIsNotEqual();
+						throw new ChecksumIsNotEqual();// TODO
 				} catch (Exception e) {
 					System.out.println(e.getMessage());
 					return;
 				}
-				if (checkForBrokerAnswerFromMarket(request))
+				if (checkForBrokerAnswerFromMarket(request))// TODO
 					return;
 				if (message.getMessageType().equals(Message.Type.SELL.toString()))
-					marketForSellRequestLogic(context, request);
+					marketForSellRequestLogic(context, request);// TODO
 				else
-					marketForBuyRequestLogic(context, request);
+					marketForBuyRequestLogic(context, request);// TODO 
 			}
+		}
+
+		private boolean messageIsBuyOrSell(FixMessage message) {
+			return message.getMessageType().equals(Message.Type.BUY.toString())
+					|| message.getMessageType().equals(Message.Type.SELL.toString());
 		}
 
 		// TODO
 
-		private boolean checkForBrokerAnswerFromMarket(MessageSellOrBuy ret) {
+		private void announceNewConnection(Object msg) {
+			ConnectionRequest request = (ConnectionRequest) msg;
+			clientID = request.getId();
+			System.out.println("Client connected to router with ID: " + clientID);
+		}
+
+		private boolean checkForBrokerAnswerFromMarket(BuyOrSellOrder ret) {
 			if (ret.getMessageAction().equals(Message.Action.EXECUTE.toString())
 					|| ret.getMessageAction().equals(Message.Action.REJECT.toString())) {
 				System.out.println("Answer for your request: " + ret.getMessageAction());
@@ -132,7 +140,7 @@ public class Client implements Runnable {
 
 		// TODO
 
-		private void marketForSellRequestLogic(ChannelHandlerContext ctx, MessageSellOrBuy ret) {
+		private void marketForSellRequestLogic(ChannelHandlerContext ctx, BuyOrSellOrder ret) {
 			Random random = new Random();
 			if (random.nextBoolean()) {
 				System.out.println("EXECUTE. Thank you for this instrument!");
@@ -147,7 +155,7 @@ public class Client implements Runnable {
 
 		// TODO
 
-		private void marketForBuyRequestLogic(ChannelHandlerContext ctx, MessageSellOrBuy ret) {
+		private void marketForBuyRequestLogic(ChannelHandlerContext ctx, BuyOrSellOrder ret) {
 			Random random = new Random();
 			int randomInt = random.nextInt(100);
 			if (randomInt >= 0 && randomInt < 20) {
@@ -187,16 +195,16 @@ public class Client implements Runnable {
 			String[] split = s.split("\\s+");
 			if (split.length != 5)
 				throw new ErrorInput();
-			MessageSellOrBuy out;
+			BuyOrSellOrder out;
 			int marketID = checkID(split[1]);
 			String instrument = split[2];
 			int quantity = Integer.valueOf(split[3]);
 			int price = Integer.valueOf(split[4]);
 			if (split[0].toLowerCase().equals("sell")) {
-				out = new MessageSellOrBuy(Message.Type.SELL.toString(), "-", marketID, clientID, instrument, quantity,
+				out = new BuyOrSellOrder(Message.Type.SELL.toString(), "-", marketID, clientID, instrument, quantity,
 						price);
 			} else if (split[0].toLowerCase().equals("buy")) {
-				out = new MessageSellOrBuy(Message.Type.BUY.toString(), "-", marketID, clientID, instrument, quantity,
+				out = new BuyOrSellOrder(Message.Type.BUY.toString(), "-", marketID, clientID, instrument, quantity,
 						price);
 			} else
 				throw new ErrorInput();

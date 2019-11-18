@@ -3,10 +3,10 @@ package core.decoders;
 import java.nio.charset.Charset;
 import java.util.List;
 
+import core.messages.BuyOrSellOrder;
 import core.messages.ConnectionRequest;
 import core.messages.FixMessage;
 import core.messages.Message;
-import core.messages.MessageSellOrBuy;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.ReplayingDecoder;
@@ -26,7 +26,7 @@ public class Decoder extends ReplayingDecoder<Object> {
 			out.add(ret);
 		} else if (	msg.getMessageType().equals(Message.Type.BUY.toString()) ||
 					msg.getMessageType().equals(Message.Type.SELL.toString())) {
-			MessageSellOrBuy ret = new MessageSellOrBuy();
+			BuyOrSellOrder ret = new BuyOrSellOrder();
 			ret.setMessageType(msg.getMessageType());
 			ret.setMessageAction(in.readCharSequence(in.readInt(), charset).toString());
 			ret.setId(in.readInt());

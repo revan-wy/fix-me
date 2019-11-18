@@ -2,7 +2,7 @@ package core.messages;
 
 import core.MyChecksum;
 
-public class MessageSellOrBuy extends FixMessage {
+public class BuyOrSellOrder extends FixMessage {
 	private int		actionLength;
 	private String	messageAction;
 	private int		id;
@@ -11,7 +11,8 @@ public class MessageSellOrBuy extends FixMessage {
 	private int		quantity;
 	private int		price;
 
-	public MessageSellOrBuy(String messageType, String messageAction, int marketId, int id, String instrument, int quantity, int price) {
+	public BuyOrSellOrder(String messageType, String messageAction, int marketId, int id, String instrument,
+			int quantity, int price) {
 		super(messageType, marketId);
 		this.messageAction = messageAction;
 		this.actionLength = messageAction.length();
@@ -23,7 +24,8 @@ public class MessageSellOrBuy extends FixMessage {
 		setChecksum(createMyChecksum());
 	}
 
-	public MessageSellOrBuy() {}
+	public BuyOrSellOrder() {
+	}
 
 	public int getId() {
 		return id;

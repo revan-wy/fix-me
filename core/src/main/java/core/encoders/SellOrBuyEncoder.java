@@ -1,18 +1,18 @@
 package core.encoders;
 
 import core.messages.Message;
-import core.messages.MessageSellOrBuy;
+import core.messages.BuyOrSellOrder;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.MessageToByteEncoder;
 
 import java.nio.charset.Charset;
 
-public class SellOrBuyEncoder extends MessageToByteEncoder<MessageSellOrBuy> {
+public class SellOrBuyEncoder extends MessageToByteEncoder<BuyOrSellOrder> {
 	private final Charset charset=Charset.forName("UTF-8");
 
 	@Override
-	protected void encode(ChannelHandlerContext ctx, MessageSellOrBuy msg, ByteBuf out) throws Exception {
+	protected void encode(ChannelHandlerContext ctx, BuyOrSellOrder msg, ByteBuf out) throws Exception {
 		out.writeInt(msg.getTypeLength());
 		out.writeCharSequence(msg.getMessageType(), charset);
 		if (msg.getMessageType().equals(Message.Type.BUY.toString()) ||

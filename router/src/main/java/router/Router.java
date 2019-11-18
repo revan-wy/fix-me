@@ -74,7 +74,7 @@ public class Router implements Runnable {
 				acceptNewConnection(ctx, msg);
 			else if (message.getMessageType().equals(Message.Type.BUY.toString())
 					|| message.getMessageType().equals(Message.Type.SELL.toString())) {
-				MessageSellOrBuy ret = (MessageSellOrBuy) msg;
+				BuyOrSellOrder ret = (BuyOrSellOrder) msg;
 				try {
 					checkForErrors(ret);
 					if (checkIfMessageIsRejectedOrExecuted(ret))
@@ -102,7 +102,7 @@ public class Router implements Runnable {
 		System.out.println("Accepted a connection from " + brokerOrMarketString() + ": " + newID);
 	}
 
-	public void checkForErrors(MessageSellOrBuy response) throws Exception {
+	public void checkForErrors(BuyOrSellOrder response) throws Exception {
 		if (!response.createMyChecksum().equals(response.getChecksum())) {
 			throw new ChecksumIsNotEqual();
 		}
@@ -111,7 +111,7 @@ public class Router implements Runnable {
 		}
 	}
 
-	private boolean checkIfMessageIsRejectedOrExecuted(MessageSellOrBuy ret) throws Exception {
+	private boolean checkIfMessageIsRejectedOrExecuted(BuyOrSellOrder ret) throws Exception {
 		if (ret.getMessageAction().equals(Message.Action.EXECUTE.toString())
 				|| ret.getMessageAction().equals(Message.Action.REJECT.toString())) {
 			if (!ret.createMyChecksum().equals(ret.getChecksum()))
