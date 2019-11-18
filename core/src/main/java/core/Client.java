@@ -130,7 +130,7 @@ public class Client implements Runnable {
 		private boolean messageHasBeenActioned(BuyOrSellOrder message) {
 			if (message.getMessageAction().equals(Message.Action.EXECUTED.toString())
 					|| message.getMessageAction().equals(Message.Action.REJECTED.toString())) {
-				System.out.println("Response to " + message.getMessageAction() + " order : " + message.getMessageAction());
+				System.out.println("Response to " + message.getMessageType() + " order : " + message.getMessageAction());
 				return true;
 			}
 			return false;
@@ -192,17 +192,14 @@ public class Client implements Runnable {
 				throw new BrokerInputError();}
 				message.updateChecksum();
 			context.writeAndFlush(message);
-			System.out.println("Sending " + message.getMessageAction() + " order to router.");
+			System.out.println("Sending " + message.getMessageType() + " order to router.");
 		}
 
 		private int verifyId(String id) throws Exception {
-			int iID = Integer.valueOf(id);
 			if (id.length() != 6)
-				throw new BrokerInputError();
-			return iID;
+			throw new BrokerInputError();
+			return Integer.valueOf(id);
 		}
-
-		// TODO
 
 		@Override
 		public void channelReadComplete(ChannelHandlerContext ctx) {
