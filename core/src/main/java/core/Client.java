@@ -202,12 +202,10 @@ public class Client implements Runnable {
 		}
 
 		@Override
-		public void channelReadComplete(ChannelHandlerContext ctx) {
+		public void channelReadComplete(ChannelHandlerContext context) {
 			if (clientType == Client.Type.BROKER)
-				channelWrite(ctx);
+				channelWrite(context);
 		}
-
-		// TODO
 
 		private String getBrokerInput() throws Exception {
 			System.out.println(
