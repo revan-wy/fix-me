@@ -8,8 +8,8 @@ import java.util.Random;
 import core.decoders.Decoder;
 import core.encoders.AcceptConnectionEncoder;
 import core.encoders.BuyOrSellEncoder;
+import core.exceptions.BrokerInputError;
 import core.exceptions.ChecksumIsInvalid;
-import core.exceptions.ErrorInput;
 import core.exceptions.InputStringEmpty;
 import core.messages.BuyOrSellOrder;
 import core.messages.ConnectionRequest;
@@ -130,7 +130,7 @@ public class Client implements Runnable {
 		private boolean messageHasBeenActioned(BuyOrSellOrder message) {
 			if (message.getMessageAction().equals(Message.Action.EXECUTED.toString())
 					|| message.getMessageAction().equals(Message.Action.REJECTED.toString())) {
-				System.out.println("Response from Market " + message.getMarketId() + ": " + message.getMessageAction());
+				System.out.println("Response to " + message.getMessageAction() + " order : " + message.getMessageAction());
 				return true;
 			}
 			return false;
@@ -177,34 +177,28 @@ public class Client implements Runnable {
 			}
 		}
 
-		private void brokerWriteHandler(ChannelHandlerContext ctx, String s) throws Exception {
-			String[] split = s.split("\\s+");
+		private void brokerWriteHandler(ChannelHandlerContext context, String string) throws Exception {
+			String[] split = string.split("\\s+");
 			if (split.length != 5)
-				throw new ErrorInput();
-			BuyOrSellOrder out;
-			int marketID = checkID(split[1]);
-			String instrument = split[2];
-			int quantity = Integer.valueOf(split[3]);
-			int price = Integer.valueOf(split[4]);
+				throw new BrokerInputError();
+			BuyOrSellOrder message;
 			if (split[0].toLowerCase().equals("sell")) {
-				out = new BuyOrSellOrder(Message.Type.SELL.toString(), "-", marketID, clientID, instrument, quantity,
-						price);
+				message = new BuyOrSellOrder(Message.Type.SELL.toString(), "", verifyId(split[1]), clientID, split[2], Integer.valueOf(split[3]),
+				Integer.valueOf(split[4]));
 			} else if (split[0].toLowerCase().equals("buy")) {
-				out = new BuyOrSellOrder(Message.Type.BUY.toString(), "-", marketID, clientID, instrument, quantity,
-						price);
-			} else
-				throw new ErrorInput();
-			out.updateChecksum();
-			ctx.writeAndFlush(out);
-			System.out.println("Sending request to router..");
+				message = new BuyOrSellOrder(Message.Type.BUY.toString(), "", verifyId(split[1]), clientID, split[2], Integer.valueOf(split[3]),
+				Integer.valueOf(split[4]));
+			} else{
+				throw new BrokerInputError();}
+				message.updateChecksum();
+			context.writeAndFlush(message);
+			System.out.println("Sending " + message.getMessageAction() + " order to router.");
 		}
 
-		// TODO
-
-		private int checkID(String id) throws Exception {
+		private int verifyId(String id) throws Exception {
 			int iID = Integer.valueOf(id);
 			if (id.length() != 6)
-				throw new ErrorInput();
+				throw new BrokerInputError();
 			return iID;
 		}
 
