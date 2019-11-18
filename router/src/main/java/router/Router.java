@@ -34,7 +34,8 @@ public class Router implements Runnable {
 	public void acceptNewConnection(ChannelHandlerContext context, Object request) {
 		ConnectionRequest response = (ConnectionRequest) request;
 		String newId = context.channel().remoteAddress().toString().substring(11);
-		newId = newId.concat(brokerOrMarketBool() ? "2" : "3");
+		System.out.println("newId is :" + newId);
+		newId = newId.concat(isBroker() ? "1" : "2");
 		response.setId(Integer.valueOf(newId));
 		response.setNewChecksum();
 		context.writeAndFlush(response);
@@ -42,7 +43,7 @@ public class Router implements Runnable {
 		System.out.println("New connection made with " + stringBrokerOrMarket() + newId);
 	}
 
-	private boolean brokerOrMarketBool() {
+	private boolean isBroker() {
 		return (this.port != 5001);
 	}
 
@@ -78,20 +79,21 @@ public class Router implements Runnable {
 	public class ProcessingHandler extends ChannelInboundHandlerAdapter {
 		@Override
 		public void channelRead(ChannelHandlerContext context, Object request) {
-			FIXMessage message = (FIXMessage)request;
+			FIXMessage message = (FIXMessage) request;
 			if (message.getMessageType().equals("MESSAGE_ACCEPT_CONNECTION")) {
 				acceptNewConnection(context, request);
-			} else if ((message.getMessageType().equals("MESSAGE_BUY")) ||
-					(message.getMessageType().equals("MESSAGE_SELL"))) {
-				MessageSellOrBuy response = (MessageSellOrBuy)request;
+			} else if ((message.getMessageType().equals("MESSAGE_BUY"))
+					|| (message.getMessageType().equals("MESSAGE_SELL"))) {
+				MessageSellOrBuy response = (MessageSellOrBuy) request;
 				try {
 					checkForErrors(response);
 					if (messageIsFromMarket(response)) {
 						return;
-					};
+					}
+					;
 					System.out.print("Sending request to market " + response.getMarketId());
 					getFromTableById(response.getMarketId()).channel().writeAndFlush(response);
-				} catch(Exception e) {
+				} catch (Exception e) {
 					System.out.println(e.getMessage());
 					response.setMessageAction("MESSAGE_REJECT");
 					response.setNewChecksum();
@@ -107,21 +109,14 @@ public class Router implements Runnable {
 		workerGroup = new NioEventLoopGroup();
 		try {
 			ServerBootstrap b = new ServerBootstrap();
-			b.group(bossGroup, workerGroup)
-					.channel(NioServerSocketChannel.class)
+			b.group(bossGroup, workerGroup).channel(NioServerSocketChannel.class)
 					.childHandler(new ChannelInitializer<SocketChannel>() {
 						@Override
-						public void initChannel(SocketChannel ch)
-							throws Exception {
-								ch.pipeline().addLast(
-									new Decoder(),
-									new AcceptConnectionEncoder(),
-									new SellOrBuyEncoder(),
-									new ProcessingHandler()
-							);
+						public void initChannel(SocketChannel ch) throws Exception {
+							ch.pipeline().addLast(new Decoder(), new AcceptConnectionEncoder(), new SellOrBuyEncoder(),
+									new ProcessingHandler());
 						}
-					}).option(ChannelOption.SO_BACKLOG, 128)
-					.childOption(ChannelOption.SO_KEEPALIVE, true);
+					}).option(ChannelOption.SO_BACKLOG, 128).childOption(ChannelOption.SO_KEEPALIVE, true);
 			ChannelFuture future = b.bind(this.port).sync();
 			future.channel().closeFuture().sync();
 		} catch (InterruptedException e) {
@@ -130,7 +125,7 @@ public class Router implements Runnable {
 			shutdown();
 		}
 	}
-	
+
 	private String stringBrokerOrMarket() {
 		return this.port == 5001 ? "market" : "broker";
 	}
