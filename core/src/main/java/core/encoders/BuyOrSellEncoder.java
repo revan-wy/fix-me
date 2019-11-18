@@ -8,14 +8,14 @@ import io.netty.handler.codec.MessageToByteEncoder;
 
 import java.nio.charset.Charset;
 
-public class SellOrBuyEncoder extends MessageToByteEncoder<BuyOrSellOrder> {
-	private final Charset charset=Charset.forName("UTF-8");
-
+public class BuyOrSellEncoder extends MessageToByteEncoder<BuyOrSellOrder> {// TODO
+	
 	@Override
-	protected void encode(ChannelHandlerContext ctx, BuyOrSellOrder msg, ByteBuf out) throws Exception {
+	protected void encode(ChannelHandlerContext ctx, BuyOrSellOrder msg, ByteBuf out) throws Exception {// TODO
+		final Charset charset=Charset.forName("UTF-8");
 		out.writeInt(msg.getTypeLength());
 		out.writeCharSequence(msg.getMessageType(), charset);
-		if (msg.getMessageType().equals(Message.Type.BUY.toString()) ||
+		if (msg.getMessageType().equals(Message.Type.BUY.toString()) ||// TODO
 				msg.getMessageType().equals(Message.Type.SELL.toString())) {
 			out.writeInt(msg.getActionLength());
 			out.writeCharSequence(msg.getMessageAction(), charset);

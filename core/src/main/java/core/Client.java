@@ -7,7 +7,7 @@ import java.util.Random;
 
 import core.decoders.Decoder;
 import core.encoders.AcceptConnectionEncoder;
-import core.encoders.SellOrBuyEncoder;
+import core.encoders.BuyOrSellEncoder;
 import core.exceptions.ChecksumIsNotEqual;
 import core.exceptions.EmptyInput;
 import core.exceptions.ErrorInput;
@@ -68,7 +68,7 @@ public class Client implements Runnable {
 			b.group(workerGroup).channel(NioSocketChannel.class).handler(new ChannelInitializer<SocketChannel>() {
 				@Override
 				public void initChannel(SocketChannel ch) throws Exception {
-					ch.pipeline().addLast(new Decoder(), new AcceptConnectionEncoder(), new SellOrBuyEncoder(),
+					ch.pipeline().addLast(new Decoder(), new AcceptConnectionEncoder(), new BuyOrSellEncoder(),
 							new ClientHandler());
 				}
 			}).option(ChannelOption.SO_KEEPALIVE, true);

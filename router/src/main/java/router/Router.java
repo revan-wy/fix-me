@@ -1,18 +1,26 @@
 package router;
 
+import java.util.HashMap;
+
 import core.decoders.Decoder;
 import core.encoders.AcceptConnectionEncoder;
-import core.encoders.SellOrBuyEncoder;
+import core.encoders.BuyOrSellEncoder;
 import core.exceptions.ChecksumIsNotEqual;
 import core.exceptions.ClientNotInRoutingTable;
-import core.messages.*;
+import core.messages.BuyOrSellOrder;
+import core.messages.ConnectionRequest;
+import core.messages.FixMessage;
+import core.messages.Message;
 import io.netty.bootstrap.ServerBootstrap;
-import io.netty.channel.*;
+import io.netty.channel.ChannelFuture;
+import io.netty.channel.ChannelHandlerContext;
+import io.netty.channel.ChannelInboundHandlerAdapter;
+import io.netty.channel.ChannelInitializer;
+import io.netty.channel.ChannelOption;
+import io.netty.channel.EventLoopGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
-
-import java.util.HashMap;
 
 public class Router implements Runnable {
 	private static HashMap<Integer, ChannelHandlerContext> routingTable = new HashMap<>();
@@ -48,7 +56,7 @@ public class Router implements Runnable {
 					.childHandler(new ChannelInitializer<SocketChannel>() {
 						@Override
 						public void initChannel(SocketChannel ch) throws Exception {
-							ch.pipeline().addLast(new Decoder(), new AcceptConnectionEncoder(), new SellOrBuyEncoder(),
+							ch.pipeline().addLast(new Decoder(), new AcceptConnectionEncoder(), new BuyOrSellEncoder(),
 									new ProcessingHandler());
 						}
 					}).option(ChannelOption.SO_BACKLOG, 128).childOption(ChannelOption.SO_KEEPALIVE, true);
