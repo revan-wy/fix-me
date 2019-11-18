@@ -9,7 +9,7 @@ import core.exceptions.ErrorInput;
 import core.messages.FIXMessage;
 import core.messages.MessageAcceptConnection;
 import core.messages.MessageSellOrBuy;
-import core.messages.MessageTypes;
+import core.messages.Message;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.*;
 import io.netty.channel.nio.NioEventLoopGroup;
@@ -84,19 +84,19 @@ public class Client implements Runnable {
 		@Override
 		public void channelActive(ChannelHandlerContext ctx) throws Exception {
 			System.out.println(clientName + " is connecting to router..");
-			MessageAcceptConnection msg = new MessageAcceptConnection(MessageTypes.MESSAGE_ACCEPT_CONNECTION.toString(), 0, 0);
+			MessageAcceptConnection msg = new MessageAcceptConnection(Message.Type.CONNECTION_REQUEST.toString(), 0, 0);
 			ctx.writeAndFlush(msg);
 		}
 
 		@Override
 		public void channelRead(ChannelHandlerContext ctx, Object msg) {
 			FIXMessage message = (FIXMessage)msg;
-			if (message.getMessageType().equals(MessageTypes.MESSAGE_ACCEPT_CONNECTION.toString())) {
+			if (message.getMessageType().equals(Message.Type.CONNECTION_REQUEST.toString())) {
 				MessageAcceptConnection ret = (MessageAcceptConnection)msg;
 				uniqueID = ret.getId();
 				System.out.println("Connection with router established. ID: " + uniqueID);
-			} else if (	message.getMessageType().equals(MessageTypes.MESSAGE_BUY.toString()) ||
-						message.getMessageType().equals(MessageTypes.MESSAGE_SELL.toString())) {
+			} else if (	message.getMessageType().equals(Message.Type.BUY.toString()) ||
+						message.getMessageType().equals(Message.Type.SELL.toString())) {
 				MessageSellOrBuy ret = (MessageSellOrBuy)msg;
 				try {
 					if (!ret.createMyChecksum().equals(ret.getChecksum()))
@@ -107,7 +107,7 @@ public class Client implements Runnable {
 				}
 				if (checkForBrokerAnswerFromMarket(ret))
 					return;
-				if (message.getMessageType().equals(MessageTypes.MESSAGE_SELL.toString()))
+				if (message.getMessageType().equals(Message.Type.SELL.toString()))
 					marketForSellRequestLogic(ctx, ret);
 				else
 					marketForBuyRequestLogic(ctx, ret);
@@ -115,8 +115,8 @@ public class Client implements Runnable {
 		}
 
 		private boolean checkForBrokerAnswerFromMarket(MessageSellOrBuy ret) {
-			if (ret.getMessageAction().equals(MessageTypes.MESSAGE_EXECUTE.toString()) ||
-					ret.getMessageAction().equals(MessageTypes.MESSAGE_REJECT.toString())) {
+			if (ret.getMessageAction().equals(Message.Action.EXECUTE.toString()) ||
+					ret.getMessageAction().equals(Message.Action.REJECT.toString())) {
 				System.out.println("Answer for your request: " + ret.getMessageAction());
 				return true;
 			}
@@ -127,10 +127,10 @@ public class Client implements Runnable {
 			Random random = new Random();
 			if (random.nextBoolean()) {
 				System.out.println("EXECUTE. Thank you for this instrument!");
-				ret.setMessageAction(MessageTypes.MESSAGE_EXECUTE.toString());
+				ret.setMessageAction(Message.Action.EXECUTE.toString());
 			} else {
 				System.out.println("REJECT. Cause: we don't want this instrument.");
-				ret.setMessageAction(MessageTypes.MESSAGE_REJECT.toString());
+				ret.setMessageAction(Message.Action.REJECT.toString());
 			}
 			ret.setNewChecksum();
 			ctx.writeAndFlush(ret);
@@ -141,13 +141,13 @@ public class Client implements Runnable {
 			int randomInt = random.nextInt(100);
 			if (randomInt >= 0 && randomInt < 20) {
 				System.out.println("REJECT. Cause: no such instrument on market!");
-				ret.setMessageAction(MessageTypes.MESSAGE_REJECT.toString());
+				ret.setMessageAction(Message.Action.REJECT.toString());
 			} else if (randomInt >= 20 && randomInt < 40) {
 				System.out.println("REJECT. Cause: not enough amount of such instrument on market!");
-				ret.setMessageAction(MessageTypes.MESSAGE_REJECT.toString());
+				ret.setMessageAction(Message.Action.REJECT.toString());
 			} else {
 				System.out.println("EXECUTE. Thank you for buying!");
-				ret.setMessageAction(MessageTypes.MESSAGE_EXECUTE.toString());
+				ret.setMessageAction(Message.Action.EXECUTE.toString());
 			}
 			ret.setNewChecksum();
 			ctx.writeAndFlush(ret);
@@ -178,9 +178,9 @@ public class Client implements Runnable {
 			int quantity = Integer.valueOf(split[3]);
 			int price = Integer.valueOf(split[4]);
 			if (split[0].toLowerCase().equals("sell")) {
-				out = new MessageSellOrBuy(MessageTypes.MESSAGE_SELL.toString(), "-",marketID, uniqueID, instrument, quantity, price);
+				out = new MessageSellOrBuy(Message.Type.SELL.toString(), "-",marketID, uniqueID, instrument, quantity, price);
 			} else if (split[0].toLowerCase().equals("buy")) {
-				out = new MessageSellOrBuy(MessageTypes.MESSAGE_BUY.toString(), "-",marketID, uniqueID, instrument, quantity, price);
+				out = new MessageSellOrBuy(Message.Type.BUY.toString(), "-",marketID, uniqueID, instrument, quantity, price);
 			} else
 				throw new ErrorInput();
 			out.setNewChecksum();

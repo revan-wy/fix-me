@@ -4,9 +4,9 @@ import java.nio.charset.Charset;
 import java.util.List;
 
 import core.messages.FIXMessage;
+import core.messages.Message;
 import core.messages.MessageAcceptConnection;
 import core.messages.MessageSellOrBuy;
-import core.messages.MessageTypes;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.ReplayingDecoder;
@@ -18,14 +18,14 @@ public class Decoder extends ReplayingDecoder<Object> {
 	protected void decode(ChannelHandlerContext ctx, ByteBuf in, List<Object> out) throws Exception {
 		FIXMessage msg = new FIXMessage();
 		msg.setMessageType(in.readCharSequence(in.readInt(), charset).toString());
-		if (msg.getMessageType().equals(MessageTypes.MESSAGE_ACCEPT_CONNECTION.toString())) {
+		if (msg.getMessageType().equals(Message.Type.CONNECTION_REQUEST.toString())) {
 			MessageAcceptConnection ret = new MessageAcceptConnection();
 			ret.setMessageType(msg.getMessageType());
 			ret.setId(in.readInt());
 			ret.setChecksum(in.readCharSequence(in.readInt(), charset).toString());
 			out.add(ret);
-		} else if (	msg.getMessageType().equals(MessageTypes.MESSAGE_BUY.toString()) ||
-					msg.getMessageType().equals(MessageTypes.MESSAGE_SELL.toString())) {
+		} else if (	msg.getMessageType().equals(Message.Type.BUY.toString()) ||
+					msg.getMessageType().equals(Message.Type.SELL.toString())) {
 			MessageSellOrBuy ret = new MessageSellOrBuy();
 			ret.setMessageType(msg.getMessageType());
 			ret.setMessageAction(in.readCharSequence(in.readInt(), charset).toString());
