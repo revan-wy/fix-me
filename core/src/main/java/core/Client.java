@@ -102,17 +102,17 @@ public class Client implements Runnable {
 				BuyOrSellOrder request = (BuyOrSellOrder) msg;
 				try {
 					if (!request.createMyChecksum().equals(request.getChecksum()))
-						throw new ChecksumIsInvalid();// TODO
+						throw new ChecksumIsInvalid();
 				} catch (Exception e) {
 					System.out.println(e.getMessage());
 					return;
 				}
-				if (checkForBrokerAnswerFromMarket(request))// TODO
+				if (messageHasBeenActioned(request))
 					return;
 				if (message.getMessageType().equals(Message.Type.SELL.toString()))
-					marketForSellRequestLogic(context, request);// TODO
+				marketSellOrderLogic(context, request);
 				else
-					marketForBuyRequestLogic(context, request);// TODO 
+				marketBuyOrderLogic(context, request);
 			}
 		}
 
@@ -129,7 +129,7 @@ public class Client implements Runnable {
 			System.out.println("Client connected to router with ID: " + clientID);
 		}
 
-		private boolean checkForBrokerAnswerFromMarket(BuyOrSellOrder ret) {
+		private boolean messageHasBeenActioned(BuyOrSellOrder ret) {
 			if (ret.getMessageAction().equals(Message.Action.EXECUTE.toString())
 					|| ret.getMessageAction().equals(Message.Action.REJECT.toString())) {
 				System.out.println("Answer for your request: " + ret.getMessageAction());
@@ -140,7 +140,7 @@ public class Client implements Runnable {
 
 		// TODO
 
-		private void marketForSellRequestLogic(ChannelHandlerContext ctx, BuyOrSellOrder ret) {
+		private void marketSellOrderLogic(ChannelHandlerContext ctx, BuyOrSellOrder ret) {
 			Random random = new Random();
 			if (random.nextBoolean()) {
 				System.out.println("EXECUTE. Thank you for this instrument!");
@@ -155,7 +155,7 @@ public class Client implements Runnable {
 
 		// TODO
 
-		private void marketForBuyRequestLogic(ChannelHandlerContext ctx, BuyOrSellOrder ret) {
+		private void marketBuyOrderLogic(ChannelHandlerContext ctx, BuyOrSellOrder ret) {
 			Random random = new Random();
 			int randomInt = random.nextInt(100);
 			if (randomInt >= 0 && randomInt < 20) {

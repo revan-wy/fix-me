@@ -12,5 +12,6 @@ public class MyChecksum {
 
 }
 
+// TODO extractify
 // TODO rethink project structure
 // TODO format
