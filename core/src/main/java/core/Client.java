@@ -21,11 +21,17 @@ import java.io.InputStreamReader;
 import java.util.Random;
 
 public class Client implements Runnable {
-	private String			clientName;
+	
+	public enum Type {
+		BROKER,
+		MARKET
+	}
+
+	private Client.Type			clientName;
 	private EventLoopGroup	workerGroup;
 	private int				uniqueID;
 
-	public Client(String clientName) {
+	public Client(Client.Type clientName) {
 		this.clientName = clientName;
 	}
 
@@ -50,7 +56,7 @@ public class Client implements Runnable {
 	public void run() {
 		String host = "localhost";
 		int port = 5000;
-		if (clientName.equals("Market"))
+		if (clientName == Client.Type.MARKET)
 			port = 5001;
 		workerGroup = new NioEventLoopGroup();
 		try {
@@ -160,7 +166,7 @@ public class Client implements Runnable {
 					throw new EmptyInput();
 				else if (input.toLowerCase().equals("exit"))
 					shutDown();
-				else if (clientName.equals("Broker"))
+				else if (clientName == Client.Type.BROKER)
 					handleBrokerWrite(ctx, input);
 			} catch (Exception e) {
 				System.out.println(e.getMessage());
@@ -197,7 +203,7 @@ public class Client implements Runnable {
 
 		@Override
 		public void channelReadComplete(ChannelHandlerContext ctx) {
-			if (clientName.equals("Broker"))
+			if (clientName == Client.Type.BROKER)
 				channelWrite(ctx);
 		}
 

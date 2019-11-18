@@ -4,7 +4,7 @@ import core.Client;
 
 public class Main {
     public static void main(String[] args) {
-        Client client = new Client("Broker");
+        Client client = new Client(Client.Type.BROKER);
         Thread clientThread = new Thread(client);
         clientThread.start();
         try {
