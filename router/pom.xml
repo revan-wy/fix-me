@@ -63,7 +63,7 @@
 					<!-- MainClass in mainfest make a executable jar -->
 					<archive>
 						<manifest>
-							<mainClass>router.App</mainClass>
+							<mainClass>router.Main</mainClass>
 						</manifest>
 					</archive>
 
@@ -89,7 +89,7 @@
 						<manifest>
 							<addClasspath>true</addClasspath>
 							<classpathPrefix>lib/</classpathPrefix>
-							<mainClass>router.App</mainClass>
+							<mainClass>router.Main</mainClass>
 						</manifest>
 					</archive>
 				</configuration>
