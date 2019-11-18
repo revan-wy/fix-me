@@ -91,8 +91,8 @@ public class Router implements Runnable {
 					getFromTableById(ret.getMarketId()).channel().writeAndFlush(ret);
 				} catch (Exception e) {
 					System.out.println(e.getMessage());
-					ret.setMessageAction(Message.Action.REJECT.toString());
-					ret.setNewChecksum();
+					ret.setMessageAction(Message.Action.REJECTED.toString());
+					ret.updateChecksum();
 					ctx.writeAndFlush(ret);
 				}
 			}
@@ -120,8 +120,8 @@ public class Router implements Runnable {
 	}
 
 	private boolean checkIfMessageIsRejectedOrExecuted(BuyOrSellOrder ret) throws Exception {
-		if (ret.getMessageAction().equals(Message.Action.EXECUTE.toString())
-				|| ret.getMessageAction().equals(Message.Action.REJECT.toString())) {
+		if (ret.getMessageAction().equals(Message.Action.EXECUTED.toString())
+				|| ret.getMessageAction().equals(Message.Action.REJECTED.toString())) {
 			if (!ret.createMyChecksum().equals(ret.getChecksum()))
 				throw new ChecksumIsInvalid();
 			getFromTableById(ret.getId()).writeAndFlush(ret);

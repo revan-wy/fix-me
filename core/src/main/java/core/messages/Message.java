@@ -9,8 +9,8 @@ public class Message {
 	}
 
 	public enum Action {
-		EXECUTE, 
-		REJECT
+		EXECUTED, 
+		REJECTED
 	}
 
 }

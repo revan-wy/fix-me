@@ -34,7 +34,7 @@ public class Decoder extends ReplayingDecoder<Object> {
 			ret.setMarketId(in.readInt());
 			ret.setQuantity(in.readInt());
 			ret.setPrice(in.readInt());
-			ret.setNewChecksum();
+			ret.updateChecksum();
 			out.add(ret);
 		}
 	}

@@ -110,9 +110,9 @@ public class Client implements Runnable {
 				if (messageHasBeenActioned(request))
 					return;
 				if (message.getMessageType().equals(Message.Type.SELL.toString()))
-				marketSellOrderLogic(context, request);
+				marketSellOrderHandler(context, request);
 				else
-				marketBuyOrderLogic(context, request);
+				marketBuyOrderHandler(context, request);
 			}
 		}
 
@@ -121,54 +121,48 @@ public class Client implements Runnable {
 					|| message.getMessageType().equals(Message.Type.SELL.toString());
 		}
 
-		// TODO
-
-		private void announceNewConnection(Object msg) {
-			ConnectionRequest request = (ConnectionRequest) msg;
+		private void announceNewConnection(Object message) {
+			ConnectionRequest request = (ConnectionRequest) message;
 			clientID = request.getId();
 			System.out.println("Client connected to router with ID: " + clientID);
 		}
 
-		private boolean messageHasBeenActioned(BuyOrSellOrder ret) {
-			if (ret.getMessageAction().equals(Message.Action.EXECUTE.toString())
-					|| ret.getMessageAction().equals(Message.Action.REJECT.toString())) {
-				System.out.println("Answer for your request: " + ret.getMessageAction());
+		private boolean messageHasBeenActioned(BuyOrSellOrder message) {
+			if (message.getMessageAction().equals(Message.Action.EXECUTED.toString())
+					|| message.getMessageAction().equals(Message.Action.REJECTED.toString())) {
+				System.out.println("Response from Market " + message.getMarketId() + ": " + message.getMessageAction());
 				return true;
 			}
 			return false;
 		}
 
-		// TODO
-
-		private void marketSellOrderLogic(ChannelHandlerContext ctx, BuyOrSellOrder ret) {
+		private void marketSellOrderHandler(ChannelHandlerContext context, BuyOrSellOrder message) {
 			Random random = new Random();
 			if (random.nextBoolean()) {
-				System.out.println("EXECUTE. Thank you for this instrument!");
-				ret.setMessageAction(Message.Action.EXECUTE.toString());
+				System.out.println("Sell order successfully executed.");
+				message.setMessageAction(Message.Action.EXECUTED.toString());
 			} else {
-				System.out.println("REJECT. Cause: we don't want this instrument.");
-				ret.setMessageAction(Message.Action.REJECT.toString());
+				System.out.println("Sell order rejected.");
+				message.setMessageAction(Message.Action.REJECTED.toString());
 			}
-			ret.setNewChecksum();
-			ctx.writeAndFlush(ret);
+			message.updateChecksum();
+			context.writeAndFlush(message);
 		}
 
-		// TODO
-
-		private void marketBuyOrderLogic(ChannelHandlerContext ctx, BuyOrSellOrder ret) {
+		private void marketBuyOrderHandler(ChannelHandlerContext ctx, BuyOrSellOrder ret) {
 			Random random = new Random();
 			int randomInt = random.nextInt(100);
 			if (randomInt >= 0 && randomInt < 20) {
 				System.out.println("REJECT. Cause: no such instrument on market!");
-				ret.setMessageAction(Message.Action.REJECT.toString());
+				ret.setMessageAction(Message.Action.REJECTED.toString());
 			} else if (randomInt >= 20 && randomInt < 40) {
 				System.out.println("REJECT. Cause: not enough amount of such instrument on market!");
-				ret.setMessageAction(Message.Action.REJECT.toString());
+				ret.setMessageAction(Message.Action.REJECTED.toString());
 			} else {
 				System.out.println("EXECUTE. Thank you for buying!");
-				ret.setMessageAction(Message.Action.EXECUTE.toString());
+				ret.setMessageAction(Message.Action.EXECUTED.toString());
 			}
-			ret.setNewChecksum();
+			ret.updateChecksum();
 			ctx.writeAndFlush(ret);
 		}
 
@@ -208,7 +202,7 @@ public class Client implements Runnable {
 						price);
 			} else
 				throw new ErrorInput();
-			out.setNewChecksum();
+			out.updateChecksum();
 			ctx.writeAndFlush(out);
 			System.out.println("Sending request to router..");
 		}
