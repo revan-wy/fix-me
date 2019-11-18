@@ -31,4 +31,4 @@ public class SellOrBuyEncoder extends MessageToByteEncoder<MessageSellOrBuy> {
 	}
 }
 
-// TODO
+// TODO format
