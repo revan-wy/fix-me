@@ -1,59 +1,84 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<?xml version="1.0" ?>
+<project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd" xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
-	<artifactId>parent-project</artifactId>
-	<groupId>fixme</groupId>
-	<version>project</version>
-  </parent>
+		<groupId>fixme</groupId>
+		<artifactId>parent-project</artifactId>
+		<version>1</version>
+	</parent>
 	<groupId>fixme</groupId>
 	<artifactId>router</artifactId>
-	<version>project</version>
-	<properties>
-		<maven.compiler.source>1.8</maven.compiler.source>
-		<maven.compiler.target>1.8</maven.compiler.target>
-		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-	</properties>
+	<version>1</version>
+	<name>router</name>
+	<url>http://maven.apache.org</url>
 	<dependencies>
+		<dependency>
+			<groupId>io.netty</groupId>
+			<artifactId>netty-all</artifactId> <!-- Use 'netty-all' for 4.0 or above -->
+			<version>4.1.43.Final</version>
+			<scope>compile</scope>
+		</dependency>
 		<dependency>
 			<groupId>fixme</groupId>
 			<artifactId>core</artifactId>
-			<version>project</version>
+			<version>1</version>
+			<scope>compile</scope>
 		</dependency>
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
-			<version>4.12</version>
+			<version>3.8.1</version>
 			<scope>test</scope>
 		</dependency>
 	</dependencies>
 	<build>
-		<pluginManagement>
-			<plugins>
-				<plugin>
-					<groupId>org.apache.maven.plugins</groupId>
-					<artifactId>maven-checkstyle-plugin</artifactId>
-					<version>3.0.0</version>
-					<dependencies>
-						<dependency>
-							<groupId>com.puppycrawl.tools</groupId>
-							<artifactId>checkstyle</artifactId>
-							<version>8.10</version>
-						</dependency>
-						<dependency>
-							<groupId>com.github.ngeor</groupId>
-							<artifactId>checkstyle-rules</artifactId>
-							<version>1.1.0</version>
-						</dependency>
-					</dependencies>
-					<configuration>
-						<configLocation>com/github/ngeor/checkstyle.xml</configLocation>
-						<includeTestSourceDirectory>true</includeTestSourceDirectory>
-					</configuration>
-				</plugin>
-			</plugins>
-		</pluginManagement>
 		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-eclipse-plugin</artifactId>
+				<version>2.9</version>
+				<configuration>
+					<downloadSources>true</downloadSources>
+					<downloadJavadocs>false</downloadJavadocs>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>2.3.2</version>
+				<configuration>
+					<source>1.8</source>
+					<target>1.8</target>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-assembly-plugin</artifactId>
+				<version>2.4.1</version>
+				<configuration>
+					<!-- get all project dependencies -->
+					<descriptorRefs>
+						<descriptorRef>jar-with-dependencies</descriptorRef>
+					</descriptorRefs>
+					<!-- MainClass in mainfest make a executable jar -->
+					<archive>
+						<manifest>
+							<mainClass>router.Main</mainClass>
+						</manifest>
+					</archive>
+
+				</configuration>
+				<executions>
+					<execution>
+						<id>make-assembly</id>
+						<!-- bind to the packaging phase -->
+						<phase>package</phase>
+						<goals>
+							<goal>single</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
 			<plugin>
 				<!-- Build an executable JAR -->
 				<groupId>org.apache.maven.plugins</groupId>
@@ -64,118 +89,11 @@
 						<manifest>
 							<addClasspath>true</addClasspath>
 							<classpathPrefix>lib/</classpathPrefix>
-							<mainClass>router.App</mainClass>
+							<mainClass>router.Main</mainClass>
 						</manifest>
 					</archive>
 				</configuration>
 			</plugin>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-checkstyle-plugin</artifactId>
-			</plugin>
-
-			<!--
-				You can run jacoco in the default profile with:
-				mvn jacoco:prepare-agent test jacoco:report
-			-->
-			<plugin>
-				<groupId>org.jacoco</groupId>
-				<artifactId>jacoco-maven-plugin</artifactId>
-				<version>0.8.1</version>
-			</plugin>
 		</plugins>
 	</build>
-	<reporting>
-		<plugins>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-javadoc-plugin</artifactId>
-				<version>3.0.0</version>
-			</plugin>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-checkstyle-plugin</artifactId>
-				<configuration>
-					<configLocation>com/github/ngeor/checkstyle.xml</configLocation>
-					<includeTestSourceDirectory>true</includeTestSourceDirectory>
-				</configuration>
-			</plugin>
-		</plugins>
-	</reporting>
-
-	<profiles>
-		<!--
-		This profile enables jacoco when unit tests are run.
-		You can run it with mvn -P jacoco test.
-		It also activates itself on Travis.
-		-->
-		<profile>
-			<id>jacoco</id>
-			<activation>
-				<property>
-					<name>env.TRAVIS</name>
-				</property>
-			</activation>
-			<build>
-				<plugins>
-					<plugin>
-						<groupId>org.jacoco</groupId>
-						<artifactId>jacoco-maven-plugin</artifactId>
-						<executions>
-							<execution>
-								<id>prepare-agent</id>
-								<phase>validate</phase>
-								<goals>
-									<goal>prepare-agent</goal>
-								</goals>
-							</execution>
-							<execution>
-								<id>report</id>
-								<phase>test</phase>
-								<goals>
-									<goal>report</goal>
-								</goals>
-							</execution>
-						</executions>
-					</plugin>
-				</plugins>
-			</build>
-		</profile>
-
-		<!--
-		For the Travis profile:
-		- we want to break the build on any checkstyle violation.
-		- we want to be able to publish coverage report to coveralls.
-		-->
-		<profile>
-			<id>travis</id>
-			<activation>
-				<property>
-					<name>env.TRAVIS</name>
-				</property>
-			</activation>
-			<build>
-				<plugins>
-					<plugin>
-						<groupId>org.apache.maven.plugins</groupId>
-						<artifactId>maven-checkstyle-plugin</artifactId>
-						<executions>
-							<execution>
-								<id>checkstyle</id>
-								<phase>test</phase>
-								<goals>
-									<goal>check</goal>
-								</goals>
-							</execution>
-						</executions>
-					</plugin>
-					<plugin>
-						<groupId>org.eluder.coveralls</groupId>
-						<artifactId>coveralls-maven-plugin</artifactId>
-						<version>4.3.0</version>
-					</plugin>
-				</plugins>
-			</build>
-		</profile>
-	</profiles>
 </project>
