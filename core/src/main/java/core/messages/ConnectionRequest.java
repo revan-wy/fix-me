@@ -5,9 +5,9 @@ import core.MyChecksum;
 public class ConnectionRequest extends FIXMessage {
 	private int		id;
 
-	public ConnectionRequest(String messageType, int marketId, int id) {
-		super(messageType, marketId);
-		this.id = id;
+	public ConnectionRequest(String messageType) {
+		super(messageType, 0);
+		this.id = 0;
 		StringBuilder checksumBuffer = new StringBuilder("");
 		checksumBuffer.append(this.id).append(this.getMessageType());
 		setChecksum(MyChecksum.myChecksum(checksumBuffer));

@@ -30,8 +30,8 @@ public class Client implements Runnable {
 	private Client.Type clientType;
 	private EventLoopGroup workerGroup;
 	private int clientID;
-	private String host = "localhost";
 	private int port;
+	private String host = "localhost";
 
 	public enum Type {
 		BROKER, MARKET
@@ -42,7 +42,6 @@ public class Client implements Runnable {
 		this.port = 5000;
 		if (clientType == Client.Type.MARKET)
 			port = 5001;
-
 	}
 
 	public static void inputHandler(Client client) {
@@ -82,19 +81,15 @@ public class Client implements Runnable {
 		}
 	}
 
-	// TODO
-
 	public void shutdown() {
 		workerGroup.shutdownGracefully();
 	}
-
-	// TODO
 
 	class ClientHandler extends ChannelInboundHandlerAdapter {
 		@Override
 		public void channelActive(ChannelHandlerContext context) throws Exception {
 			System.out.println("Connection request sent to router.");
-			ConnectionRequest message = new ConnectionRequest(Message.Type.CONNECTION_REQUEST.toString(), 0, 0);
+			ConnectionRequest message = new ConnectionRequest(Message.Type.CONNECTION_REQUEST.toString());
 			context.writeAndFlush(message);
 		}
 
