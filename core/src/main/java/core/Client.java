@@ -9,8 +9,8 @@ import core.decoders.Decoder;
 import core.encoders.AcceptConnectionEncoder;
 import core.encoders.BuyOrSellEncoder;
 import core.exceptions.ChecksumIsInvalid;
-import core.exceptions.EmptyInput;
 import core.exceptions.ErrorInput;
+import core.exceptions.InputStringEmpty;
 import core.messages.BuyOrSellOrder;
 import core.messages.ConnectionRequest;
 import core.messages.FixMessage;
@@ -162,24 +162,22 @@ public class Client implements Runnable {
 			context.writeAndFlush(message);
 		}
 
-		private void channelWrite(ChannelHandlerContext ctx) {
+		private void channelWrite(ChannelHandlerContext context) {
 			try {
-				String input = getTextFromUser();
+				String input = getBrokerInput();
 				if (input.length() == 0)
-					throw new EmptyInput();
+					throw new InputStringEmpty();
 				else if (input.toLowerCase().equals("exit"))
 					shutdown();
 				else if (clientType == Client.Type.BROKER)
-					handleBrokerWrite(ctx, input);
+				brokerWriteHandler(context, input);
 			} catch (Exception e) {
 				System.out.println(e.getMessage());
-				channelWrite(ctx);
+				channelWrite(context);
 			}
 		}
 
-		// TODO
-
-		private void handleBrokerWrite(ChannelHandlerContext ctx, String s) throws Exception {
+		private void brokerWriteHandler(ChannelHandlerContext ctx, String s) throws Exception {
 			String[] split = s.split("\\s+");
 			if (split.length != 5)
 				throw new ErrorInput();
@@ -220,7 +218,7 @@ public class Client implements Runnable {
 
 		// TODO
 
-		private String getTextFromUser() throws Exception {
+		private String getBrokerInput() throws Exception {
 			System.out.println(
 					"Enter request message of type: [sell || buy] [market id] [instrument] [quantity] [price]");
 			BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
