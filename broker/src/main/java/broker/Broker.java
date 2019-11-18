@@ -2,7 +2,7 @@ package broker;
 
 import core.Client;
 
-public class Main {
+public class Broker {
     public static void main(String[] args) {
         Client client = new Client(Client.Type.BROKER);
         Thread clientThread = new Thread(client);
@@ -10,7 +10,7 @@ public class Main {
         try {
             clientThread.join();
         } catch (InterruptedException e) {
-            e.printStackTrace();
+            System.out.println(e.getMessage());
         }
 	}
 }

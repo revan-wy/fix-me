@@ -39,7 +39,7 @@
 					<!-- MainClass in mainfest make a executable jar -->
 					<archive>
 						<manifest>
-							<mainClass>broker.Main</mainClass>
+							<mainClass>broker.Broker</mainClass>
 						</manifest>
 					</archive>
 
@@ -65,7 +65,7 @@
 						<manifest>
 							<addClasspath>true</addClasspath>
 							<classpathPrefix>lib/</classpathPrefix>
-							<mainClass>broker.Main</mainClass>
+							<mainClass>broker.Broker</mainClass>
 						</manifest>
 					</archive>
 				</configuration>

@@ -39,7 +39,7 @@
 					<!-- MainClass in mainfest make a executable jar -->
 					<archive>
 						<manifest>
-							<mainClass>market.Main</mainClass>
+							<mainClass>market.Market</mainClass>
 						</manifest>
 					</archive>
 
@@ -65,7 +65,7 @@
 						<manifest>
 							<addClasspath>true</addClasspath>
 							<classpathPrefix>lib/</classpathPrefix>
-							<mainClass>market.Main</mainClass>
+							<mainClass>market.Market</mainClass>
 						</manifest>
 					</archive>
 				</configuration>
