@@ -1,19 +1,20 @@
 package core.messages;
 
-public class FIXMessage {
+public class FixMessage {
 	private int		typeLength;
 	private String	messageType;
 	private int		marketId;
 	private int		checksumLength;
 	private String	checksum;
 
-	public FIXMessage(String messageType, int marketId) {
+	public FixMessage(String messageType, int marketId) {
 		this.messageType = messageType;
 		this.typeLength = messageType.length();
 		this.marketId = marketId;
 	}
 
-	public FIXMessage() {}
+	public FixMessage() {
+	}
 
 	public String getMessageType() {
 		return messageType;
