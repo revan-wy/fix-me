@@ -76,7 +76,7 @@ public class Client implements Runnable {
 		@Override
 		public void channelRead(ChannelHandlerContext context, Object msg) {
 			FixMessage message = (FixMessage) msg;
-			if (message.getMessageType().equals(Message.Type.CONNECTION_REQUEST.toString())) {
+			if (messageIsConnectionRequest(message)) {
 				announceNewConnection(msg);
 			} else if (messageIsBuyOrSell(message)) {
 				BuyOrSellOrder request = (BuyOrSellOrder) msg;
@@ -187,6 +187,10 @@ public class Client implements Runnable {
 	public static boolean messageIsBuyOrSell(FixMessage message) {
 		return message.getMessageType().equals(Message.Type.BUY.toString())
 				|| message.getMessageType().equals(Message.Type.SELL.toString());
+	}
+
+	public static boolean messageIsConnectionRequest(FixMessage message) {
+		return message.getMessageType().equals(Message.Type.CONNECTION_REQUEST.toString());
 	}
 
 	@Override

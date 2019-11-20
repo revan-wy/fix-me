@@ -79,7 +79,7 @@ public class Router implements Runnable {
 		@Override
 		public void channelRead(ChannelHandlerContext ctx, Object msg) {
 			FixMessage message = (FixMessage) msg;
-			if (message.getMessageType().equals(Message.Type.CONNECTION_REQUEST.toString()))
+			if (Client.messageIsConnectionRequest(message))
 				acceptNewConnection(ctx, msg);
 			else if (Client.messageIsBuyOrSell(message)) {
 				BuyOrSellOrder ret = (BuyOrSellOrder) msg;

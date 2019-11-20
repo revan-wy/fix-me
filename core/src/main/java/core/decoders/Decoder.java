@@ -7,7 +7,6 @@ import core.Client;
 import core.messages.BuyOrSellOrder;
 import core.messages.ConnectionRequest;
 import core.messages.FixMessage;
-import core.messages.Message;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.ReplayingDecoder;
@@ -19,7 +18,7 @@ public class Decoder extends ReplayingDecoder<Object> {
 		final Charset charset = Charset.forName("UTF-8");
 		FixMessage message = new FixMessage();
 		message.setMessageType(in.readCharSequence(in.readInt(), charset).toString());
-		if (message.getMessageType().equals(Message.Type.CONNECTION_REQUEST.toString())) {
+		if (Client.messageIsConnectionRequest(message)) {
 			ConnectionRequest request = new ConnectionRequest();
 			request.setMessageType(message.getMessageType());
 			request.setId(in.readInt());
