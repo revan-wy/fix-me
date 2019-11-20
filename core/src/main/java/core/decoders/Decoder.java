@@ -19,25 +19,31 @@ public class Decoder extends ReplayingDecoder<Object> {
 		FixMessage message = new FixMessage();
 		message.setMessageType(in.readCharSequence(in.readInt(), charset).toString());
 		if (Client.messageIsConnectionRequest(message)) {
-			ConnectionRequest request = new ConnectionRequest();
-			request.setMessageType(message.getMessageType());
-			request.setId(in.readInt());
-			request.setChecksum(in.readCharSequence(in.readInt(), charset).toString());
-			out.add(request);
+			out.add(connectionRequestHandler(in, charset, message));
 		} else if (Client.messageIsBuyOrSell(message)) {
-			BuyOrSellOrder order = new BuyOrSellOrder();
-			order.setMessageType(message.getMessageType());
-			order.setMessageAction(in.readCharSequence(in.readInt(), charset).toString());
-			order.setId(in.readInt());
-			order.setInstrument(in.readCharSequence(in.readInt(), charset).toString());
-			order.setMarketId(in.readInt());
-			order.setQuantity(in.readInt());
-			order.setPrice(in.readInt());
-			order.setChecksum(order.createMyChecksum());
-			out.add(order);
+			out.add(orderHandler(in, charset, message));
 		}
 	}
-}
 
-// TODO alphabetise and format
-// TODO format
+	private ConnectionRequest connectionRequestHandler(ByteBuf in, final Charset charset, FixMessage message) {
+		ConnectionRequest request = new ConnectionRequest();
+		request.setMessageType(message.getMessageType());
+		request.setId(in.readInt());
+		request.setChecksum(in.readCharSequence(in.readInt(), charset).toString());
+		return request;
+	}
+
+	private BuyOrSellOrder orderHandler(ByteBuf in, final Charset charset, FixMessage message) {
+		BuyOrSellOrder order = new BuyOrSellOrder();
+		order.setMessageType(message.getMessageType());
+		order.setMessageAction(in.readCharSequence(in.readInt(), charset).toString());
+		order.setId(in.readInt());
+		order.setInstrument(in.readCharSequence(in.readInt(), charset).toString());
+		order.setMarketId(in.readInt());
+		order.setQuantity(in.readInt());
+		order.setPrice(in.readInt());
+		order.setChecksum(order.createMyChecksum());
+		return order;
+	}
+
+}
