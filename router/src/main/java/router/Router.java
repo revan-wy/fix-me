@@ -85,14 +85,14 @@ public class Router implements Runnable {
 				Order ret = (Order) msg;
 				try {
 					checkForErrors(ret);
-					if (checkIfMessageIsRejectedOrExecuted(ret)) // TODO rename this method, Ryan!!!!!!
+					if (messageIsFromMarket(ret))
 						return;
 					System.out.println("Sending request to market with ID " + ret.getMarketId());
 					getFromTableById(ret.getMarketId()).channel().writeAndFlush(ret);
 				} catch (Exception e) {
 					System.out.println(e.getMessage());
 					ret.setMessageAction(Message.Action.REJECTED.toString());
-					ret.setChecksum(ret.createMyChecksum());
+					ret.setChecksum(ret.createMyChecksum()); // TODO change this to update checksum
 					ctx.writeAndFlush(ret);
 				}
 			}
@@ -119,12 +119,12 @@ public class Router implements Runnable {
 		}
 	}
 
-	private boolean checkIfMessageIsRejectedOrExecuted(Order ret) throws Exception {
-		if (ret.getMessageAction().equals(Message.Action.EXECUTED.toString())
-				|| ret.getMessageAction().equals(Message.Action.REJECTED.toString())) {
-			if (!ret.createMyChecksum().equals(ret.getChecksum())) // TODO extract this
+	private boolean messageIsFromMarket(Order order) throws Exception {
+		if (order.getMessageAction().equals(Message.Action.EXECUTED.toString())// TODO extract this
+				|| order.getMessageAction().equals(Message.Action.REJECTED.toString())) {
+			if (!order.createMyChecksum().equals(order.getChecksum())) // TODO extract this
 				throw new ChecksumIsInvalid();
-			getFromTableById(ret.getId()).writeAndFlush(ret); 
+			getFromTableById(order.getId()).writeAndFlush(order); // TODO change to table checking
 			return true;
 		}
 		return false;
