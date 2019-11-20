@@ -12,30 +12,30 @@ import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.ReplayingDecoder;
 
 public class Decoder extends ReplayingDecoder<Object> {
-	private final Charset charset = Charset.forName("UTF-8");
 
 	@Override
 	protected void decode(ChannelHandlerContext ctx, ByteBuf in, List<Object> out) throws Exception {
-		FixMessage msg = new FixMessage();
-		msg.setMessageType(in.readCharSequence(in.readInt(), charset).toString());
-		if (msg.getMessageType().equals(Message.Type.CONNECTION_REQUEST.toString())) {
-			ConnectionRequest ret = new ConnectionRequest();
-			ret.setMessageType(msg.getMessageType());
-			ret.setId(in.readInt());
-			ret.setChecksum(in.readCharSequence(in.readInt(), charset).toString());
-			out.add(ret);
-		} else if (	msg.getMessageType().equals(Message.Type.BUY.toString()) ||
-					msg.getMessageType().equals(Message.Type.SELL.toString())) {
-			BuyOrSellOrder ret = new BuyOrSellOrder();
-			ret.setMessageType(msg.getMessageType());
-			ret.setMessageAction(in.readCharSequence(in.readInt(), charset).toString());
-			ret.setId(in.readInt());
-			ret.setInstrument(in.readCharSequence(in.readInt(), charset).toString());
-			ret.setMarketId(in.readInt());
-			ret.setQuantity(in.readInt());
-			ret.setPrice(in.readInt());
-			ret.updateChecksum();
-			out.add(ret);
+		final Charset charset = Charset.forName("UTF-8");
+		FixMessage message = new FixMessage();
+		message.setMessageType(in.readCharSequence(in.readInt(), charset).toString());
+		if (message.getMessageType().equals(Message.Type.CONNECTION_REQUEST.toString())) {
+			ConnectionRequest request = new ConnectionRequest();
+			request.setMessageType(message.getMessageType());
+			request.setId(in.readInt());
+			request.setChecksum(in.readCharSequence(in.readInt(), charset).toString());
+			out.add(request);
+		} else if (message.getMessageType().equals(Message.Type.BUY.toString())
+				|| message.getMessageType().equals(Message.Type.SELL.toString())) {
+			BuyOrSellOrder order = new BuyOrSellOrder();
+			order.setMessageType(message.getMessageType());
+			order.setMessageAction(in.readCharSequence(in.readInt(), charset).toString());
+			order.setId(in.readInt());
+			order.setInstrument(in.readCharSequence(in.readInt(), charset).toString());
+			order.setMarketId(in.readInt());
+			order.setQuantity(in.readInt());
+			order.setPrice(in.readInt());
+			order.setChecksum(order.createMyChecksum());
+			out.add(order);
 		}
 	}
 }

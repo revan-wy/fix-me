@@ -64,9 +64,9 @@ public class BuyOrSellOrder extends FixMessage {
 		return instrumentLength;
 	}
 
-	public void updateChecksum() {
-		setChecksum(createMyChecksum());
-	}
+	// public void updateChecksum() {
+	// 	setChecksum(createMyChecksum());
+	// }
 
 	public String getMessageAction() {
 		return messageAction;

@@ -92,7 +92,7 @@ public class Router implements Runnable {
 				} catch (Exception e) {
 					System.out.println(e.getMessage());
 					ret.setMessageAction(Message.Action.REJECTED.toString());
-					ret.updateChecksum();
+					ret.setChecksum(ret.createMyChecksum());
 					ctx.writeAndFlush(ret);
 				}
 			}

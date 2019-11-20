@@ -61,7 +61,7 @@ public class Client implements Runnable {
 			} else {
 				throw new BrokerInputError();
 			}
-			message.updateChecksum();
+			message.setChecksum(message.createMyChecksum());
 			context.writeAndFlush(message);
 			System.out.println("Sending " + message.getMessageType() + " order to router.");
 		}
@@ -148,7 +148,7 @@ public class Client implements Runnable {
 				System.out.println("Buy order successfully executed.");
 				message.setMessageAction(Message.Action.EXECUTED.toString());
 			}
-			message.updateChecksum();
+			message.setChecksum(message.createMyChecksum());
 			context.writeAndFlush(message);
 		}
 
@@ -161,7 +161,7 @@ public class Client implements Runnable {
 				System.out.println("Sell order rejected.");
 				message.setMessageAction(Message.Action.REJECTED.toString());
 			}
-			message.updateChecksum();
+			message.setChecksum(message.createMyChecksum());
 			context.writeAndFlush(message);
 		}
 
