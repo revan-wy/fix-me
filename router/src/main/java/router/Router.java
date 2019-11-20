@@ -7,7 +7,7 @@ import core.decoders.Decoder;
 import core.encoders.ConnectionRequestEncoder;
 import core.encoders.OrderEncoder;
 import core.exceptions.ChecksumIsInvalid;
-import core.exceptions.MarketNotRegistered;
+import core.exceptions.ClientNotRegistered;
 import core.messages.BuyOrSellOrder;
 import core.messages.ConnectionRequest;
 import core.messages.FixMessage;
@@ -115,7 +115,7 @@ public class Router implements Runnable {
 			throw new ChecksumIsInvalid();
 		}
 		if (!checkIfInTable(response.getMarketId())) {
-			throw new MarketNotRegistered();
+			throw new ClientNotRegistered();
 		}
 	}
 
