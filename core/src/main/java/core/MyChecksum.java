@@ -12,6 +12,7 @@ public class MyChecksum {
 
 }
 
+// TODO follow flow of setchecksum, reading and writing checksum in decoders and encoders
 // TODO extractify
 // TODO rethink project structure
 // TODO format
