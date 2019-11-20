@@ -122,9 +122,9 @@ public class Router implements Runnable {
 	private boolean checkIfMessageIsRejectedOrExecuted(BuyOrSellOrder ret) throws Exception {
 		if (ret.getMessageAction().equals(Message.Action.EXECUTED.toString())
 				|| ret.getMessageAction().equals(Message.Action.REJECTED.toString())) {
-			if (!ret.createMyChecksum().equals(ret.getChecksum()))
+			if (!ret.createMyChecksum().equals(ret.getChecksum())) // TODO extract this
 				throw new ChecksumIsInvalid();
-			getFromTableById(ret.getId()).writeAndFlush(ret);
+			getFromTableById(ret.getId()).writeAndFlush(ret); 
 			return true;
 		}
 		return false;
