@@ -49,6 +49,8 @@ public class FixMessage {
 	public int getChecksumLength() {
 		return checksumLength;
 	}
+
+	
 }
 
 // TODO format

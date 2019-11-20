@@ -21,7 +21,7 @@ public class Order extends FixMessage { // TODO change name to order
 		this.instrumentLength = instrument.length();
 		this.quantity = quantity;
 		this.price = price;
-		setChecksum(createMyChecksum());
+		updateChecksum();
 	}
 
 	public Order() {
@@ -64,9 +64,9 @@ public class Order extends FixMessage { // TODO change name to order
 		return instrumentLength;
 	}
 
-	// public void updateChecksum() {
-	// 	setChecksum(createMyChecksum());
-	// }
+	public void updateChecksum() {
+		setChecksum(createMyChecksum());
+	}
 
 	public String getMessageAction() {
 		return messageAction;

@@ -8,12 +8,16 @@ public class ConnectionRequest extends FixMessage {
 	public ConnectionRequest(String messageType) {
 		super(messageType, 0);
 		this.id = 0;
-		StringBuilder checksumBuffer = new StringBuilder("");
-		checksumBuffer.append(this.id).append(this.getMessageType());
-		setChecksum(MyChecksum.myChecksum(checksumBuffer));
+		updateChecksum();
 	}
 
 	public ConnectionRequest() {
+	}
+
+	public String	createMyChecksum() {
+		StringBuilder checksumBuffer = new StringBuilder("");
+		checksumBuffer.append(this.getMarketId()).append(this.getMessageType()).append(id);
+		return MyChecksum.myChecksum(checksumBuffer);
 	}
 
 	public int getId() {
@@ -24,10 +28,8 @@ public class ConnectionRequest extends FixMessage {
 		this.id = id;
 	}
 
-	public void		setNewChecksum() {
-		StringBuilder checksumBuffer = new StringBuilder("");
-		checksumBuffer.append(this.id).append(this.getMessageType());
-		setChecksum(MyChecksum.myChecksum(checksumBuffer));
+	public void		updateChecksum() {
+		setChecksum(createMyChecksum());
 	}
 
 	@Override

@@ -42,7 +42,7 @@ public class Decoder extends ReplayingDecoder<Object> {
 		order.setMarketId(in.readInt());
 		order.setQuantity(in.readInt());
 		order.setPrice(in.readInt());
-		order.setChecksum(order.createMyChecksum());
+		order.setChecksum(in.readCharSequence(in.readInt(), charset).toString());
 		return order;
 	}
 

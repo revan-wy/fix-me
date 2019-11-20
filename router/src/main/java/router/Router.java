@@ -92,7 +92,7 @@ public class Router implements Runnable {
 				} catch (Exception e) {
 					System.out.println(e.getMessage());
 					ret.setMessageAction(Message.Action.REJECTED.toString());
-					ret.setChecksum(ret.createMyChecksum()); // TODO change this to update checksum
+					ret.updateChecksum();
 					ctx.writeAndFlush(ret);
 				}
 			}
@@ -104,7 +104,7 @@ public class Router implements Runnable {
 		String newID = ctx.channel().remoteAddress().toString().substring(11);
 		newID = newID.concat(brokerOrMarketBool() ? "2" : "3");
 		ret.setId(Integer.valueOf(newID));
-		ret.setNewChecksum();
+		ret.updateChecksum();
 		ctx.writeAndFlush(ret);
 		routingTable.put(ret.getId(), ctx);
 		System.out.println("Accepted a connection from " + brokerOrMarketString() + ": " + newID);
