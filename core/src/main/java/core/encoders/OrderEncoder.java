@@ -8,7 +8,7 @@ import io.netty.handler.codec.MessageToByteEncoder;
 
 import java.nio.charset.Charset;
 
-public class BuyOrSellEncoder extends MessageToByteEncoder<BuyOrSellOrder> {// TODO
+public class OrderEncoder extends MessageToByteEncoder<BuyOrSellOrder> {// TODO
 	
 	@Override
 	protected void encode(ChannelHandlerContext ctx, BuyOrSellOrder msg, ByteBuf out) throws Exception {// TODO
