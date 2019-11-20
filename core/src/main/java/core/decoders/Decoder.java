@@ -3,6 +3,7 @@ package core.decoders;
 import java.nio.charset.Charset;
 import java.util.List;
 
+import core.Client;
 import core.messages.BuyOrSellOrder;
 import core.messages.ConnectionRequest;
 import core.messages.FixMessage;
@@ -24,8 +25,7 @@ public class Decoder extends ReplayingDecoder<Object> {
 			request.setId(in.readInt());
 			request.setChecksum(in.readCharSequence(in.readInt(), charset).toString());
 			out.add(request);
-		} else if (message.getMessageType().equals(Message.Type.BUY.toString())
-				|| message.getMessageType().equals(Message.Type.SELL.toString())) {
+		} else if (Client.messageIsBuyOrSell(message)) {
 			BuyOrSellOrder order = new BuyOrSellOrder();
 			order.setMessageType(message.getMessageType());
 			order.setMessageAction(in.readCharSequence(in.readInt(), charset).toString());
@@ -40,4 +40,5 @@ public class Decoder extends ReplayingDecoder<Object> {
 	}
 }
 
+// TODO alphabetise and format
 // TODO format

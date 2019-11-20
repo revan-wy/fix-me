@@ -134,11 +134,6 @@ public class Client implements Runnable {
 			return false;
 		}
 
-		private boolean messageIsBuyOrSell(FixMessage message) {
-			return message.getMessageType().equals(Message.Type.BUY.toString())
-					|| message.getMessageType().equals(Message.Type.SELL.toString());
-		}
-
 		private void marketBuyOrderHandler(ChannelHandlerContext context, BuyOrSellOrder message) {
 			Random random = new Random();
 			if (random.nextBoolean()) {
@@ -187,6 +182,11 @@ public class Client implements Runnable {
 				break;
 			}
 		}
+	}
+
+	public static boolean messageIsBuyOrSell(FixMessage message) {
+		return message.getMessageType().equals(Message.Type.BUY.toString())
+				|| message.getMessageType().equals(Message.Type.SELL.toString());
 	}
 
 	@Override

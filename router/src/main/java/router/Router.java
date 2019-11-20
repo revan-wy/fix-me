@@ -2,6 +2,7 @@ package router;
 
 import java.util.HashMap;
 
+import core.Client;
 import core.decoders.Decoder;
 import core.encoders.AcceptConnectionEncoder;
 import core.encoders.BuyOrSellEncoder;
@@ -80,8 +81,7 @@ public class Router implements Runnable {
 			FixMessage message = (FixMessage) msg;
 			if (message.getMessageType().equals(Message.Type.CONNECTION_REQUEST.toString()))
 				acceptNewConnection(ctx, msg);
-			else if (message.getMessageType().equals(Message.Type.BUY.toString())
-					|| message.getMessageType().equals(Message.Type.SELL.toString())) {
+			else if (Client.messageIsBuyOrSell(message)) {
 				BuyOrSellOrder ret = (BuyOrSellOrder) msg;
 				try {
 					checkForErrors(ret);
