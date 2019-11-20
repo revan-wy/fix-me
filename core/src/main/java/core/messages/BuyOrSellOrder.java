@@ -2,7 +2,7 @@ package core.messages;
 
 import core.MyChecksum;
 
-public class BuyOrSellOrder extends FixMessage {
+public class BuyOrSellOrder extends FixMessage { // TODO change name to order
 	private int		actionLength;
 	private String	messageAction;
 	private int		id; // TODO investigate moving to fixmessage class; rename to brokerId

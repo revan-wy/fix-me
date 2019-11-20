@@ -4,8 +4,8 @@ import java.util.HashMap;
 
 import core.Client;
 import core.decoders.Decoder;
-import core.encoders.BuyOrSellEncoder;
 import core.encoders.ConnectionRequestEncoder;
+import core.encoders.OrderEncoder;
 import core.exceptions.ChecksumIsInvalid;
 import core.exceptions.ClientNotInRoutingTable;
 import core.messages.BuyOrSellOrder;
@@ -57,7 +57,7 @@ public class Router implements Runnable {
 					.childHandler(new ChannelInitializer<SocketChannel>() {
 						@Override
 						public void initChannel(SocketChannel ch) throws Exception {
-							ch.pipeline().addLast(new Decoder(), new ConnectionRequestEncoder(), new BuyOrSellEncoder(),
+							ch.pipeline().addLast(new Decoder(), new ConnectionRequestEncoder(), new OrderEncoder(),
 									new ProcessingHandler());
 						}
 					}).option(ChannelOption.SO_BACKLOG, 128).childOption(ChannelOption.SO_KEEPALIVE, true);
