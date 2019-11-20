@@ -8,7 +8,7 @@ public class Message {
 		SELL
 	}
 
-	public enum Action {
+	public enum Action { // TODO rename to market response
 		EXECUTED, 
 		REJECTED
 	}

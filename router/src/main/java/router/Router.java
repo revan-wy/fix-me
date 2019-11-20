@@ -85,7 +85,7 @@ public class Router implements Runnable {
 				BuyOrSellOrder ret = (BuyOrSellOrder) msg;
 				try {
 					checkForErrors(ret);
-					if (checkIfMessageIsRejectedOrExecuted(ret))
+					if (checkIfMessageIsRejectedOrExecuted(ret)) // TODO rename this method, Ryan!!!!!!
 						return;
 					System.out.println("Sending request to market with ID " + ret.getMarketId());
 					getFromTableById(ret.getMarketId()).channel().writeAndFlush(ret);

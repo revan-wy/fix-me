@@ -5,7 +5,7 @@ import core.MyChecksum;
 public class BuyOrSellOrder extends FixMessage {
 	private int		actionLength;
 	private String	messageAction;
-	private int		id;
+	private int		id; // TODO investigate moving to fixmessage class; rename to brokerId
 	private int		instrumentLength;
 	private String	instrument;
 	private int		quantity;

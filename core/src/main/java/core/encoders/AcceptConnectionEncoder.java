@@ -15,7 +15,7 @@ public class AcceptConnectionEncoder extends MessageToByteEncoder<ConnectionRequ
 	protected void encode(ChannelHandlerContext ctx, ConnectionRequest msg, ByteBuf out) throws Exception {
 		out.writeInt(msg.getTypeLength());
 		out.writeCharSequence(msg.getMessageType(), charset);
-		if (msg.getMessageType().equals(Message.Type.CONNECTION_REQUEST.toString())) {
+		if (msg.getMessageType().equals(Message.Type.CONNECTION_REQUEST.toString())) { //TODO
 			out.writeInt(msg.getId());
 			out.writeInt(msg.getChecksumLength());
 			out.writeCharSequence(msg.getChecksum(), charset);

@@ -3,7 +3,7 @@ package core.messages;
 public class FixMessage {
 	private int		typeLength;
 	private String	messageType;
-	private int		marketId;
+	private int		marketId; // TODO investigate moving to buysell class
 	private int		checksumLength;
 	private String	checksum;
 
