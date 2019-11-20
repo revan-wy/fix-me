@@ -8,10 +8,10 @@ import core.encoders.ConnectionRequestEncoder;
 import core.encoders.OrderEncoder;
 import core.exceptions.ChecksumIsInvalid;
 import core.exceptions.ClientNotRegistered;
-import core.messages.BuyOrSellOrder;
 import core.messages.ConnectionRequest;
 import core.messages.FixMessage;
 import core.messages.Message;
+import core.messages.Order;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelHandlerContext;
@@ -82,7 +82,7 @@ public class Router implements Runnable {
 			if (Client.messageIsConnectionRequest(message))
 				acceptNewConnection(ctx, msg);
 			else if (Client.messageIsBuyOrSell(message)) {
-				BuyOrSellOrder ret = (BuyOrSellOrder) msg;
+				Order ret = (Order) msg;
 				try {
 					checkForErrors(ret);
 					if (checkIfMessageIsRejectedOrExecuted(ret)) // TODO rename this method, Ryan!!!!!!
@@ -110,7 +110,7 @@ public class Router implements Runnable {
 		System.out.println("Accepted a connection from " + brokerOrMarketString() + ": " + newID);
 	}
 
-	public void checkForErrors(BuyOrSellOrder response) throws Exception {
+	public void checkForErrors(Order response) throws Exception {
 		if (!response.createMyChecksum().equals(response.getChecksum())) {
 			throw new ChecksumIsInvalid();
 		}
@@ -119,7 +119,7 @@ public class Router implements Runnable {
 		}
 	}
 
-	private boolean checkIfMessageIsRejectedOrExecuted(BuyOrSellOrder ret) throws Exception {
+	private boolean checkIfMessageIsRejectedOrExecuted(Order ret) throws Exception {
 		if (ret.getMessageAction().equals(Message.Action.EXECUTED.toString())
 				|| ret.getMessageAction().equals(Message.Action.REJECTED.toString())) {
 			if (!ret.createMyChecksum().equals(ret.getChecksum())) // TODO extract this

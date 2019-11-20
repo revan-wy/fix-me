@@ -11,10 +11,10 @@ import core.encoders.OrderEncoder;
 import core.exceptions.BrokerInputError;
 import core.exceptions.ChecksumIsInvalid;
 import core.exceptions.InputStringEmpty;
-import core.messages.BuyOrSellOrder;
 import core.messages.ConnectionRequest;
 import core.messages.FixMessage;
 import core.messages.Message;
+import core.messages.Order;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelHandlerContext;
@@ -51,12 +51,12 @@ public class Client implements Runnable {
 			String[] split = string.split("\\s+");
 			if (split.length != 5)
 				throw new BrokerInputError();
-			BuyOrSellOrder message;
+			Order message;
 			if (split[0].toLowerCase().equals("sell")) {
-				message = new BuyOrSellOrder(Message.Type.SELL.toString(), "", verifyId(split[1]), clientID, split[2],
+				message = new Order(Message.Type.SELL.toString(), "", verifyId(split[1]), clientID, split[2],
 						Integer.valueOf(split[3]), Integer.valueOf(split[4]));
 			} else if (split[0].toLowerCase().equals("buy")) {
-				message = new BuyOrSellOrder(Message.Type.BUY.toString(), "", verifyId(split[1]), clientID, split[2],
+				message = new Order(Message.Type.BUY.toString(), "", verifyId(split[1]), clientID, split[2],
 						Integer.valueOf(split[3]), Integer.valueOf(split[4]));
 			} else {
 				throw new BrokerInputError();
@@ -79,7 +79,7 @@ public class Client implements Runnable {
 			if (messageIsConnectionRequest(message)) {
 				announceNewConnection(msg);
 			} else if (messageIsBuyOrSell(message)) {
-				BuyOrSellOrder request = (BuyOrSellOrder) msg;
+				Order request = (Order) msg;
 				try {
 					if (!request.createMyChecksum().equals(request.getChecksum()))
 						throw new ChecksumIsInvalid();
@@ -124,7 +124,7 @@ public class Client implements Runnable {
 			return br.readLine();
 		}
 
-		private boolean messageHasBeenActioned(BuyOrSellOrder message) {
+		private boolean messageHasBeenActioned(Order message) {
 			if (message.getMessageAction().equals(Message.Action.EXECUTED.toString())
 					|| message.getMessageAction().equals(Message.Action.REJECTED.toString())) {
 				System.out
@@ -134,7 +134,7 @@ public class Client implements Runnable {
 			return false;
 		}
 
-		private void marketBuyOrderHandler(ChannelHandlerContext context, BuyOrSellOrder message) {
+		private void marketBuyOrderHandler(ChannelHandlerContext context, Order message) {
 			Random random = new Random();
 			if (random.nextBoolean()) {
 				System.out.println("Buy order rejected.");
@@ -147,7 +147,7 @@ public class Client implements Runnable {
 			context.writeAndFlush(message);
 		}
 
-		private void marketSellOrderHandler(ChannelHandlerContext context, BuyOrSellOrder message) {
+		private void marketSellOrderHandler(ChannelHandlerContext context, Order message) {
 			Random random = new Random();
 			if (random.nextBoolean()) {
 				System.out.println("Sell order successfully executed.");

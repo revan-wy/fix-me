@@ -4,9 +4,9 @@ import java.nio.charset.Charset;
 import java.util.List;
 
 import core.Client;
-import core.messages.BuyOrSellOrder;
 import core.messages.ConnectionRequest;
 import core.messages.FixMessage;
+import core.messages.Order;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.ReplayingDecoder;
@@ -33,8 +33,8 @@ public class Decoder extends ReplayingDecoder<Object> {
 		return request;
 	}
 
-	private BuyOrSellOrder orderHandler(ByteBuf in, final Charset charset, FixMessage message) {
-		BuyOrSellOrder order = new BuyOrSellOrder();
+	private Order orderHandler(ByteBuf in, final Charset charset, FixMessage message) {
+		Order order = new Order();
 		order.setMessageType(message.getMessageType());
 		order.setMessageAction(in.readCharSequence(in.readInt(), charset).toString());
 		order.setId(in.readInt());
