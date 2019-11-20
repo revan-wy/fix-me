@@ -1,14 +1,9 @@
 package core.exceptions;
 
 public class ClientNotInRoutingTable extends Exception {
-	/**
-	 * added to circumvent warning
-	 */
-	private static final long serialVersionUID = -1354177855341301317L;
+	private static final long serialVersionUID = -1114883444409482670L;
 
 	public ClientNotInRoutingTable() {
-		super("This client is not in routing table!");
+		super("The requested market is not a registered client.");
 	}
 }
-
-// TODO format
