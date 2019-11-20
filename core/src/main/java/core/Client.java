@@ -6,8 +6,8 @@ import java.io.InputStreamReader;
 import java.util.Random;
 
 import core.decoders.Decoder;
-import core.encoders.AcceptConnectionEncoder;
 import core.encoders.BuyOrSellEncoder;
+import core.encoders.ConnectionRequestEncoder;
 import core.exceptions.BrokerInputError;
 import core.exceptions.ChecksumIsInvalid;
 import core.exceptions.InputStringEmpty;
@@ -201,7 +201,7 @@ public class Client implements Runnable {
 			b.group(workerGroup).channel(NioSocketChannel.class).handler(new ChannelInitializer<SocketChannel>() {
 				@Override
 				public void initChannel(SocketChannel ch) throws Exception {
-					ch.pipeline().addLast(new Decoder(), new AcceptConnectionEncoder(), new BuyOrSellEncoder(),
+					ch.pipeline().addLast(new Decoder(), new ConnectionRequestEncoder(), new BuyOrSellEncoder(),
 							new ClientHandler());
 				}
 			}).option(ChannelOption.SO_KEEPALIVE, true);
