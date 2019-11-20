@@ -2,7 +2,7 @@ package core.messages;
 
 import core.MyChecksum;
 
-public class BuyOrSellOrder extends FixMessage { // TODO change name to order
+public class Order extends FixMessage { // TODO change name to order
 	private int		actionLength;
 	private String	messageAction;
 	private int		id; // TODO investigate moving to fixmessage class; rename to brokerId
@@ -11,7 +11,7 @@ public class BuyOrSellOrder extends FixMessage { // TODO change name to order
 	private int		quantity;
 	private int		price;
 
-	public BuyOrSellOrder(String messageType, String messageAction, int marketId, int id, String instrument,
+	public Order(String messageType, String messageAction, int marketId, int id, String instrument,
 			int quantity, int price) {
 		super(messageType, marketId);
 		this.messageAction = messageAction;
@@ -24,7 +24,7 @@ public class BuyOrSellOrder extends FixMessage { // TODO change name to order
 		setChecksum(createMyChecksum());
 	}
 
-	public BuyOrSellOrder() {
+	public Order() {
 	}
 
 	public int getId() {
