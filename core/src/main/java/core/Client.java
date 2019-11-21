@@ -125,8 +125,8 @@ public class Client implements Runnable {
 		}
 
 		private boolean messageHasBeenActioned(Order message) {
-			if (message.getResponse().equals(Message.Action.EXECUTED.toString())
-					|| message.getResponse().equals(Message.Action.REJECTED.toString())) {
+			if (message.getResponse().equals(Message.Response.EXECUTED.toString())
+					|| message.getResponse().equals(Message.Response.REJECTED.toString())) {
 				System.out
 						.println("Response to " + message.getType() + " order : " + message.getResponse());
 				return true;
@@ -138,10 +138,10 @@ public class Client implements Runnable {
 			Random random = new Random();
 			if (random.nextBoolean()) {
 				System.out.println("Buy order rejected.");
-				message.setResponse(Message.Action.REJECTED.toString());
+				message.setResponse(Message.Response.REJECTED.toString());
 			} else {
 				System.out.println("Buy order successfully executed.");
-				message.setResponse(Message.Action.EXECUTED.toString());
+				message.setResponse(Message.Response.EXECUTED.toString());
 			}
 			message.updateChecksum();;
 			context.writeAndFlush(message);
@@ -151,10 +151,10 @@ public class Client implements Runnable {
 			Random random = new Random();
 			if (random.nextBoolean()) {
 				System.out.println("Sell order successfully executed.");
-				message.setResponse(Message.Action.EXECUTED.toString());
+				message.setResponse(Message.Response.EXECUTED.toString());
 			} else {
 				System.out.println("Sell order rejected.");
-				message.setResponse(Message.Action.REJECTED.toString());
+				message.setResponse(Message.Response.REJECTED.toString());
 			}
 			message.updateChecksum();;
 			context.writeAndFlush(message);

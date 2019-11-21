@@ -91,7 +91,7 @@ public class Router implements Runnable {
 					getFromTableById(ret.getMarketId()).channel().writeAndFlush(ret);
 				} catch (Exception e) {
 					System.out.println(e.getMessage());
-					ret.setResponse(Message.Action.REJECTED.toString());
+					ret.setResponse(Message.Response.REJECTED.toString());
 					ret.updateChecksum();
 					ctx.writeAndFlush(ret);
 				}
@@ -120,8 +120,8 @@ public class Router implements Runnable {
 	}
 
 	private boolean messageIsFromMarket(Order order) throws Exception {
-		if (order.getResponse().equals(Message.Action.EXECUTED.toString())// TODO extract this
-				|| order.getResponse().equals(Message.Action.REJECTED.toString())) {
+		if (order.getResponse().equals(Message.Response.EXECUTED.toString())// TODO extract this
+				|| order.getResponse().equals(Message.Response.REJECTED.toString())) {
 			if (!order.createMyChecksum().equals(order.getChecksum())) // TODO extract this
 				throw new ChecksumIsInvalid();
 			getFromTableById(order.getSenderId()).writeAndFlush(order); // TODO change to table checking
