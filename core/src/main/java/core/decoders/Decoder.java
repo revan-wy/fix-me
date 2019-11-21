@@ -17,7 +17,7 @@ public class Decoder extends ReplayingDecoder<Object> {
 	protected void decode(ChannelHandlerContext ctx, ByteBuf in, List<Object> out) throws Exception {
 		final Charset charset = Charset.forName("UTF-8");
 		FixMessage message = new FixMessage();
-		message.setMessageType(in.readCharSequence(in.readInt(), charset).toString());
+		message.setType(in.readCharSequence(in.readInt(), charset).toString());
 		if (Client.messageIsConnectionRequest(message)) {
 			out.add(connectionRequestHandler(in, charset, message));
 		} else if (Client.messageIsBuyOrSell(message)) {
@@ -27,7 +27,7 @@ public class Decoder extends ReplayingDecoder<Object> {
 
 	private ConnectionRequest connectionRequestHandler(ByteBuf in, final Charset charset, FixMessage message) {
 		ConnectionRequest request = new ConnectionRequest();
-		request.setMessageType(message.getMessageType());
+		request.setType(message.getType());
 		request.setSenderId(in.readInt());
 		request.setChecksum(in.readCharSequence(in.readInt(), charset).toString());
 		return request;
@@ -35,7 +35,7 @@ public class Decoder extends ReplayingDecoder<Object> {
 
 	private Order orderHandler(ByteBuf in, final Charset charset, FixMessage message) {
 		Order order = new Order();
-		order.setMessageType(message.getMessageType());
+		order.setType(message.getType());
 		order.setMessageAction(in.readCharSequence(in.readInt(), charset).toString());
 		order.setSenderId(in.readInt());
 		order.setInstrument(in.readCharSequence(in.readInt(), charset).toString());

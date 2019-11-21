@@ -13,7 +13,7 @@ public class ConnectionRequestEncoder extends MessageToByteEncoder<ConnectionReq
 	protected void encode(ChannelHandlerContext context, ConnectionRequest message, ByteBuf out) throws Exception {
 		final Charset charset = Charset.forName("UTF-8");
 		out.writeInt(message.getTypeLength());
-		out.writeCharSequence(message.getMessageType(), charset);
+		out.writeCharSequence(message.getType(), charset);
 		out.writeInt(message.getSenderId());
 		out.writeInt(message.getChecksumLength());
 		out.writeCharSequence(message.getChecksum(), charset);

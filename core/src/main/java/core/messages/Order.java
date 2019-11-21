@@ -85,7 +85,7 @@ public class Order extends FixMessage {
 	public String toString() {
 		return "MessageSellOrBuy {" +
 				"ID = " + getSenderId() +
-				"|MSG_TYPE = '" + getMessageType() + "'" +
+				"|MSG_TYPE = '" + getType() + "'" +
 				"|MSG_ACTION = '" + getMessageAction() + "'" +
 				"|INSTRUMENT = '" + getInstrument() + "'" +
 				"|MARKET_ID = " + getMarketId() +
@@ -97,9 +97,9 @@ public class Order extends FixMessage {
 
 	public String	createMyChecksum() {
 		StringBuilder checksumBuffer = new StringBuilder("");
-		checksumBuffer.append(this.getMarketId()).append(this.getMessageType()).append(getSenderId()).
-				append(price).append(quantity).append(instrument).
-				append(messageAction);
+		checksumBuffer.append(this.getMarketId()).append(this.getType()).append(getSenderId()).
+				append(getPrice()).append(getQuantity()).append(getInstrument()).
+				append(getMessageAction());
 		return MyChecksum.myChecksum(checksumBuffer);
 	}
 

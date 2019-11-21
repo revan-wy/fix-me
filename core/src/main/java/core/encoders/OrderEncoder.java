@@ -13,7 +13,7 @@ public class OrderEncoder extends MessageToByteEncoder<Order> {
 	protected void encode(ChannelHandlerContext context, Order message, ByteBuf out) throws Exception {
 		final Charset charset = Charset.forName("UTF-8");
 		out.writeInt(message.getTypeLength());
-		out.writeCharSequence(message.getMessageType(), charset);
+		out.writeCharSequence(message.getType(), charset);
 		out.writeInt(message.getActionLength());
 		out.writeCharSequence(message.getMessageAction(), charset);
 		out.writeInt(message.getSenderId());

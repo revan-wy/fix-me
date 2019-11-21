@@ -1,40 +1,39 @@
 package core.messages;
 
 public class FixMessage {
-	private int		checksumLength;
-	private int		typeLength;
+	private int checksumLength;
 	private int senderId;
-	private String	checksum;
-	private String	messageType;
+	private int typeLength;
+	private String checksum;
+	private String type;
 
-	public FixMessage(String messageType, int senderId) {
-		this.messageType = messageType;
-		this.typeLength = messageType.length();
+	public FixMessage(String type, int senderId) {
+		this.type = type;
+		this.typeLength = type.length();
 		this.senderId = senderId;
+	}
+
+	public FixMessage() {
+	}
+
+	public String getChecksum() {
+		return checksum;
+	}
+
+	public int getChecksumLength() {
+		return checksumLength;
 	}
 
 	public int getSenderId() {
 		return senderId;
 	}
 
-	public void setSenderId(int id) {
-		this.senderId = id;
+	public String getType() {
+		return type;
 	}
 
-	public FixMessage() {
-	}
-
-	public String getMessageType() {
-		return messageType;
-	}
-
-	public void setMessageType(String messageType) {
-		this.messageType = messageType;
-		typeLength = messageType.length();
-	}
-
-	public String getChecksum() {
-		return checksum;
+	public int getTypeLength() {
+		return typeLength;
 	}
 
 	public void setChecksum(String checksum) {
@@ -42,15 +41,13 @@ public class FixMessage {
 		checksumLength = checksum.length();
 	}
 
-	public int getTypeLength() {
-		return typeLength;
+	public void setSenderId(int id) {
+		this.senderId = id;
 	}
 
-	public int getChecksumLength() {
-		return checksumLength;
+	public void setType(String type) {
+		this.type = type;
+		typeLength = type.length();
 	}
 
-	
 }
-
-// TODO format

@@ -63,7 +63,7 @@ public class Client implements Runnable {
 			}
 			message.updateChecksum();;
 			context.writeAndFlush(message);
-			System.out.println("Sending " + message.getMessageType() + " order to router.");
+			System.out.println("Sending " + message.getType() + " order to router.");
 		}
 
 		@Override
@@ -89,7 +89,7 @@ public class Client implements Runnable {
 				}
 				if (messageHasBeenActioned(request))
 					return;
-				if (message.getMessageType().equals(Message.Type.SELL.toString()))
+				if (message.getType().equals(Message.Type.SELL.toString()))
 					marketSellOrderHandler(context, request);
 				else
 					marketBuyOrderHandler(context, request);
@@ -128,7 +128,7 @@ public class Client implements Runnable {
 			if (message.getMessageAction().equals(Message.Action.EXECUTED.toString())
 					|| message.getMessageAction().equals(Message.Action.REJECTED.toString())) {
 				System.out
-						.println("Response to " + message.getMessageType() + " order : " + message.getMessageAction());
+						.println("Response to " + message.getType() + " order : " + message.getMessageAction());
 				return true;
 			}
 			return false;
@@ -185,12 +185,12 @@ public class Client implements Runnable {
 	}
 
 	public static boolean messageIsBuyOrSell(FixMessage message) {
-		return message.getMessageType().equals(Message.Type.BUY.toString())
-				|| message.getMessageType().equals(Message.Type.SELL.toString());
+		return message.getType().equals(Message.Type.BUY.toString())
+				|| message.getType().equals(Message.Type.SELL.toString());
 	}
 
 	public static boolean messageIsConnectionRequest(FixMessage message) {
-		return message.getMessageType().equals(Message.Type.CONNECTION_REQUEST.toString());
+		return message.getType().equals(Message.Type.CONNECTION_REQUEST.toString());
 	}
 
 	@Override

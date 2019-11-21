@@ -14,13 +14,13 @@ public class ConnectionRequest extends FixMessage {
 
 	public String createMyChecksum() {
 		StringBuilder checksumBuffer = new StringBuilder("");
-		checksumBuffer.append(this.getMessageType()).append(this.getSenderId());
+		checksumBuffer.append(this.getType()).append(this.getSenderId());
 		return MyChecksum.myChecksum(checksumBuffer);
 	}
 
 	@Override
 	public String toString() {
-		return "MessageAcceptConnection {" + "ID = " + getSenderId() + "|MSG_TYPE = '" + getMessageType() + "'"
+		return "MessageAcceptConnection {" + "ID = " + getSenderId() + "|MSG_TYPE = '" + getType() + "'"
 				+ "|CHECKSUM = '" + getChecksum() + "'" + '}';
 	}
 
