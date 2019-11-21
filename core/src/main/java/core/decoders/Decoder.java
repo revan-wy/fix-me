@@ -36,7 +36,7 @@ public class Decoder extends ReplayingDecoder<Object> {
 	private Order orderHandler(ByteBuf in, final Charset charset, FixMessage message) {
 		Order order = new Order();
 		order.setType(message.getType());
-		order.setMessageAction(in.readCharSequence(in.readInt(), charset).toString());
+		order.setResponse(in.readCharSequence(in.readInt(), charset).toString());
 		order.setSenderId(in.readInt());
 		order.setInstrument(in.readCharSequence(in.readInt(), charset).toString());
 		order.setMarketId(in.readInt());

@@ -14,8 +14,8 @@ public class OrderEncoder extends MessageToByteEncoder<Order> {
 		final Charset charset = Charset.forName("UTF-8");
 		out.writeInt(message.getTypeLength());
 		out.writeCharSequence(message.getType(), charset);
-		out.writeInt(message.getActionLength());
-		out.writeCharSequence(message.getMessageAction(), charset);
+		out.writeInt(message.getResponseLength());
+		out.writeCharSequence(message.getResponse(), charset);
 		out.writeInt(message.getSenderId());
 		out.writeInt(message.getInstrumentLength());
 		out.writeCharSequence(message.getInstrument(), charset);

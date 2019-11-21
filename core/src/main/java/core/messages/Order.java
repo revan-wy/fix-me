@@ -3,24 +3,24 @@ package core.messages;
 import core.MyChecksum;
 
 public class Order extends FixMessage {
-	private int		actionLength;
 	private int		instrumentLength;
 	private int		marketId;
 	private int		price;
 	private int		quantity;
+	private int		responseLength;
 	private String	instrument;
-	private String	messageAction; // TODO rename to response
+	private String	response;
 
-	public Order(String messageType, String messageAction, int marketId, int senderId, String instrument,
+	public Order(String messageType, String response, int marketId, int senderId, String instrument,
 			int quantity, int price) {
 		super(messageType, senderId);
-		this.actionLength = messageAction.length();
 		this.instrument = instrument;
 		this.instrumentLength = instrument.length();
 		this.marketId = marketId;
-		this.messageAction = messageAction;
 		this.price = price;
 		this.quantity = quantity;
+		this.response = response;
+		this.responseLength = response.length();
 		updateChecksum();
 	}
 
@@ -68,17 +68,17 @@ public class Order extends FixMessage {
 		setChecksum(createMyChecksum());
 	}
 
-	public String getMessageAction() {
-		return messageAction;
+	public String getResponse() {
+		return this.response;
 	}
 
-	public void setMessageAction(String messageAction) {
-		this.messageAction = messageAction;
-		this.actionLength = messageAction.length();
+	public void setResponse(String response) {
+		this.response = response;
+		this.responseLength = response.length();
 	}
 
-	public int getActionLength() {
-		return actionLength;
+	public int getResponseLength() {
+		return responseLength;
 	}
 
 	@Override
@@ -86,7 +86,7 @@ public class Order extends FixMessage {
 		return "MessageSellOrBuy {" +
 				"ID = " + getSenderId() +
 				"|MSG_TYPE = '" + getType() + "'" +
-				"|MSG_ACTION = '" + getMessageAction() + "'" +
+				"|MSG_ACTION = '" + getResponse() + "'" +
 				"|INSTRUMENT = '" + getInstrument() + "'" +
 				"|MARKET_ID = " + getMarketId() +
 				"|QUANTITY = " + getQuantity() +
@@ -99,7 +99,7 @@ public class Order extends FixMessage {
 		StringBuilder checksumBuffer = new StringBuilder("");
 		checksumBuffer.append(this.getMarketId()).append(this.getType()).append(getSenderId()).
 				append(getPrice()).append(getQuantity()).append(getInstrument()).
-				append(getMessageAction());
+				append(getResponse());
 		return MyChecksum.myChecksum(checksumBuffer);
 	}
 
