@@ -4,25 +4,23 @@ import core.MyChecksum;
 
 public class Order extends FixMessage {
 	private int		actionLength;
-	private String	messageAction;
-	private int		id; // TODO investigate moving to fixmessage class; rename to brokerId
 	private int		instrumentLength;
-	private String	instrument;
-	private int		quantity;
-	private int		price;
 	private int		marketId;
+	private int		price;
+	private int		quantity;
+	private String	instrument;
+	private String	messageAction; // TODO rename to response
 
-	public Order(String messageType, String messageAction, int marketId, int id, String instrument,
+	public Order(String messageType, String messageAction, int marketId, int senderId, String instrument,
 			int quantity, int price) {
-		super(messageType);
-		this.marketId = marketId;
-		this.messageAction = messageAction;
+		super(messageType, senderId);
 		this.actionLength = messageAction.length();
-		this.id = id;
 		this.instrument = instrument;
 		this.instrumentLength = instrument.length();
-		this.quantity = quantity;
+		this.marketId = marketId;
+		this.messageAction = messageAction;
 		this.price = price;
+		this.quantity = quantity;
 		updateChecksum();
 	}
 
@@ -37,14 +35,6 @@ public class Order extends FixMessage {
 		return this.marketId;
 	}
 	
-	public int getId() {
-		return id;
-	}
-
-	public void setId(int id) {
-		this.id = id;
-	}
-
 	public String getInstrument() {
 		return instrument;
 	}
@@ -94,20 +84,20 @@ public class Order extends FixMessage {
 	@Override
 	public String toString() {
 		return "MessageSellOrBuy {" +
-				"ID = " + id +
+				"ID = " + getSenderId() +
 				"|MSG_TYPE = '" + getMessageType() + "'" +
-				"|MSG_ACTION = '" + messageAction + "'" +
-				"|INSTRUMENT = '" + instrument + "'" +
+				"|MSG_ACTION = '" + getMessageAction() + "'" +
+				"|INSTRUMENT = '" + getInstrument() + "'" +
 				"|MARKET_ID = " + getMarketId() +
-				"|QUANTITY = " + quantity +
-				"|PRICE = " + price +
+				"|QUANTITY = " + getQuantity() +
+				"|PRICE = " + getPrice() +
 				"|CHECKSUM = '" + getChecksum() + "'" +
 				'}';
 	}
 
 	public String	createMyChecksum() {
 		StringBuilder checksumBuffer = new StringBuilder("");
-		checksumBuffer.append(this.getMarketId()).append(this.getMessageType()).append(id).
+		checksumBuffer.append(this.getMarketId()).append(this.getMessageType()).append(getSenderId()).
 				append(price).append(quantity).append(instrument).
 				append(messageAction);
 		return MyChecksum.myChecksum(checksumBuffer);

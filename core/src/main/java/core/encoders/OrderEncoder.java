@@ -16,7 +16,7 @@ public class OrderEncoder extends MessageToByteEncoder<Order> {
 		out.writeCharSequence(message.getMessageType(), charset);
 		out.writeInt(message.getActionLength());
 		out.writeCharSequence(message.getMessageAction(), charset);
-		out.writeInt(message.getId());
+		out.writeInt(message.getSenderId());
 		out.writeInt(message.getInstrumentLength());
 		out.writeCharSequence(message.getInstrument(), charset);
 		out.writeInt(message.getMarketId());

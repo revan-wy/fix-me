@@ -3,12 +3,22 @@ package core.messages;
 public class FixMessage {
 	private int		checksumLength;
 	private int		typeLength;
+	private int senderId;
 	private String	checksum;
 	private String	messageType;
 
-	public FixMessage(String messageType) {
+	public FixMessage(String messageType, int senderId) {
 		this.messageType = messageType;
 		this.typeLength = messageType.length();
+		this.senderId = senderId;
+	}
+
+	public int getSenderId() {
+		return senderId;
+	}
+
+	public void setSenderId(int id) {
+		this.senderId = id;
 	}
 
 	public FixMessage() {

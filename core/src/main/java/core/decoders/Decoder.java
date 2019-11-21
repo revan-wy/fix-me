@@ -37,7 +37,7 @@ public class Decoder extends ReplayingDecoder<Object> {
 		Order order = new Order();
 		order.setMessageType(message.getMessageType());
 		order.setMessageAction(in.readCharSequence(in.readInt(), charset).toString());
-		order.setId(in.readInt());
+		order.setSenderId(in.readInt());
 		order.setInstrument(in.readCharSequence(in.readInt(), charset).toString());
 		order.setMarketId(in.readInt());
 		order.setQuantity(in.readInt());

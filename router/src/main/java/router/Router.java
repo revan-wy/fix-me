@@ -124,7 +124,7 @@ public class Router implements Runnable {
 				|| order.getMessageAction().equals(Message.Action.REJECTED.toString())) {
 			if (!order.createMyChecksum().equals(order.getChecksum())) // TODO extract this
 				throw new ChecksumIsInvalid();
-			getFromTableById(order.getId()).writeAndFlush(order); // TODO change to table checking
+			getFromTableById(order.getSenderId()).writeAndFlush(order); // TODO change to table checking
 			return true;
 		}
 		return false;
