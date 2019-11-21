@@ -28,7 +28,7 @@ public class Decoder extends ReplayingDecoder<Object> {
 	private ConnectionRequest connectionRequestHandler(ByteBuf in, final Charset charset, FixMessage message) {
 		ConnectionRequest request = new ConnectionRequest();
 		request.setMessageType(message.getMessageType());
-		request.setId(in.readInt());
+		request.setSenderId(in.readInt());
 		request.setChecksum(in.readCharSequence(in.readInt(), charset).toString());
 		return request;
 	}

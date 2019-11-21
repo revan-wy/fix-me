@@ -3,43 +3,41 @@ package core.messages;
 import core.MyChecksum;
 
 public class ConnectionRequest extends FixMessage {
-	private int		id;
+	private int senderId;
 
 	public ConnectionRequest(String messageType) {
 		super(messageType, 0);
-		this.id = 0;
+		this.senderId = 0;
 		updateChecksum();
 	}
 
 	public ConnectionRequest() {
 	}
 
-	public String	createMyChecksum() {
+	public String createMyChecksum() {
 		StringBuilder checksumBuffer = new StringBuilder("");
-		checksumBuffer.append(this.getMarketId()).append(this.getMessageType()).append(id);
+		checksumBuffer.append(this.getMarketId()).append(this.getMessageType()).append(this.getSenderId());
 		return MyChecksum.myChecksum(checksumBuffer);
 	}
 
-	public int getId() {
-		return id;
+	public int getSenderId() {
+		return senderId;
 	}
 
-	public void setId(int id) {
-		this.id = id;
-	}
-
-	public void		updateChecksum() {
-		setChecksum(createMyChecksum());
+	public void setSenderId(int id) {
+		this.senderId = id;
 	}
 
 	@Override
 	public String toString() {
-		return "MessageAcceptConnection {" +
-				"ID = " + id +
-				"|MSG_TYPE = '" + getMessageType() + "'" +
-				"|CHECKSUM = '" + getChecksum() + "'" +
-				'}';
+		return "MessageAcceptConnection {" + "ID = " + getSenderId() + "|MSG_TYPE = '" + getMessageType() + "'"
+				+ "|CHECKSUM = '" + getChecksum() + "'" + '}';
 	}
+
+	public void updateChecksum() {
+		setChecksum(createMyChecksum());
+	}
+
 }
 
 // TODO format

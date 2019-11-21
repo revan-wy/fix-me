@@ -103,10 +103,10 @@ public class Router implements Runnable {
 		ConnectionRequest ret = (ConnectionRequest) msg;
 		String newID = ctx.channel().remoteAddress().toString().substring(11);
 		newID = newID.concat(brokerOrMarketBool() ? "2" : "3");
-		ret.setId(Integer.valueOf(newID));
+		ret.setSenderId(Integer.valueOf(newID));
 		ret.updateChecksum();
 		ctx.writeAndFlush(ret);
-		routingTable.put(ret.getId(), ctx);
+		routingTable.put(ret.getSenderId(), ctx);
 		System.out.println("Accepted a connection from " + brokerOrMarketString() + ": " + newID);
 	}
 

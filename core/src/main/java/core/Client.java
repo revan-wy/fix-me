@@ -43,7 +43,7 @@ public class Client implements Runnable {
 	class ClientHandler extends ChannelInboundHandlerAdapter {
 		private void announceNewConnection(Object message) {
 			ConnectionRequest request = (ConnectionRequest) message;
-			clientID = request.getId();
+			clientID = request.getSenderId();
 			System.out.println("Client connected to router with ID: " + clientID);
 		}
 
