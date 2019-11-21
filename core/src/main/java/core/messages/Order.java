@@ -10,10 +10,12 @@ public class Order extends FixMessage { // TODO change name to order
 	private String	instrument;
 	private int		quantity;
 	private int		price;
+	private int		marketId;
 
 	public Order(String messageType, String messageAction, int marketId, int id, String instrument,
 			int quantity, int price) {
-		super(messageType, marketId);
+		super(messageType);
+		this.marketId = marketId;
 		this.messageAction = messageAction;
 		this.actionLength = messageAction.length();
 		this.id = id;
@@ -27,6 +29,14 @@ public class Order extends FixMessage { // TODO change name to order
 	public Order() {
 	}
 
+	public void setMarketId(int marketId) {
+		this.marketId = marketId;
+	}
+
+	public int getMarketId() {
+		return this.marketId;
+	}
+	
 	public int getId() {
 		return id;
 	}

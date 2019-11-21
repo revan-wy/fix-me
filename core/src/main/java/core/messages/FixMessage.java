@@ -1,16 +1,14 @@
 package core.messages;
 
 public class FixMessage {
-	private int		typeLength;
-	private String	messageType;
-	private int		marketId; // TODO investigate moving to buysell class
 	private int		checksumLength;
+	private int		typeLength;
 	private String	checksum;
+	private String	messageType;
 
-	public FixMessage(String messageType, int marketId) {
+	public FixMessage(String messageType) {
 		this.messageType = messageType;
 		this.typeLength = messageType.length();
-		this.marketId = marketId;
 	}
 
 	public FixMessage() {
@@ -23,14 +21,6 @@ public class FixMessage {
 	public void setMessageType(String messageType) {
 		this.messageType = messageType;
 		typeLength = messageType.length();
-	}
-
-	public int getMarketId() {
-		return marketId;
-	}
-
-	public void setMarketId(int marketId) {
-		this.marketId = marketId;
 	}
 
 	public String getChecksum() {

@@ -3,10 +3,10 @@ package core.messages;
 import core.MyChecksum;
 
 public class ConnectionRequest extends FixMessage {
-	private int senderId;
+	private int senderId; //TODO should this not be in super?
 
 	public ConnectionRequest(String messageType) {
-		super(messageType, 0);
+		super(messageType);
 		this.senderId = 0;
 		updateChecksum();
 	}
@@ -16,7 +16,7 @@ public class ConnectionRequest extends FixMessage {
 
 	public String createMyChecksum() {
 		StringBuilder checksumBuffer = new StringBuilder("");
-		checksumBuffer.append(this.getMarketId()).append(this.getMessageType()).append(this.getSenderId());
+		checksumBuffer.append(this.getMessageType()).append(this.getSenderId());
 		return MyChecksum.myChecksum(checksumBuffer);
 	}
 
