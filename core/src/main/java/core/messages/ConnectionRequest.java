@@ -39,5 +39,3 @@ public class ConnectionRequest extends FixMessage {
 	}
 
 }
-
-// TODO format
