@@ -110,24 +110,26 @@ public class Router implements Runnable {
 		System.out.println("Accepted a connection from " + brokerOrMarketString() + ": " + newID);
 	}
 
-	public void checkForErrors(Order response) throws Exception {
-		if (!response.createMyChecksum().equals(response.getChecksum())) {
-			throw new ChecksumIsInvalid();
-		}
-		if (!checkIfInTable(response.getMarketId())) {
+	public void checkForErrors(Order order) throws Exception {
+		isChecksumValid(order);
+		if (!checkIfInTable(order.getMarketId())) {// TODO extract this
 			throw new ClientNotRegistered();
 		}
 	}
 
 	private boolean messageIsFromMarket(Order order) throws Exception {
-		if (order.getResponse().equals(Message.Response.EXECUTED.toString())// TODO extract this
+		if (order.getResponse().equals(Message.Response.EXECUTED.toString())
 				|| order.getResponse().equals(Message.Response.REJECTED.toString())) {
-			if (!order.createMyChecksum().equals(order.getChecksum())) // TODO extract this
-				throw new ChecksumIsInvalid();
+			isChecksumValid(order);
 			getFromTableById(order.getSenderId()).writeAndFlush(order); // TODO change to table checking
 			return true;
 		}
 		return false;
+	}
+
+	private void isChecksumValid(Order order) throws Exception {
+		if (!order.createMyChecksum().equals(order.getChecksum())) // TODO extract this
+			throw new ChecksumIsInvalid();
 	}
 
 	private boolean checkIfInTable(int id) {
