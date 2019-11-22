@@ -86,7 +86,7 @@ public class Router implements Runnable {
 						getFromTableById(order.getSenderId()).writeAndFlush(order);
 					} else {
 						System.out.println("Sending request to market with ID " + order.getMarketId());
-						getFromTableById(order.getMarketId()).channel().writeAndFlush(order);
+						getFromTableById(order.getMarketId()).writeAndFlush(order);
 					}
 				} catch (Exception e) {
 					System.out.println(e.getMessage());
