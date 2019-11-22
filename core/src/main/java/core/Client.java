@@ -51,16 +51,24 @@ public class Client implements Runnable {
 			if (split.length != 5)
 				throw new BrokerInputError();
 			Order message;
-			if (split[0].toLowerCase().equals("sell")) {
-				message = new Order(Message.Type.SELL.toString(), "", verifyId(split[1]), clientID, split[2],
-						Integer.valueOf(split[3]), Integer.valueOf(split[4]));
-			} else if (split[0].toLowerCase().equals("buy")) {
-				message = new Order(Message.Type.BUY.toString(), "", verifyId(split[1]), clientID, split[2],
-						Integer.valueOf(split[3]), Integer.valueOf(split[4]));
+			String type = split[0].toLowerCase();
+			String response = "";
+			int marketId = verifyId(split[1]);
+			String instrument = split[2];
+			int quantity, price;
+			try {
+				quantity = Integer.valueOf(split[3]);
+				price = Integer.valueOf(split[4]);
+			} catch (Exception e) {
+				throw new BrokerInputError();
+			}
+			if (type.equals("sell") || type.equals("buy")) {
+				message = new Order(type.toUpperCase(), response, marketId, clientID, instrument, quantity, price);
 			} else {
 				throw new BrokerInputError();
 			}
-			message.updateChecksum();;
+			message.updateChecksum();
+			;
 			context.writeAndFlush(message);
 			System.out.println("Sending " + message.getType() + " order to router.");
 		}
@@ -78,7 +86,7 @@ public class Client implements Runnable {
 			if (messageIsConnectionRequest(fixMessage)) {
 				ConnectionRequest request = (ConnectionRequest) message;
 				announceNewConnection(request);
-			} else if (messageIsOrder(fixMessage)) { // TODO change to message is order
+			} else if (messageIsOrder(fixMessage)) {
 				Order order = (Order) message;
 				try {
 					if (!order.createMyChecksum().equals(order.getChecksum()))
@@ -127,8 +135,7 @@ public class Client implements Runnable {
 		private boolean messageHasBeenActioned(Order message) {
 			if (message.getResponse().equals(Message.Response.EXECUTED.toString())
 					|| message.getResponse().equals(Message.Response.REJECTED.toString())) {
-				System.out
-						.println("Response to " + message.getType() + " order : " + message.getResponse());
+				System.out.println("Response to " + message.getType() + " order : " + message.getResponse());
 				return true;
 			}
 			return false;
@@ -143,7 +150,8 @@ public class Client implements Runnable {
 				System.out.println("Buy order successfully executed.");
 				message.setResponse(Message.Response.EXECUTED.toString());
 			}
-			message.updateChecksum();;
+			message.updateChecksum();
+			;
 			context.writeAndFlush(message);
 		}
 
@@ -156,7 +164,8 @@ public class Client implements Runnable {
 				System.out.println("Sell order rejected.");
 				message.setResponse(Message.Response.REJECTED.toString());
 			}
-			message.updateChecksum();;
+			message.updateChecksum();
+			;
 			context.writeAndFlush(message);
 		}
 

@@ -10,6 +10,7 @@ public class Main {
 		new Thread(brokerRouter).start();
 		Router marketRouter = new Router(Router.MARKET_PORT);
 		new Thread(marketRouter).start();
+		System.out.println("Awaiting Broker and Market connections.");
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 		String command = "";
 		while (true) {

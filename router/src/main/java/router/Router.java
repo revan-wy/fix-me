@@ -124,7 +124,7 @@ public class Router implements Runnable {
 			ChannelFuture f = b.bind(port).sync();
 			f.channel().closeFuture().sync();
 		} catch (InterruptedException e) {
-			e.printStackTrace();
+			System.out.println(e.getMessage());
 		} finally {
 			shutDown();
 		}
