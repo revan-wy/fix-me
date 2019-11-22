@@ -20,7 +20,7 @@ public class Decoder extends ReplayingDecoder<Object> {
 		message.setType(in.readCharSequence(in.readInt(), charset).toString());
 		if (Client.messageIsConnectionRequest(message)) {
 			out.add(connectionRequestHandler(in, charset, message));
-		} else if (Client.messageIsBuyOrSell(message)) {
+		} else if (Client.messageIsOrder(message)) {
 			out.add(orderHandler(in, charset, message));
 		}
 	}

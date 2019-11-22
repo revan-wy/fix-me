@@ -78,7 +78,7 @@ public class Client implements Runnable {
 			if (messageIsConnectionRequest(fixMessage)) {
 				ConnectionRequest request = (ConnectionRequest) message;
 				announceNewConnection(request);
-			} else if (messageIsBuyOrSell(fixMessage)) { // TODO change to message is order
+			} else if (messageIsOrder(fixMessage)) { // TODO change to message is order
 				Order order = (Order) message;
 				try {
 					if (!order.createMyChecksum().equals(order.getChecksum()))
@@ -184,7 +184,7 @@ public class Client implements Runnable {
 		}
 	}
 
-	public static boolean messageIsBuyOrSell(FixMessage message) {
+	public static boolean messageIsOrder(FixMessage message) {
 		return message.getType().equals(Message.Type.BUY.toString())
 				|| message.getType().equals(Message.Type.SELL.toString());
 	}
