@@ -2,7 +2,6 @@ package router;
 
 import java.util.HashMap;
 
-import core.Client;
 import core.decoders.Decoder;
 import core.encoders.ConnectionRequestEncoder;
 import core.encoders.OrderEncoder;
@@ -85,10 +84,10 @@ public class Router implements Runnable {
 		@Override
 		public void channelRead(ChannelHandlerContext context, Object message) {
 			FixMessage fixMessage = (FixMessage) message;
-			if (Client.messageIsConnectionRequest(fixMessage)) {
+			if (messageIsConnectionRequest(fixMessage)) {
 				ConnectionRequest request = (ConnectionRequest) message;
 				acceptNewConnection(context, request);
-			} else if (Client.messageIsBuyOrSell(fixMessage)) {
+			} else if (messageIsBuyOrSell(fixMessage)) {
 				Order order = (Order) message;
 				try {
 					checkForErrors(order);
@@ -129,6 +128,15 @@ public class Router implements Runnable {
 		} finally {
 			shutDown();
 		}
+	}
+
+	public static boolean messageIsBuyOrSell(FixMessage message) {
+		return message.getType().equals(Message.Type.BUY.toString())
+				|| message.getType().equals(Message.Type.SELL.toString());
+	}
+
+	public static boolean messageIsConnectionRequest(FixMessage message) {
+		return message.getType().equals(Message.Type.CONNECTION_REQUEST.toString());
 	}
 
 	void shutDown() {

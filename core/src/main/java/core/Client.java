@@ -78,7 +78,7 @@ public class Client implements Runnable {
 			if (messageIsConnectionRequest(fixMessage)) {
 				ConnectionRequest request = (ConnectionRequest) message;
 				announceNewConnection(request);
-			} else if (messageIsBuyOrSell(fixMessage)) {
+			} else if (messageIsBuyOrSell(fixMessage)) { // TODO change to message is order
 				Order order = (Order) message;
 				try {
 					if (!order.createMyChecksum().equals(order.getChecksum()))
