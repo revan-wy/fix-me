@@ -90,6 +90,7 @@ public class Router implements Runnable {
 			} else if (messageIsBuyOrSell(fixMessage)) {
 				Order order = (Order) message;
 				try {
+					System.out.println(order.toString());
 					checkForErrors(order);
 					if (messageIsFromMarket(order)) {
 						getFromTableById(order.getSenderId()).writeAndFlush(order);
