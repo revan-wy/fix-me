@@ -86,7 +86,7 @@ public class Order extends FixMessage {
 
 	@Override
 	public String toString() {
-		return "MessageSellOrBuy {" + "ID = " + getSenderId() + "|MSG_TYPE = '" + getType() + "'" + "|MSG_ACTION = '"
+		return "ORDER {" + "SENDER_ID = " + getSenderId() + "|TYPE = '" + getType() + "'" + "|ACTION = '"
 				+ getResponse() + "'" + "|INSTRUMENT = '" + getInstrument() + "'" + "|MARKET_ID = " + getMarketId()
 				+ "|QUANTITY = " + getQuantity() + "|PRICE = " + getPrice() + "|CHECKSUM = '" + getChecksum() + "'"
 				+ '}';

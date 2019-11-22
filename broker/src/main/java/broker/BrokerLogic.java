@@ -4,7 +4,7 @@ import java.io.IOException;
 import java.util.Random;
 import java.util.Scanner;
 
-import core.messages.MessageSellOrBuy;
+import core.messages.Order;
 
 public class BrokerLogic {
     int validation;
@@ -13,7 +13,7 @@ public class BrokerLogic {
     }
 
     public void brokerLoop() throws IOException {
-        MessageSellOrBuy message;
+        Order message;
         Scanner scan = new Scanner(System.in);
         String command;
         int marketId = 0;
@@ -29,7 +29,7 @@ public class BrokerLogic {
                     System.out.println("Press Any Key To Continue...");
                     System.in.read();
                     continue;}
-                message = new MessageSellOrBuy("Buy Message", "BUY", (marketId), 1212, randInstrument(), randQuantity(), randPrice());
+                message = new Order("Buy Message", "BUY", (marketId), 1212, randInstrument(), randQuantity(), randPrice());
                 System.out.println("Buy command signaled -> ["+marketId+"]");
                 System.out.println(message.toString());
                 System.out.println("Press Any Key To Continue...");
@@ -42,7 +42,7 @@ public class BrokerLogic {
                     System.out.println("Press Any Key To Continue...");
                     System.in.read();
                     continue;}
-                message = new MessageSellOrBuy("Sell Message", "SELL", (marketId), 1212, randInstrument(), randQuantity(), randPrice());
+                message = new Order("Sell Message", "SELL", (marketId), 1212, randInstrument(), randQuantity(), randPrice());
                 System.out.println("Sell command signaled to market -> ["+marketId+"]");
                 System.out.println(message.toString());
                 System.out.println("Press Any Key To Continue...");
@@ -53,6 +53,7 @@ public class BrokerLogic {
                 System.out.println("Exit command signaled");
                 System.out.println("Press Any Key To Continue...");
                 scan.nextLine();
+                
                 break;
             }
             // Write and Flush goes here

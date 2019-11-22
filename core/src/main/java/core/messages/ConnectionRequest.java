@@ -20,7 +20,7 @@ public class ConnectionRequest extends FixMessage {
 
 	@Override
 	public String toString() {
-		return "MessageAcceptConnection {" + "ID = " + getSenderId() + "|MSG_TYPE = '" + getType() + "'"
+		return "CONNECTION_REQUEST {" + "SENDER_ID = " + getSenderId() + "|TYPE = '" + getType() + "'"
 				+ "|CHECKSUM = '" + getChecksum() + "'" + '}';
 	}
 
