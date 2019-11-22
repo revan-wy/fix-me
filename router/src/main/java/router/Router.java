@@ -112,7 +112,7 @@ public class Router implements Runnable {
 
 	public void checkForErrors(Order order) throws Exception {
 		isChecksumValid(order);
-		if (!checkIfInTable(order.getMarketId())) {// TODO extract this
+		if (!checkIfInTable(order.getMarketId())) {
 			throw new ClientNotRegistered();
 		}
 	}
@@ -121,14 +121,14 @@ public class Router implements Runnable {
 		if (order.getResponse().equals(Message.Response.EXECUTED.toString())
 				|| order.getResponse().equals(Message.Response.REJECTED.toString())) {
 			isChecksumValid(order);
-			getFromTableById(order.getSenderId()).writeAndFlush(order); // TODO change to table checking
+			getFromTableById(order.getSenderId()).writeAndFlush(order); 
 			return true;
 		}
 		return false;
 	}
 
 	private void isChecksumValid(Order order) throws Exception {
-		if (!order.createMyChecksum().equals(order.getChecksum())) // TODO extract this
+		if (!order.createMyChecksum().equals(order.getChecksum()))
 			throw new ChecksumIsInvalid();
 	}
 
@@ -141,4 +141,3 @@ public class Router implements Runnable {
 	}
 }
 
-// TODO format

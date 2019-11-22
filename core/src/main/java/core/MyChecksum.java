@@ -12,9 +12,3 @@ public class MyChecksum {
 
 }
 
-// TODO fix client / router cross importing
-// TODO globally change message, order, request, response names
-// TODO follow flow of setchecksum, reading and writing checksum in decoders and encoders
-// TODO extractify
-// TODO rethink project structure
-// TODO format
