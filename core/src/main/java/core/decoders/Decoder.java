@@ -14,13 +14,13 @@ import io.netty.handler.codec.ReplayingDecoder;
 public class Decoder extends ReplayingDecoder<Object> {
 
 	@Override
-	protected void decode(ChannelHandlerContext ctx, ByteBuf in, List<Object> out) throws Exception {
+	protected void decode(ChannelHandlerContext context, ByteBuf in, List<Object> out) throws Exception {
 		final Charset charset = Charset.forName("UTF-8");
 		FixMessage message = new FixMessage();
 		message.setType(in.readCharSequence(in.readInt(), charset).toString());
 		if (Client.messageIsConnectionRequest(message)) {
 			out.add(connectionRequestHandler(in, charset, message));
-		} else if (Client.messageIsBuyOrSell(message)) {
+		} else if (Client.messageIsOrder(message)) {
 			out.add(orderHandler(in, charset, message));
 		}
 	}
