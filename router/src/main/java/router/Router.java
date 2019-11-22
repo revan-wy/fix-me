@@ -75,9 +75,10 @@ public class Router implements Runnable {
 		@Override
 		public void channelRead(ChannelHandlerContext context, Object message) {// TODO
 			FixMessage fixMessage = (FixMessage) message;
-			if (Client.messageIsConnectionRequest(fixMessage))
-				acceptNewConnection(context, message);
-			else if (Client.messageIsBuyOrSell(fixMessage)) {
+			if (Client.messageIsConnectionRequest(fixMessage)) {
+				ConnectionRequest request = (ConnectionRequest) message;
+				acceptNewConnection(context, request);
+			} else if (Client.messageIsBuyOrSell(fixMessage)) {
 				Order order = (Order) message;
 				try {
 					checkForErrors(order);
@@ -97,8 +98,7 @@ public class Router implements Runnable {
 		}
 	}
 
-	private void acceptNewConnection(ChannelHandlerContext context, Object message) {// TODO
-		ConnectionRequest request = (ConnectionRequest) message;
+	private void acceptNewConnection(ChannelHandlerContext context, ConnectionRequest request) {// TODO
 		String newID = context.channel().remoteAddress().toString().substring(11);
 		newID = newID.concat(brokerOrMarketBool() ? "0" : "1");
 		request.setSenderId(Integer.valueOf(newID));

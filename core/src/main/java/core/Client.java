@@ -41,8 +41,7 @@ public class Client implements Runnable {
 	}
 
 	class ClientHandler extends ChannelInboundHandlerAdapter {
-		private void announceNewConnection(Object message) {
-			ConnectionRequest request = (ConnectionRequest) message;
+		private void announceNewConnection(ConnectionRequest request) {
 			clientID = request.getSenderId();
 			System.out.println("Client connected to router with ID: " + clientID);
 		}
@@ -77,7 +76,8 @@ public class Client implements Runnable {
 		public void channelRead(ChannelHandlerContext context, Object message) {
 			FixMessage fixMessage = (FixMessage) message;
 			if (messageIsConnectionRequest(fixMessage)) {
-				announceNewConnection(message);
+				ConnectionRequest request = (ConnectionRequest) message;
+				announceNewConnection(request);
 			} else if (messageIsBuyOrSell(fixMessage)) {
 				Order order = (Order) message;
 				try {
