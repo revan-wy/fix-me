@@ -45,31 +45,33 @@ public class Client implements Runnable {
 			System.out.println("Client connected to router with ID: " + clientID);
 		}
 
-		// private void brokerWriteHandler(ChannelHandlerContext context, String string) throws Exception {
-		// 	String[] split = string.split("\\s+");
-		// 	if (split.length != 5)
-		// 		throw new BrokerInputError();
-		// 	Order message;
-		// 	String type = split[0].toLowerCase();
-		// 	String response = "";
-		// 	int marketId = verifyId(split[1]);
-		// 	String instrument = split[2];
-		// 	int quantity, price;
-		// 	try {
-		// 		quantity = Integer.valueOf(split[3]);
-		// 		price = Integer.valueOf(split[4]);
-		// 	} catch (Exception e) {
-		// 		throw new BrokerInputError();
-		// 	}
-		// 	if (type.equals("sell") || type.equals("buy")) {
-		// 		message = new Order(type.toUpperCase(), response, marketId, clientID, instrument, quantity, price);
-		// 	} else {
-		// 		throw new BrokerInputError();
-		// 	}
-		// 	message.updateChecksum();
-		// 	;
-		// 	context.writeAndFlush(message);
-		// 	System.out.println("Sending " + message.getType() + " order to router.");
+		// private void brokerWriteHandler(ChannelHandlerContext context, String string)
+		// throws Exception {
+		// String[] split = string.split("\\s+");
+		// if (split.length != 5)
+		// throw new BrokerInputError();
+		// Order message;
+		// String type = split[0].toLowerCase();
+		// String response = "";
+		// int marketId = verifyId(split[1]);
+		// String instrument = split[2];
+		// int quantity, price;
+		// try {
+		// quantity = Integer.valueOf(split[3]);
+		// price = Integer.valueOf(split[4]);
+		// } catch (Exception e) {
+		// throw new BrokerInputError();
+		// }
+		// if (type.equals("sell") || type.equals("buy")) {
+		// message = new Order(type.toUpperCase(), response, marketId, clientID,
+		// instrument, quantity, price);
+		// } else {
+		// throw new BrokerInputError();
+		// }
+		// message.updateChecksum();
+		// ;
+		// context.writeAndFlush(message);
+		// System.out.println("Sending " + message.getType() + " order to router.");
 		// }
 
 		@Override
@@ -118,66 +120,67 @@ public class Client implements Runnable {
 			Scanner scan = new Scanner(System.in);
 			String command;
 			int marketId = 0;
-			int validation = 0;
-			while (validation == 0) {
-				printMenue();
-				command = scan.nextLine();
-				switch (command) {
-				case "1":
-					System.out.println("Please input a market ID:");
-					try {
-						marketId = scan.nextInt();
-					} catch (Exception ex) {
-						System.out.println("Invalid Market ID");
-						System.out.println("Press Any Key To Continue...");
-						System.in.read();
-						continue;
-					}
-					message = new Order(Message.Type.BUY.toString(), "", (marketId), 1212, randInstrument(),
-							randQuantity(), randPrice());
-					System.out.println("Buy command signaled -> [" + marketId + "]");
-					System.out.println(message.toString());
+			// int validation = 0;
+			// while (validation == 0) {
+			printMenue();
+			command = scan.nextLine();
+			switch (command) {
+			case "1":
+				System.out.println("Please input a market ID:");
+				try {
+					marketId = (scan.nextInt());
+				} catch (Exception ex) {
+					System.out.println("Invalid Market ID");
 					System.out.println("Press Any Key To Continue...");
-					try {
-						System.in.read();
-					} catch (Exception ex) {
-						ex.printStackTrace();
-					}
-					break;
-				case "2":
-					System.out.println("Please input a market ID:");
-					try {
-						marketId = scan.nextInt();
-					} catch (Exception ex) {
-						System.out.println("Invalid Market ID");
-						System.out.println("Press Any Key To Continue...");
-						System.in.read();
-						continue;
-					}
-					message = new Order(Message.Type.SELL.toString(), "", (marketId), 1212, randInstrument(), randQuantity(),
-							randPrice());
-					System.out.println("Sell command signaled to market -> [" + marketId + "]");
-					System.out.println(message.toString());
-					System.out.println("Press Any Key To Continue...");
-					try {
-						System.in.read();
-					} catch (Exception ex) {
-						ex.printStackTrace();
-					}
-					break;
-				case "3":
-					validation = 1;
-					System.out.println("Exit command signaled");
-					System.out.println("Press Any Key To Continue...");
-					scan.nextLine();
-					shutdown();
-					break;
+					System.in.read();
+					// continue;
 				}
-				// Write and Flush
-				message.updateChecksum();
-				context.writeAndFlush(message);
-				System.out.println("Write and Flush goes here");
+				message = new Order(Message.Type.BUY.toString(), "", (marketId), clientID, randInstrument(),
+						randQuantity(), randPrice());
+				System.out.println("Buy command signaled -> [" + marketId + "]");
+				System.out.println(message.toString());
+				System.out.println("Press Any Key To Continue...");
+				try {
+					System.in.read();
+				} catch (Exception ex) {
+					ex.printStackTrace();
+				}
+				break;
+			case "2":
+				System.out.println("Please input a market ID:");
+				try {
+					marketId = scan.nextInt();
+				} catch (Exception ex) {
+					System.out.println("Invalid Market ID");
+					System.out.println("Press Any Key To Continue...");
+					System.in.read();
+					// continue;
+				}
+				message = new Order(Message.Type.SELL.toString(), "", (marketId), clientID, randInstrument(),
+						randQuantity(), randPrice());
+				System.out.println("Sell command signaled to market -> [" + marketId + "]");
+				System.out.println(message.toString());
+				System.out.println("Press Any Key To Continue...");
+				try {
+					System.in.read();
+				} catch (Exception ex) {
+					ex.printStackTrace();
+				}
+				break;
+			case "3":
+				// validation = 1;
+				System.out.println("Exit command signaled");
+				System.out.println("Press Any Key To Continue...");
+				scan.nextLine();
+				shutdown();
+				break;
 			}
+			// Write and Flush
+			message.updateChecksum();
+			scan.nextLine();
+			context.channel().writeAndFlush(message);
+			// System.out.println("Write and Flush goes here");
+			// }
 			System.out.println("Broker Loop Exited");
 			scan.close();
 			// }
@@ -200,10 +203,11 @@ public class Client implements Runnable {
 
 		// =========>
 		// private String getBrokerInput() throws Exception {
-		// 	System.out.println(
-		// 			"Please create a new order. Format: \n[sell || buy] [market id] [instrument] [quantity] [price]");
-		// 	BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-		// 	return br.readLine();
+		// System.out.println(
+		// "Please create a new order. Format: \n[sell || buy] [market id] [instrument]
+		// [quantity] [price]");
+		// BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		// return br.readLine();
 		// }
 
 		// =========>
@@ -245,9 +249,9 @@ public class Client implements Runnable {
 		}
 
 		// private int verifyId(String id) throws Exception {
-		// 	if (id.length() != 6)
-		// 		throw new BrokerInputError();
-		// 	return Integer.valueOf(id);
+		// if (id.length() != 6)
+		// throw new BrokerInputError();
+		// return Integer.valueOf(id);
 		// }
 
 	}
