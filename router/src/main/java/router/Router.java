@@ -29,26 +29,22 @@ public class Router implements Runnable {
 	static final int BROKER_PORT = 5000;
 	private EventLoopGroup bossGroup;
 	private EventLoopGroup workerGroup;
-	private int serverType;
+	private int port;
 
-	Router(int serverType) {
-		this.serverType = serverType;
+	Router(int port) {
+		this.port = port;
+	}
+
+	private String brokerOrMarketString() {
+		return this.port == MARKET_PORT ? "market" : "broker";
+	}
+
+	private boolean brokerOrMarketBool() {
+		return this.port != MARKET_PORT;
 	}
 
 	@Override
 	public void run() {
-		createServer(serverType);
-	}
-
-	private String brokerOrMarketString() {
-		return serverType == MARKET_PORT ? "market" : "broker";
-	}
-
-	private boolean brokerOrMarketBool() {
-		return serverType != MARKET_PORT;
-	}
-
-	private void createServer(int port) {
 		bossGroup = new NioEventLoopGroup();
 		workerGroup = new NioEventLoopGroup();
 		try {
@@ -77,66 +73,67 @@ public class Router implements Runnable {
 
 	class ProcessingHandler extends ChannelInboundHandlerAdapter {
 		@Override
-		public void channelRead(ChannelHandlerContext ctx, Object msg) {
-			FixMessage message = (FixMessage) msg;
-			if (Client.messageIsConnectionRequest(message))
-				acceptNewConnection(ctx, msg);
-			else if (Client.messageIsBuyOrSell(message)) {
-				Order ret = (Order) msg;
+		public void channelRead(ChannelHandlerContext context, Object message) {// TODO
+			FixMessage fixMessage = (FixMessage) message;
+			if (Client.messageIsConnectionRequest(fixMessage))
+				acceptNewConnection(context, message);
+			else if (Client.messageIsBuyOrSell(fixMessage)) {
+				Order order = (Order) message;
 				try {
-					checkForErrors(ret);
-					if (messageIsFromMarket(ret))
-						return;
-					System.out.println("Sending request to market with ID " + ret.getMarketId());
-					getFromTableById(ret.getMarketId()).channel().writeAndFlush(ret);
+					checkForErrors(order);
+					if (messageIsFromMarket(order)) {
+						getFromTableById(order.getSenderId()).writeAndFlush(order);
+					} else {
+						System.out.println("Sending request to market with ID " + order.getMarketId());
+						getFromTableById(order.getMarketId()).channel().writeAndFlush(order);
+					}
 				} catch (Exception e) {
 					System.out.println(e.getMessage());
-					ret.setResponse(Message.Response.REJECTED.toString());
-					ret.updateChecksum();
-					ctx.writeAndFlush(ret);
+					order.setResponse(Message.Response.REJECTED.toString());
+					order.updateChecksum();
+					context.writeAndFlush(order);
 				}
 			}
 		}
 	}
 
-	private void acceptNewConnection(ChannelHandlerContext ctx, Object msg) {
-		ConnectionRequest ret = (ConnectionRequest) msg;
-		String newID = ctx.channel().remoteAddress().toString().substring(11);
-		newID = newID.concat(brokerOrMarketBool() ? "2" : "3");
-		ret.setSenderId(Integer.valueOf(newID));
-		ret.updateChecksum();
-		ctx.writeAndFlush(ret);
-		routingTable.put(ret.getSenderId(), ctx);
+	private void acceptNewConnection(ChannelHandlerContext context, Object message) {// TODO
+		ConnectionRequest request = (ConnectionRequest) message;
+		String newID = context.channel().remoteAddress().toString().substring(11);
+		newID = newID.concat(brokerOrMarketBool() ? "0" : "1");
+		request.setSenderId(Integer.valueOf(newID));
+		request.updateChecksum();
+		context.writeAndFlush(request);
+		routingTable.put(request.getSenderId(), context);
 		System.out.println("Accepted a connection from " + brokerOrMarketString() + ": " + newID);
 	}
 
 	public void checkForErrors(Order order) throws Exception {
 		isChecksumValid(order);
-		if (!checkIfInTable(order.getMarketId())) {// TODO extract this
-			throw new ClientNotRegistered();
-		}
+		checkIfInTable(order.getMarketId());
 	}
 
 	private boolean messageIsFromMarket(Order order) throws Exception {
 		if (order.getResponse().equals(Message.Response.EXECUTED.toString())
 				|| order.getResponse().equals(Message.Response.REJECTED.toString())) {
 			isChecksumValid(order);
-			getFromTableById(order.getSenderId()).writeAndFlush(order); // TODO change to table checking
 			return true;
 		}
 		return false;
 	}
 
 	private void isChecksumValid(Order order) throws Exception {
-		if (!order.createMyChecksum().equals(order.getChecksum())) // TODO extract this
+		if (!order.createMyChecksum().equals(order.getChecksum()))
 			throw new ChecksumIsInvalid();
 	}
 
-	private boolean checkIfInTable(int id) {
-		return routingTable.containsKey(id);
+	private void checkIfInTable(int id) throws Exception {
+		if (!routingTable.containsKey(id))
+			throw new ClientNotRegistered();
 	}
 
-	private ChannelHandlerContext getFromTableById(int id) {
+	private ChannelHandlerContext getFromTableById(int id) throws Exception {
+		checkIfInTable(id);
 		return routingTable.get(id);
 	}
 }

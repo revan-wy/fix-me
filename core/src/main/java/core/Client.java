@@ -74,25 +74,25 @@ public class Client implements Runnable {
 		}
 
 		@Override
-		public void channelRead(ChannelHandlerContext context, Object msg) {
-			FixMessage message = (FixMessage) msg;
-			if (messageIsConnectionRequest(message)) {
-				announceNewConnection(msg);
-			} else if (messageIsBuyOrSell(message)) {
-				Order request = (Order) msg;
+		public void channelRead(ChannelHandlerContext context, Object message) {
+			FixMessage fixMessage = (FixMessage) message;
+			if (messageIsConnectionRequest(fixMessage)) {
+				announceNewConnection(message);
+			} else if (messageIsBuyOrSell(fixMessage)) {
+				Order order = (Order) message;
 				try {
-					if (!request.createMyChecksum().equals(request.getChecksum()))
+					if (!order.createMyChecksum().equals(order.getChecksum()))
 						throw new ChecksumIsInvalid();
 				} catch (Exception e) {
 					System.out.println(e.getMessage());
 					return;
 				}
-				if (messageHasBeenActioned(request))
+				if (messageHasBeenActioned(order))
 					return;
-				if (message.getType().equals(Message.Type.SELL.toString()))
-					marketSellOrderHandler(context, request);
+				if (fixMessage.getType().equals(Message.Type.SELL.toString()))
+					marketSellOrderHandler(context, order);
 				else
-					marketBuyOrderHandler(context, request);
+					marketBuyOrderHandler(context, order);
 			}
 		}
 
