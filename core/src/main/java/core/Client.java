@@ -9,9 +9,7 @@ import java.util.Scanner;
 import core.decoders.Decoder;
 import core.encoders.ConnectionRequestEncoder;
 import core.encoders.OrderEncoder;
-import core.exceptions.BrokerInputError;
 import core.exceptions.ChecksumIsInvalid;
-import core.exceptions.InputStringEmpty;
 import core.messages.ConnectionRequest;
 import core.messages.FixMessage;
 import core.messages.Message;
@@ -47,32 +45,32 @@ public class Client implements Runnable {
 			System.out.println("Client connected to router with ID: " + clientID);
 		}
 
-		private void brokerWriteHandler(ChannelHandlerContext context, String string) throws Exception {
-			String[] split = string.split("\\s+");
-			if (split.length != 5)
-				throw new BrokerInputError();
-			Order message;
-			String type = split[0].toLowerCase();
-			String response = "";
-			int marketId = verifyId(split[1]);
-			String instrument = split[2];
-			int quantity, price;
-			try {
-				quantity = Integer.valueOf(split[3]);
-				price = Integer.valueOf(split[4]);
-			} catch (Exception e) {
-				throw new BrokerInputError();
-			}
-			if (type.equals("sell") || type.equals("buy")) {
-				message = new Order(type.toUpperCase(), response, marketId, clientID, instrument, quantity, price);
-			} else {
-				throw new BrokerInputError();
-			}
-			message.updateChecksum();
-			;
-			context.writeAndFlush(message);
-			System.out.println("Sending " + message.getType() + " order to router.");
-		}
+		// private void brokerWriteHandler(ChannelHandlerContext context, String string) throws Exception {
+		// 	String[] split = string.split("\\s+");
+		// 	if (split.length != 5)
+		// 		throw new BrokerInputError();
+		// 	Order message;
+		// 	String type = split[0].toLowerCase();
+		// 	String response = "";
+		// 	int marketId = verifyId(split[1]);
+		// 	String instrument = split[2];
+		// 	int quantity, price;
+		// 	try {
+		// 		quantity = Integer.valueOf(split[3]);
+		// 		price = Integer.valueOf(split[4]);
+		// 	} catch (Exception e) {
+		// 		throw new BrokerInputError();
+		// 	}
+		// 	if (type.equals("sell") || type.equals("buy")) {
+		// 		message = new Order(type.toUpperCase(), response, marketId, clientID, instrument, quantity, price);
+		// 	} else {
+		// 		throw new BrokerInputError();
+		// 	}
+		// 	message.updateChecksum();
+		// 	;
+		// 	context.writeAndFlush(message);
+		// 	System.out.println("Sending " + message.getType() + " order to router.");
+		// }
 
 		@Override
 		public void channelActive(ChannelHandlerContext context) throws Exception {
@@ -108,45 +106,64 @@ public class Client implements Runnable {
 		@Override
 		public void channelReadComplete(ChannelHandlerContext context) {
 			if (clientType == Client.Type.BROKER)
-				channelWrite(context);
+				try {
+					channelWrite(context);
+				} catch (Exception e) {
+					System.out.println(e.getMessage());
+				}
 		}
 
-		private void channelWrite(ChannelHandlerContext context) throws IOException {
+		private void channelWrite(ChannelHandlerContext context) throws Exception {
 			Order message = null;
 			Scanner scan = new Scanner(System.in);
 			String command;
 			int marketId = 0;
 			int validation = 0;
-			while (validation == 0){
+			while (validation == 0) {
 				printMenue();
-            	command = scan.nextLine();
+				command = scan.nextLine();
 				switch (command) {
 				case "1":
 					System.out.println("Please input a market ID:");
-					try{marketId = scan.nextInt();}catch(Exception ex){
+					try {
+						marketId = scan.nextInt();
+					} catch (Exception ex) {
 						System.out.println("Invalid Market ID");
 						System.out.println("Press Any Key To Continue...");
 						System.in.read();
-						continue;}
-						//Order(Message.Type.SELL.toString(), "", verifyId(split[1]), clientID, split[2],
-					message = new Order(Message.Type.SELL.toString(), "", (marketId), 1212, randInstrument(), randQuantity(), randPrice());
-					System.out.println("Buy command signaled -> ["+marketId+"]");
+						continue;
+					}
+					message = new Order(Message.Type.BUY.toString(), "", (marketId), 1212, randInstrument(),
+							randQuantity(), randPrice());
+					System.out.println("Buy command signaled -> [" + marketId + "]");
 					System.out.println(message.toString());
 					System.out.println("Press Any Key To Continue...");
-					try{System.in.read();}catch(Exception ex){ex.printStackTrace();}
+					try {
+						System.in.read();
+					} catch (Exception ex) {
+						ex.printStackTrace();
+					}
 					break;
 				case "2":
 					System.out.println("Please input a market ID:");
-					try{marketId = scan.nextInt();}catch(Exception ex){
+					try {
+						marketId = scan.nextInt();
+					} catch (Exception ex) {
 						System.out.println("Invalid Market ID");
 						System.out.println("Press Any Key To Continue...");
 						System.in.read();
-						continue;}
-					message = new Order("Sell Message", "SELL", (marketId), 1212, randInstrument(), randQuantity(), randPrice());
-					System.out.println("Sell command signaled to market -> ["+marketId+"]");
+						continue;
+					}
+					message = new Order(Message.Type.SELL.toString(), "", (marketId), 1212, randInstrument(), randQuantity(),
+							randPrice());
+					System.out.println("Sell command signaled to market -> [" + marketId + "]");
 					System.out.println(message.toString());
 					System.out.println("Press Any Key To Continue...");
-					try{System.in.read();}catch(Exception ex){ex.printStackTrace();}
+					try {
+						System.in.read();
+					} catch (Exception ex) {
+						ex.printStackTrace();
+					}
 					break;
 				case "3":
 					validation = 1;
@@ -156,38 +173,40 @@ public class Client implements Runnable {
 					shutdown();
 					break;
 				}
-				//Write and Flush
-				message.updateChecksum();;
+				// Write and Flush
+				message.updateChecksum();
 				context.writeAndFlush(message);
-            	System.out.println("Write and Flush goes here");
-            }
-            System.out.println("Broker Loop Exited");
-        	scan.close();
+				System.out.println("Write and Flush goes here");
+			}
+			System.out.println("Broker Loop Exited");
+			scan.close();
 			// }
 			// try {
-			// 	String input = getBrokerInput();
-			// 	if (input.length() == 0)
-			// 		throw new InputStringEmpty();
-			// 	else if (input.toLowerCase().equals("exit"))
-			// 		shutdown();
-			// 	else if (clientType == Client.Type.BROKER)
-			// 		brokerWriteHandler(context, input);
+			// String input = getBrokerInput();
+			// if (input.length() == 0)
+			// throw new InputStringEmpty();
+			// else if (input.toLowerCase().equals("exit"))
+			// shutdown();
+			// else if (clientType == Client.Type.BROKER)
+			// brokerWriteHandler(context, input);
 			// } catch (Exception e) {
-			// 	System.out.println(e.getMessage());
-			// 	channelWrite(context);
+			// System.out.println(e.getMessage());
+			// channelWrite(context);
 			// }
 			// write and flush Here
 			// message.updateChecksum();;
 			// context.writeAndFlush(message);
 		}
-//=========>
-		private String getBrokerInput() throws Exception {
-			System.out.println(
-					"Please create a new order. Format: \n[sell || buy] [market id] [instrument] [quantity] [price]");
-			BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-			return br.readLine();
-		}
-//=========>
+
+		// =========>
+		// private String getBrokerInput() throws Exception {
+		// 	System.out.println(
+		// 			"Please create a new order. Format: \n[sell || buy] [market id] [instrument] [quantity] [price]");
+		// 	BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		// 	return br.readLine();
+		// }
+
+		// =========>
 		private boolean messageHasBeenActioned(Order message) {
 			if (message.getResponse().equals(Message.Response.EXECUTED.toString())
 					|| message.getResponse().equals(Message.Response.REJECTED.toString())) {
@@ -225,11 +244,11 @@ public class Client implements Runnable {
 			context.writeAndFlush(message);
 		}
 
-		private int verifyId(String id) throws Exception {
-			if (id.length() != 6)
-				throw new BrokerInputError();
-			return Integer.valueOf(id);
-		}
+		// private int verifyId(String id) throws Exception {
+		// 	if (id.length() != 6)
+		// 		throw new BrokerInputError();
+		// 	return Integer.valueOf(id);
+		// }
 
 	}
 
@@ -289,36 +308,37 @@ public class Client implements Runnable {
 
 	// Sell or buy generating functions aswell as menue print
 	private static void printMenue() {
-        System.out.print("\033[H\033[2J");
-        System.out.flush();
-        System.out.println("    ______ _                  __  __        ____            _    ");
-        System.out.println("   |  ____(_)                |  \\/  |      |  _ \\          | |");
-        System.out.println("   | |__   ___  ___  ______  | \\  / | ___  | |_) |_ __ ___ | | _____ _ __ ");
-        System.out.println("   |  __| | \\ \\/ /  |______| | |\\/| |/ _ \\ |  _ <| '__/ _ \\| |/ / _ \\ '__|");
-        System.out.println("   | |    | |>  <            | |  | |  __/ | |_) | | | (_) |   <  __/ |   ");
-        System.out.println("   |_|    |_/_/\\_\\           |_|  |_|\\___| |____/|_|  \\___/|_|\\_\\___|_|");
-        System.out.println("   ________________________________________________________________________");
-        System.out.println("  | Welcome to the Fix-Me Broker.                                          |");
-        System.out.println("  | The following commands are available, please use numbers 1, 2 or 3.    |");
-        System.out.println("  |------------------------------------------------------------------------|");
-        System.out.println("  |  1. | BUY a comodity from the market.                                  |");
-        System.out.println("  |  2. | SELL a comodity to the market.                                   |");
-        System.out.println("  |  3. | EXIT the Fix-Me Broker.                                          |");
-        System.out.println("  |________________________________________________________________________|");
-    }
+		System.out.print("\033[H\033[2J");
+		System.out.flush();
+		System.out.println("    ______ _                  __  __        ____            _    ");
+		System.out.println("   |  ____(_)                |  \\/  |      |  _ \\          | |");
+		System.out.println("   | |__   ___  ___  ______  | \\  / | ___  | |_) |_ __ ___ | | _____ _ __ ");
+		System.out.println("   |  __| | \\ \\/ /  |______| | |\\/| |/ _ \\ |  _ <| '__/ _ \\| |/ / _ \\ '__|");
+		System.out.println("   | |    | |>  <            | |  | |  __/ | |_) | | | (_) |   <  __/ |   ");
+		System.out.println("   |_|    |_/_/\\_\\           |_|  |_|\\___| |____/|_|  \\___/|_|\\_\\___|_|");
+		System.out.println("   ________________________________________________________________________");
+		System.out.println("  | Welcome to the Fix-Me Broker.                                          |");
+		System.out.println("  | The following commands are available, please use numbers 1, 2 or 3.    |");
+		System.out.println("  |------------------------------------------------------------------------|");
+		System.out.println("  |  1. | BUY a comodity from the market.                                  |");
+		System.out.println("  |  2. | SELL a comodity to the market.                                   |");
+		System.out.println("  |  3. | EXIT the Fix-Me Broker.                                          |");
+		System.out.println("  |________________________________________________________________________|");
+	}
 
-    private static int randPrice(){
-        Random rand = new Random();
-        return(rand.nextInt(100));
-    }
+	private static int randPrice() {
+		Random rand = new Random();
+		return (rand.nextInt(100));
+	}
 
-    private static String randInstrument(){
-        String[] arr = {"GOLD", "OIl", "AVOCADOS", "DIAMONDS", "COFFEE"};
-        Random rand = new Random();
-        return(arr[rand.nextInt(4)]);
-    }
-    private static int randQuantity(){
-        Random rand = new Random();
-        return(rand.nextInt(100));
-    }
+	private static String randInstrument() {
+		String[] arr = { "GOLD", "OIl", "AVOCADOS", "DIAMONDS", "COFFEE" };
+		Random rand = new Random();
+		return (arr[rand.nextInt(4)]);
+	}
+
+	private static int randQuantity() {
+		Random rand = new Random();
+		return (rand.nextInt(100));
+	}
 }
