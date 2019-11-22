@@ -4,7 +4,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.Random;
-import java.util.Scanner;
+// import java.util.Scanner;
 
 import core.decoders.Decoder;
 import core.encoders.ConnectionRequestEncoder;
@@ -26,6 +26,7 @@ import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioSocketChannel;
 
 public class Client implements Runnable {
+	// private static int count = 0;
 	private Client.Type clientType;
 	private EventLoopGroup workerGroup;
 	private int clientID;
@@ -117,18 +118,19 @@ public class Client implements Runnable {
 
 		private void channelWrite(ChannelHandlerContext context) throws Exception {
 			Order message = null;
-			Scanner scan = new Scanner(System.in);
+			// Scanner scan = new Scanner(System.in);
+			BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 			String command;
 			int marketId = 0;
 			// int validation = 0;
 			// while (validation == 0) {
 			printMenue();
-			command = scan.nextLine();
+			command = br.readLine();
 			switch (command) {
 			case "1":
 				System.out.println("Please input a market ID:");
 				try {
-					marketId = (scan.nextInt());
+					marketId = Integer.valueOf(br.readLine());
 				} catch (Exception ex) {
 					System.out.println("Invalid Market ID");
 					System.out.println("Press Any Key To Continue...");
@@ -149,7 +151,7 @@ public class Client implements Runnable {
 			case "2":
 				System.out.println("Please input a market ID:");
 				try {
-					marketId = scan.nextInt();
+					marketId = Integer.valueOf(br.readLine());
 				} catch (Exception ex) {
 					System.out.println("Invalid Market ID");
 					System.out.println("Press Any Key To Continue...");
@@ -171,18 +173,20 @@ public class Client implements Runnable {
 				// validation = 1;
 				System.out.println("Exit command signaled");
 				System.out.println("Press Any Key To Continue...");
-				scan.nextLine();
+				br.readLine();
 				shutdown();
 				break;
 			}
 			// Write and Flush
 			message.updateChecksum();
-			scan.nextLine();
+			// scan.nextLine();
 			context.channel().writeAndFlush(message);
+			// System.out.println("cycle count is " + count);
+			// Client.count++;
 			// System.out.println("Write and Flush goes here");
 			// }
 			System.out.println("Broker Loop Exited");
-			scan.close();
+			br.readLine(); 
 			// }
 			// try {
 			// String input = getBrokerInput();
