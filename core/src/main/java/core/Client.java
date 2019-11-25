@@ -9,6 +9,7 @@ import java.util.Random;
 import core.decoders.Decoder;
 import core.encoders.ConnectionRequestEncoder;
 import core.encoders.OrderEncoder;
+import core.exceptions.BrokerInputError;
 import core.exceptions.ChecksumIsInvalid;
 import core.messages.ConnectionRequest;
 import core.messages.FixMessage;
@@ -120,62 +121,72 @@ public class Client implements Runnable {
 			Order message = null;
 			// Scanner scan = new Scanner(System.in);
 			BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-			String command = "";
+			String command = "0";
 			int marketId = 0;
 			// int validation = 0;
+
 			while (!isValidCommand(command)) {
 				printMenue();
 				command = br.readLine();
-				switch (command) {
-				case "1":
-					System.out.println("Please input a market ID:");
-					try {
-						marketId = Integer.valueOf(br.readLine());
-					} catch (Exception ex) {
-						System.out.println("Invalid Market ID");
-						System.out.println("Press Any Key To Continue...");
-						System.in.read();
-						continue;
-					}
-					message = new Order(Message.Type.BUY.toString(), "", (marketId), clientID, randInstrument(),
-							randQuantity(), randPrice());
-					System.out.println("Buy command signaled -> [" + marketId + "]");
-					System.out.println(message.toString());
-					System.out.println("Press Any Key To Continue...");
-					try {
-						System.in.read();
-					} catch (Exception ex) {
-						ex.printStackTrace();
-					}
-					break;
-				case "2":
-					System.out.println("Please input a market ID:");
-					try {
-						marketId = Integer.valueOf(br.readLine());
-					} catch (Exception ex) {
-						System.out.println("Invalid Market ID");
-						System.out.println("Press Any Key To Continue...");
-						System.in.read();
-						continue;
-					}
-					message = new Order(Message.Type.SELL.toString(), "", (marketId), clientID, randInstrument(),
-							randQuantity(), randPrice());
-					System.out.println("Sell command signaled to market -> [" + marketId + "]");
-					System.out.println(message.toString());
-					System.out.println("Press Any Key To Continue...");
-					try {
-						System.in.read();
-					} catch (Exception ex) {
-						ex.printStackTrace();
-					}
-					break;
-				case "3":
-					// validation = 1;
-					System.out.println("    Broker client shutting down");
-					shutdown();
-					break;
+				try {
+					verifyId(command);
+				} catch (Exception e) {
+					System.out.println(e.getMessage());
+					continue;
 				}
 			}
+			switch (command) {
+			case "1":
+				System.out.println("Please input a market ID:");
+				try {
+					marketId = Integer.valueOf(br.readLine());
+				} catch (Exception ex) {
+					System.out.println("Invalid Market ID");
+					System.out.println("Press Any Key To Continue...");
+					System.in.read();
+					// continue;
+				}
+				message = new Order(Message.Type.BUY.toString(), "", (marketId), clientID, randInstrument(),
+						randQuantity(), randPrice());
+				System.out.println("Buy command signaled -> [" + marketId + "]");
+				System.out.println(message.toString());
+				System.out.println("Press Any Key To Continue...");
+				try {
+					System.in.read();
+				} catch (Exception ex) {
+					ex.printStackTrace();
+				}
+				break;
+			case "2":
+				System.out.println("Please input a market ID:");
+				try {
+					marketId = Integer.valueOf(br.readLine());
+				} catch (Exception ex) {
+					System.out.println("Invalid Market ID");
+					System.out.println("Press Any Key To Continue...");
+					System.in.read();
+					// continue;
+				}
+				message = new Order(Message.Type.SELL.toString(), "", (marketId), clientID, randInstrument(),
+						randQuantity(), randPrice());
+				System.out.println("Sell command signaled to market -> [" + marketId + "]");
+				System.out.println(message.toString());
+				System.out.println("Press Any Key To Continue...");
+				try {
+					System.in.read();
+				} catch (Exception ex) {
+					ex.printStackTrace();
+				}
+				break;
+			case "3":
+				// validation = 1;
+				System.out.println("    Broker client shutting down");
+				shutdown();
+				break;
+			default:
+				return;
+			}
+			// }
 			// Write and Flush
 			message.updateChecksum();
 			// scan.nextLine();
@@ -214,11 +225,15 @@ public class Client implements Runnable {
 		// }
 
 		private boolean isValidCommand(String command) {
-			int x = Integer.valueOf(command);
-			if (x >= 1 && x <= 3)
-				return true;
-			else
+			try {
+				int x = Integer.valueOf(command);
+				if (x >= 1 && x <= 3)
+					return true;
+				else
+					return false;
+			} catch (Exception e) {
 				return false;
+			}
 		}
 
 		// =========>
@@ -259,11 +274,11 @@ public class Client implements Runnable {
 			context.writeAndFlush(message);
 		}
 
-		// private int verifyId(String id) throws Exception {
-		// if (id.length() != 6)
-		// throw new BrokerInputError();
-		// return Integer.valueOf(id);
-		// }
+		private int verifyId(String id) throws Exception {
+			if (id.length() != 6)
+				throw new BrokerInputError();
+			return Integer.valueOf(id);
+		}
 
 	}
 
