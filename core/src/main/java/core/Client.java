@@ -120,62 +120,63 @@ public class Client implements Runnable {
 			Order message = null;
 			// Scanner scan = new Scanner(System.in);
 			BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-			String command;
+			String command = "";
 			int marketId = 0;
 			// int validation = 0;
-			// while (!isValidCommand(command)) {
-			printMenue();
-			command = br.readLine();
-			switch (command) {
-			case "1":
-				System.out.println("Please input a market ID:");
-				try {
-					marketId = Integer.valueOf(br.readLine());
-				} catch (Exception ex) {
-					System.out.println("Invalid Market ID");
+			while (!isValidCommand(command)) {
+				printMenue();
+				command = br.readLine();
+				switch (command) {
+				case "1":
+					System.out.println("Please input a market ID:");
+					try {
+						marketId = Integer.valueOf(br.readLine());
+					} catch (Exception ex) {
+						System.out.println("Invalid Market ID");
+						System.out.println("Press Any Key To Continue...");
+						System.in.read();
+						continue;
+					}
+					message = new Order(Message.Type.BUY.toString(), "", (marketId), clientID, randInstrument(),
+							randQuantity(), randPrice());
+					System.out.println("Buy command signaled -> [" + marketId + "]");
+					System.out.println(message.toString());
 					System.out.println("Press Any Key To Continue...");
-					System.in.read();
-					// continue;
-				}
-				message = new Order(Message.Type.BUY.toString(), "", (marketId), clientID, randInstrument(),
-						randQuantity(), randPrice());
-				System.out.println("Buy command signaled -> [" + marketId + "]");
-				System.out.println(message.toString());
-				System.out.println("Press Any Key To Continue...");
-				try {
-					System.in.read();
-				} catch (Exception ex) {
-					ex.printStackTrace();
-				}
-				break;
-			case "2":
-				System.out.println("Please input a market ID:");
-				try {
-					marketId = Integer.valueOf(br.readLine());
-				} catch (Exception ex) {
-					System.out.println("Invalid Market ID");
+					try {
+						System.in.read();
+					} catch (Exception ex) {
+						ex.printStackTrace();
+					}
+					break;
+				case "2":
+					System.out.println("Please input a market ID:");
+					try {
+						marketId = Integer.valueOf(br.readLine());
+					} catch (Exception ex) {
+						System.out.println("Invalid Market ID");
+						System.out.println("Press Any Key To Continue...");
+						System.in.read();
+						continue;
+					}
+					message = new Order(Message.Type.SELL.toString(), "", (marketId), clientID, randInstrument(),
+							randQuantity(), randPrice());
+					System.out.println("Sell command signaled to market -> [" + marketId + "]");
+					System.out.println(message.toString());
 					System.out.println("Press Any Key To Continue...");
-					System.in.read();
-					// continue;
+					try {
+						System.in.read();
+					} catch (Exception ex) {
+						ex.printStackTrace();
+					}
+					break;
+				case "3":
+					// validation = 1;
+					System.out.println("Exit command signaled");
+					System.out.println("Press Any Key To Continue...");
+					br.readLine();
+					shutdown();
+					break;
 				}
-				message = new Order(Message.Type.SELL.toString(), "", (marketId), clientID, randInstrument(),
-						randQuantity(), randPrice());
-				System.out.println("Sell command signaled to market -> [" + marketId + "]");
-				System.out.println(message.toString());
-				System.out.println("Press Any Key To Continue...");
-				try {
-					System.in.read();
-				} catch (Exception ex) {
-					ex.printStackTrace();
-				}
-				break;
-			case "3":
-				// validation = 1;
-				System.out.println("Exit command signaled");
-				System.out.println("Press Any Key To Continue...");
-				br.readLine();
-				shutdown();
-				break;
 			}
 			// Write and Flush
 			message.updateChecksum();
@@ -186,7 +187,7 @@ public class Client implements Runnable {
 			// System.out.println("Write and Flush goes here");
 			// }
 			// System.out.println("Broker Loop Exited");
-			// br.readLine(); 
+			// br.readLine();
 			// }
 			// try {
 			// String input = getBrokerInput();
@@ -213,6 +214,14 @@ public class Client implements Runnable {
 		// BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 		// return br.readLine();
 		// }
+
+		private boolean isValidCommand(String command) {
+			int x = Integer.valueOf(command);
+			if (x >= 1 && x <= 3)
+				return true;
+			else
+				return false;
+		}
 
 		// =========>
 		private boolean messageHasBeenActioned(Order message) {
