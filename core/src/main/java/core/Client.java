@@ -167,7 +167,7 @@ public class Client implements Runnable {
 				// validation = 1;
 				System.out.println("    Broker client shutting down");
 				shutdown();
-				break;
+				return;
 			default:
 				return;
 			}
