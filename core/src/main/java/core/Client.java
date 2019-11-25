@@ -94,18 +94,13 @@ public class Client implements Runnable {
 			while (!isValidCommand(command)) {
 				printMenue();
 				command = br.readLine();
-				try {
-					verifyId(command);
-				} catch (Exception e) {
-					System.out.println(e.getMessage());
-					continue;
-				}
 			}
 			switch (command) {
 			case "1":
 				System.out.println("Please input a market ID:");
 				try {
 					marketId = Integer.valueOf(br.readLine());
+					verifyId(String.valueOf(marketId));
 				} catch (Exception ex) {
 					System.out.println("Invalid Market ID");
 					System.out.println("Press Any Key To Continue...");
@@ -120,6 +115,7 @@ public class Client implements Runnable {
 				System.out.println("Please input a market ID:");
 				try {
 					marketId = Integer.valueOf(br.readLine());
+					verifyId(String.valueOf(marketId));
 				} catch (Exception ex) {
 					System.out.println("Invalid Market ID");
 				}
