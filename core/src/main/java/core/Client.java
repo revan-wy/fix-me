@@ -171,9 +171,7 @@ public class Client implements Runnable {
 				break;
 			case "3":
 				// validation = 1;
-				System.out.println("Exit command signaled");
-				System.out.println("Press Any Key To Continue...");
-				br.readLine();
+				System.out.println("    Broker client shutting down");
 				shutdown();
 				break;
 			}
@@ -316,22 +314,9 @@ public class Client implements Runnable {
 
 	// Sell or buy generating functions aswell as menue print
 	private static void printMenue() {
-		System.out.print("\033[H\033[2J");
-		System.out.flush();
-		System.out.println("    ______ _                  __  __        ____            _    ");
-		System.out.println("   |  ____(_)                |  \\/  |      |  _ \\          | |");
-		System.out.println("   | |__   ___  ___  ______  | \\  / | ___  | |_) |_ __ ___ | | _____ _ __ ");
-		System.out.println("   |  __| | \\ \\/ /  |______| | |\\/| |/ _ \\ |  _ <| '__/ _ \\| |/ / _ \\ '__|");
-		System.out.println("   | |    | |>  <            | |  | |  __/ | |_) | | | (_) |   <  __/ |   ");
-		System.out.println("   |_|    |_/_/\\_\\           |_|  |_|\\___| |____/|_|  \\___/|_|\\_\\___|_|");
-		System.out.println("   ________________________________________________________________________");
-		System.out.println("  | Welcome to the Fix-Me Broker.                                          |");
-		System.out.println("  | The following commands are available, please use numbers 1, 2 or 3.    |");
-		System.out.println("  |------------------------------------------------------------------------|");
-		System.out.println("  |  1. | BUY a comodity from the market.                                  |");
-		System.out.println("  |  2. | SELL a comodity to the market.                                   |");
-		System.out.println("  |  3. | EXIT the Fix-Me Broker.                                          |");
-		System.out.println("  |________________________________________________________________________|");
+		System.out.println("    1.  BUY a comodity from the market.");
+		System.out.println("    2.  SELL a comodity to the market.");
+		System.out.println("    3.  EXIT the Fix-Me Broker.");
 	}
 
 	private static int randPrice() {
