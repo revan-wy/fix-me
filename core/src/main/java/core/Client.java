@@ -9,6 +9,7 @@ import java.util.Random;
 import core.decoders.Decoder;
 import core.encoders.ConnectionRequestEncoder;
 import core.encoders.OrderEncoder;
+import core.exceptions.BrokerInputError;
 import core.exceptions.ChecksumIsInvalid;
 import core.messages.ConnectionRequest;
 import core.messages.FixMessage;
@@ -120,12 +121,20 @@ public class Client implements Runnable {
 			Order message = null;
 			// Scanner scan = new Scanner(System.in);
 			BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-			String command;
+			String command = "0";
 			int marketId = 0;
 			// int validation = 0;
-			// while (!isValidCommand(command)) {
-			printMenue();
-			command = br.readLine();
+
+			while (!isValidCommand(command)) {
+				printMenue();
+				command = br.readLine();
+				try {
+					verifyId(command);
+				} catch (Exception e) {
+					System.out.println(e.getMessage());
+					continue;
+				}
+			}
 			switch (command) {
 			case "1":
 				System.out.println("Please input a market ID:");
@@ -159,7 +168,10 @@ public class Client implements Runnable {
 				System.out.println("    Broker client shutting down");
 				shutdown();
 				break;
+			default:
+				return;
 			}
+			// }
 			// Write and Flush
 			message.updateChecksum();
 			// scan.nextLine();
@@ -169,7 +181,7 @@ public class Client implements Runnable {
 			// System.out.println("Write and Flush goes here");
 			// }
 			// System.out.println("Broker Loop Exited");
-			// br.readLine(); 
+			// br.readLine();
 			// }
 			// try {
 			// String input = getBrokerInput();
@@ -196,6 +208,18 @@ public class Client implements Runnable {
 		// BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 		// return br.readLine();
 		// }
+
+		private boolean isValidCommand(String command) {
+			try {
+				int x = Integer.valueOf(command);
+				if (x >= 1 && x <= 3)
+					return true;
+				else
+					return false;
+			} catch (Exception e) {
+				return false;
+			}
+		}
 
 		// =========>
 		private boolean messageHasBeenActioned(Order message) {
@@ -235,11 +259,11 @@ public class Client implements Runnable {
 			context.writeAndFlush(message);
 		}
 
-		// private int verifyId(String id) throws Exception {
-		// if (id.length() != 6)
-		// throw new BrokerInputError();
-		// return Integer.valueOf(id);
-		// }
+		private int verifyId(String id) throws Exception {
+			if (id.length() != 6)
+				throw new BrokerInputError();
+			return Integer.valueOf(id);
+		}
 
 	}
 
