@@ -4,7 +4,6 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.Random;
-// import java.util.Scanner;
 
 import core.decoders.Decoder;
 import core.encoders.ConnectionRequestEncoder;
@@ -27,7 +26,6 @@ import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioSocketChannel;
 
 public class Client implements Runnable {
-	// private static int count = 0;
 	private Client.Type clientType;
 	private EventLoopGroup workerGroup;
 	private int clientID;
@@ -46,35 +44,6 @@ public class Client implements Runnable {
 			clientID = request.getSenderId();
 			System.out.println("Client connected to router with ID: " + clientID);
 		}
-
-		// private void brokerWriteHandler(ChannelHandlerContext context, String string)
-		// throws Exception {
-		// String[] split = string.split("\\s+");
-		// if (split.length != 5)
-		// throw new BrokerInputError();
-		// Order message;
-		// String type = split[0].toLowerCase();
-		// String response = "";
-		// int marketId = verifyId(split[1]);
-		// String instrument = split[2];
-		// int quantity, price;
-		// try {
-		// quantity = Integer.valueOf(split[3]);
-		// price = Integer.valueOf(split[4]);
-		// } catch (Exception e) {
-		// throw new BrokerInputError();
-		// }
-		// if (type.equals("sell") || type.equals("buy")) {
-		// message = new Order(type.toUpperCase(), response, marketId, clientID,
-		// instrument, quantity, price);
-		// } else {
-		// throw new BrokerInputError();
-		// }
-		// message.updateChecksum();
-		// ;
-		// context.writeAndFlush(message);
-		// System.out.println("Sending " + message.getType() + " order to router.");
-		// }
 
 		@Override
 		public void channelActive(ChannelHandlerContext context) throws Exception {
@@ -119,12 +88,9 @@ public class Client implements Runnable {
 
 		private void channelWrite(ChannelHandlerContext context) throws Exception {
 			Order message = null;
-			// Scanner scan = new Scanner(System.in);
 			BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 			String command = "0";
 			int marketId = 0;
-			// int validation = 0;
-
 			while (!isValidCommand(command)) {
 				printMenue();
 				command = br.readLine();
@@ -144,7 +110,6 @@ public class Client implements Runnable {
 					System.out.println("Invalid Market ID");
 					System.out.println("Press Any Key To Continue...");
 					System.in.read();
-					// continue;
 				}
 				message = new Order(Message.Type.BUY.toString(), "", (marketId), clientID, randInstrument(),
 						randQuantity(), randPrice());
@@ -164,50 +129,15 @@ public class Client implements Runnable {
 				System.out.println(message.toString());
 				break;
 			case "3":
-				// validation = 1;
 				System.out.println("    Broker client shutting down");
 				shutdown();
 				return;
 			default:
 				return;
 			}
-			// }
-			// Write and Flush
 			message.updateChecksum();
-			// scan.nextLine();
 			context.channel().writeAndFlush(message);
-			// System.out.println("cycle count is " + count);
-			// Client.count++;
-			// System.out.println("Write and Flush goes here");
-			// }
-			// System.out.println("Broker Loop Exited");
-			// br.readLine();
-			// }
-			// try {
-			// String input = getBrokerInput();
-			// if (input.length() == 0)
-			// throw new InputStringEmpty();
-			// else if (input.toLowerCase().equals("exit"))
-			// shutdown();
-			// else if (clientType == Client.Type.BROKER)
-			// brokerWriteHandler(context, input);
-			// } catch (Exception e) {
-			// System.out.println(e.getMessage());
-			// channelWrite(context);
-			// }
-			// write and flush Here
-			// message.updateChecksum();;
-			// context.writeAndFlush(message);
 		}
-
-		// =========>
-		// private String getBrokerInput() throws Exception {
-		// System.out.println(
-		// "Please create a new order. Format: \n[sell || buy] [market id] [instrument]
-		// [quantity] [price]");
-		// BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-		// return br.readLine();
-		// }
 
 		private boolean isValidCommand(String command) {
 			try {
@@ -221,7 +151,6 @@ public class Client implements Runnable {
 			}
 		}
 
-		// =========>
 		private boolean messageHasBeenActioned(Order message) {
 			if (message.getResponse().equals(Message.Response.EXECUTED.toString())
 					|| message.getResponse().equals(Message.Response.REJECTED.toString())) {
@@ -321,7 +250,6 @@ public class Client implements Runnable {
 		BROKER, MARKET
 	}
 
-	// Sell or buy generating functions aswell as menue print
 	private static void printMenue() {
 		System.out.println("    1.  BUY a comodity from the market.");
 		System.out.println("    2.  SELL a comodity to the market.");
