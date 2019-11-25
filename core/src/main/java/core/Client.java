@@ -150,12 +150,6 @@ public class Client implements Runnable {
 						randQuantity(), randPrice());
 				System.out.println("Buy command signaled -> [" + marketId + "]");
 				System.out.println(message.toString());
-				System.out.println("Press Any Key To Continue...");
-				try {
-					System.in.read();
-				} catch (Exception ex) {
-					ex.printStackTrace();
-				}
 				break;
 			case "2":
 				System.out.println("Please input a market ID:");
@@ -163,20 +157,11 @@ public class Client implements Runnable {
 					marketId = Integer.valueOf(br.readLine());
 				} catch (Exception ex) {
 					System.out.println("Invalid Market ID");
-					System.out.println("Press Any Key To Continue...");
-					System.in.read();
-					// continue;
 				}
 				message = new Order(Message.Type.SELL.toString(), "", (marketId), clientID, randInstrument(),
 						randQuantity(), randPrice());
 				System.out.println("Sell command signaled to market -> [" + marketId + "]");
 				System.out.println(message.toString());
-				System.out.println("Press Any Key To Continue...");
-				try {
-					System.in.read();
-				} catch (Exception ex) {
-					ex.printStackTrace();
-				}
 				break;
 			case "3":
 				// validation = 1;
