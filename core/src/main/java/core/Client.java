@@ -171,9 +171,7 @@ public class Client implements Runnable {
 				break;
 			case "3":
 				// validation = 1;
-				System.out.println("Exit command signaled");
-				System.out.println("Press Any Key To Continue...");
-				br.readLine();
+				System.out.println("    Broker client shutting down");
 				shutdown();
 				break;
 			}
@@ -316,7 +314,6 @@ public class Client implements Runnable {
 
 	// Sell or buy generating functions aswell as menue print
 	private static void printMenue() {
-		
 		System.out.println("    1.  BUY a comodity from the market.");
 		System.out.println("    2.  SELL a comodity to the market.");
 		System.out.println("    3.  EXIT the Fix-Me Broker.");
