@@ -123,7 +123,7 @@ public class Client implements Runnable {
 			String command;
 			int marketId = 0;
 			// int validation = 0;
-			// while (validation == 0) {
+			// while (!isValidCommand(command)) {
 			printMenue();
 			command = br.readLine();
 			switch (command) {
@@ -185,8 +185,8 @@ public class Client implements Runnable {
 			// Client.count++;
 			// System.out.println("Write and Flush goes here");
 			// }
-			System.out.println("Broker Loop Exited");
-			br.readLine(); 
+			// System.out.println("Broker Loop Exited");
+			// br.readLine(); 
 			// }
 			// try {
 			// String input = getBrokerInput();
